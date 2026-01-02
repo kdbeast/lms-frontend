@@ -1,9 +1,9 @@
-import { Button } from "./components/ui/button";
+import Login from "./pages/Login";
 
 function App() {
   return (
     <>
-      <Button>Let's Start</Button>
+      <Login />
     </>
   );
 }
