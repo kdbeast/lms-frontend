@@ -6,11 +6,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { toast } from "sonner";
 import { useState } from "react";
 import {
   useLoginUserMutation,
   useRegisterUserMutation,
 } from "../features/api/authApi";
+import { useEffect } from "react";
 import { Loader2 } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -31,7 +33,7 @@ const Login = () => {
       error: loginError,
       isLoading: loginLoading,
       isSuccess: loginSuccess,
-    }
+    },
   ] = useLoginUserMutation();
   const [
     registerUser,
@@ -40,7 +42,7 @@ const Login = () => {
       error: registerError,
       isLoading: registerLoading,
       isSuccess: registerSuccess,
-    }
+    },
   ] = useRegisterUserMutation();
 
   const handleRegistration = async (type) => {
@@ -58,8 +60,30 @@ const Login = () => {
     }
   };
 
+  useEffect(() => {
+    if (registerSuccess && registerData) {
+      toast.success("User registered successfully");
+    }
+    if (registerError) {
+      toast.error(registerData.data.message || "User registration failed");
+    }
+    if (loginSuccess && loginData) {
+      toast.success(loginData.message || "User logged in successfully");
+    }
+    if (loginError) {
+      toast.error(loginData.data.message || "User login failed");
+    }
+  }, [
+    loginData,
+    loginError,
+    registerData,
+    loginSuccess,
+    registerError,
+    registerSuccess,
+  ]);
+
   return (
-    <div className="flex items-center w-full justify-center">
+    <div className="w-full max-w-sm mx-auto mt-48">
       <Tabs defaultValue="signup">
         <TabsList>
           <TabsTrigger value="signup">Sign Up</TabsTrigger>
