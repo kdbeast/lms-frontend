@@ -1,10 +1,4 @@
-import React, { useState } from "react";
 import Course from "./Course";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Loader2 } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -14,19 +8,25 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Loader2 } from "lucide-react";
+import React, { useState } from "react";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { useGetUserProfileQuery } from "../../features/api/authApi";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const Profile = () => {
   const [name, setName] = useState("");
 
-  const user = {
-    name: "John Doe",
-    email: "john.doe@example.com",
-    role: "Student",
-    photoUrl: "https://github.com/shadcn.png",
-    enrolledCourses: [],
-  };
+  const { data, isLoading } = useGetUserProfileQuery();
 
-  const isLoading = false;
+  if (isLoading)
+    return (
+      <div className="my-24">
+        <ProfileSkeleton />
+      </div>
+    );
 
   //   const {
   //     data: userProfile,
@@ -64,7 +64,7 @@ const Profile = () => {
 
   //   if (profileLoading) return <ProfileSkeleton />;
 
-  //   const { user } = userProfile;
+  const { user } = data;
 
   return (
     <div className="max-w-4xl mx-auto my-24 px-4">
@@ -72,7 +72,9 @@ const Profile = () => {
       <div className="flex flex-col md:flex-row items-center md:items-start gap-8 my-5">
         <div className="flex flex-col items-center">
           <Avatar className="h-24 w-24 md:h-32 md:w-32 mb-4">
-            <AvatarImage src={user.photoUrl} />
+            <AvatarImage
+              src={user.photoUrl || "https://github.com/shadcn.png"}
+            />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
         </div>

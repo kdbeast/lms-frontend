@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
