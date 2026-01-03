@@ -83,7 +83,7 @@ const Login = () => {
   ]);
 
   return (
-    <div className="w-full max-w-sm mx-auto mt-48">
+    <div className="w-full max-w-sm mx-auto mt-32">
       <Tabs defaultValue="signup">
         <TabsList>
           <TabsTrigger value="signup">Sign Up</TabsTrigger>
