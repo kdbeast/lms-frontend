@@ -77,6 +77,7 @@ const Login = () => {
       toast.error(loginData.data.message || "User login failed");
     }
   }, [
+    navigate,
     loginData,
     loginError,
     registerData,

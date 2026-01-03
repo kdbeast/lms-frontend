@@ -2,7 +2,6 @@ import React from "react";
 import {
   Sheet,
   SheetTitle,
-  SheetClose,
   SheetHeader,
   SheetFooter,
   SheetContent,
@@ -16,13 +15,12 @@ import {
   DropdownMenuSeparator,
 } from "./ui/dropdown-menu";
 import DarkMode from "../DarkMode";
-import { Input } from "./ui/input";
+import { Link } from "react-router";
 import { Button } from "./ui/button";
+import { SheetTrigger } from "./ui/sheet";
 import { Menu, School } from "lucide-react";
-import { Label } from "@radix-ui/react-label";
-import { SheetDescription, SheetTrigger } from "./ui/sheet";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Separator } from "@radix-ui/react-dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 const Navbar = () => {
   const user = true;
@@ -52,8 +50,12 @@ const Navbar = () => {
               <DropdownMenuContent>
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator className="bg-black m-0.5" />
-                <DropdownMenuItem>My Learning</DropdownMenuItem>
-                <DropdownMenuItem>Edit Profile</DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link to="/my-learning">My Learning</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link to="/profile">Edit Profile</Link>
+                </DropdownMenuItem>
                 <DropdownMenuItem>Logout</DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>Dashboard</DropdownMenuItem>
