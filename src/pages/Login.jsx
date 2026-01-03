@@ -67,14 +67,14 @@ const Login = () => {
       toast.success("User registered successfully");
     }
     if (registerError) {
-      toast.error(registerData.data.message || "User registration failed");
+      toast.error(registerError.data.message || "User registration failed");
     }
     if (loginSuccess && loginData) {
       toast.success(loginData.message || "User logged in successfully");
       navigate("/");
     }
     if (loginError) {
-      toast.error(loginData.data.message || "User login failed");
+      toast.error(loginError.data.message || "User login failed");
     }
   }, [
     navigate,
@@ -87,8 +87,8 @@ const Login = () => {
   ]);
 
   return (
-    <div className="w-full max-w-sm mx-auto mt-24">
-      <Tabs>
+    <div className="w-full max-w-sm mx-auto mt-48">
+      <Tabs defaultValue="login">
         <TabsList>
           <TabsTrigger value="signup">Sign Up</TabsTrigger>
           <TabsTrigger value="login">Login</TabsTrigger>

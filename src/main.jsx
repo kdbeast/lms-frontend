@@ -1,5 +1,6 @@
 import "./index.css";
 import App from "./App.jsx";
+import { Custom } from "./Custom";
 import store from "./app/store";
 import { StrictMode } from "react";
 import { Provider } from "react-redux";
@@ -10,7 +11,9 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={store}>
       <Toaster />
-      <App />
+      <Custom>
+        <App />
+      </Custom>
     </Provider>
   </StrictMode>
 );

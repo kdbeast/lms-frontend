@@ -1,4 +1,5 @@
 import Course from "./Course";
+import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
@@ -8,18 +9,42 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  useGetUserProfileQuery,
+  useUpdateProfileMutation,
+} from "../../features/api/authApi";
 import { Loader2 } from "lucide-react";
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useGetUserProfileQuery } from "../../features/api/authApi";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const Profile = () => {
   const [name, setName] = useState("");
+  const [profilePhoto, setProfilePhoto] = useState(null);
 
-  const { data, isLoading } = useGetUserProfileQuery();
+  const { data, isLoading, refetch } = useGetUserProfileQuery();
+  const [
+    updateProfile,
+    {
+      isError,
+      isSuccess,
+      data: updateProfileData,
+      isLoading: updateProfileLoading,
+    },
+  ] = useUpdateProfileMutation();
+
+  // useEffect must be called before any early returns to follow React's Rules of Hooks
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success(updateProfileData?.message || "Profile updated.");
+      refetch();
+    }
+    if (isError) {
+      toast.error(updateProfileData?.message || "Failed to update profile");
+    }
+  }, [isSuccess, isError, updateProfileData, refetch]);
 
   if (isLoading)
     return (
@@ -28,43 +53,19 @@ const Profile = () => {
       </div>
     );
 
-  //   const {
-  //     data: userProfile,
-  //     isLoading: profileLoading,
-  //     refetch,
-  //   } = useLoadUserQuery();
-  //   const [updateProfile, { data, isLoading, isError, isSuccess, error }] =
-  //     useUpdateProfileMutation();
+  const onChangeHandler = (e) => {
+    const file = e.target.files?.[0];
+    if (file) setProfilePhoto(file);
+  };
 
-  //   useEffect(() => {
-  //     if (userProfile) setName(userProfile.user.name);
-  //   }, [userProfile]);
+  const profileUpdateHandle = async () => {
+    const formData = new FormData();
+    formData.append("name", name);
+    if (profilePhoto) formData.append("profilePhoto", profilePhoto);
+    await updateProfile(formData);
+  };
 
-  //   const onChangeHandler = (e) => {
-  //     const file = e.target.files?.[0];
-  //     if (file) setProfilePhoto(file);
-  //   };
-
-  //   const profileUpdateHandle = async () => {
-  //     const formData = new FormData();
-  //     formData.append("name", name);
-  //     if (profilePhoto) formData.append("profilePhoto", profilePhoto);
-  //     await updateProfile(formData);
-  //   };
-
-  //   useEffect(() => {
-  //     if (isSuccess) {
-  //       refetch();
-  //       toast.success(data.message || "Profile updated.");
-  //     }
-  //     if (isError) {
-  //       toast.error(error.message || "Failed to update profile");
-  //     }
-  //   }, [isSuccess, isError, refetch, data, error]);
-
-  //   if (profileLoading) return <ProfileSkeleton />;
-
-  const { user } = data;
+  const user = data?.user;
 
   return (
     <div className="max-w-4xl mx-auto my-24 px-4">
@@ -123,11 +124,11 @@ const Profile = () => {
                     Name
                   </Label>
                   <Input
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
                     id="name"
+                    value={name}
                     placeholder="Name"
                     className="col-span-3"
+                    onChange={(e) => setName(e.target.value)}
                   />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
@@ -135,22 +136,24 @@ const Profile = () => {
                     Photo
                   </Label>
                   <Input
-                    type="file"
                     id="photo"
+                    type="file"
                     accept="image/*"
-                    // onChange={onChangeHandler}
                     className="col-span-3"
+                    onChange={onChangeHandler}
                   />
                 </div>
               </div>
               <DialogFooter>
-                {isLoading ? (
+                {updateProfileLoading ? (
                   <Button disabled>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please
                     wait
                   </Button>
                 ) : (
-                  <Button type="submit">Save changes</Button>
+                  <Button onClick={profileUpdateHandle} type="submit">
+                    Save changes
+                  </Button>
                 )}
               </DialogFooter>
             </DialogContent>
