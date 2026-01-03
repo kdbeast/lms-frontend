@@ -14,6 +14,7 @@ import {
 } from "../features/api/authApi";
 import { useEffect } from "react";
 import { Loader2 } from "lucide-react";
+import { useNavigate } from "react-router";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -26,6 +27,7 @@ const Login = () => {
     email: "",
     password: "",
   });
+  const navigate = useNavigate();
   const [
     loginUser,
     {
@@ -69,6 +71,7 @@ const Login = () => {
     }
     if (loginSuccess && loginData) {
       toast.success(loginData.message || "User logged in successfully");
+      navigate("/");
     }
     if (loginError) {
       toast.error(loginData.data.message || "User login failed");
@@ -83,8 +86,8 @@ const Login = () => {
   ]);
 
   return (
-    <div className="w-full max-w-sm mx-auto mt-32">
-      <Tabs defaultValue="signup">
+    <div className="w-full max-w-sm mx-auto mt-24">
+      <Tabs>
         <TabsList>
           <TabsTrigger value="signup">Sign Up</TabsTrigger>
           <TabsTrigger value="login">Login</TabsTrigger>
@@ -101,7 +104,7 @@ const Login = () => {
 
             <CardContent className="grid gap-6">
               <div className="grid gap-3">
-                <Label htmlFor="name">Name</Label>
+                <Label>Name</Label>
                 <Input
                   type="text"
                   name="name"
@@ -113,7 +116,7 @@ const Login = () => {
               </div>
 
               <div className="grid gap-3">
-                <Label htmlFor="username">Email</Label>
+                <Label>Email</Label>
                 <Input
                   type="email"
                   name="email"
@@ -125,7 +128,7 @@ const Login = () => {
               </div>
 
               <div className="grid gap-3">
-                <Label htmlFor="password">Password</Label>
+                <Label>Password</Label>
                 <Input
                   type="password"
                   name="password"
@@ -163,7 +166,7 @@ const Login = () => {
 
             <CardContent className="grid gap-6">
               <div className="grid gap-3">
-                <Label htmlFor="username">Username</Label>
+                <Label>Username</Label>
                 <Input
                   type="email"
                   name="email"
@@ -175,7 +178,7 @@ const Login = () => {
               </div>
 
               <div className="grid gap-3">
-                <Label htmlFor="password">Password</Label>
+                <Label>Password</Label>
                 <Input
                   type="password"
                   name="password"
