@@ -13,7 +13,7 @@ const Course = ({ course }) => {
         <img
           src={course.courseImage}
           alt={course.courseTitle}
-          className="w-full h-56 object-cover rounded-t-lg"
+          className="w-full h-64 object-cover rounded-t-lg"
         />
         <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent rounded-t-lg"></div>
       </div>
