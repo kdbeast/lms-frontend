@@ -9,8 +9,9 @@ import Sidebar from "./pages/admin/Sidebar";
 import Dashboard from "./pages/admin/Dashboard";
 import CourseTable from "./pages/admin/course/CourseTable";
 
-import { createBrowserRouter, RouterProvider } from "react-router";
 import AddCourse from "./pages/admin/course/AddCourse";
+import EditCourse from "./pages/admin/course/EditCourse";
+import { createBrowserRouter, RouterProvider } from "react-router";
 
 const router = createBrowserRouter([
   {
@@ -55,6 +56,10 @@ const router = createBrowserRouter([
           {
             path: "course/create",
             element: <AddCourse />,
+          },
+          {
+            path: "course/:userId",
+            element: <EditCourse />,
           },
         ],
       },
