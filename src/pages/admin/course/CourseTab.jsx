@@ -17,14 +17,17 @@ import {
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { useParams } from "react-router";
+import {
+  useEditCourseMutation,
+  useGetCourseByIdQuery,
+} from "../../../features/api/courseApi";
 import { Editor } from "primereact/editor";
 import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { useEditCourseMutation } from "../../../features/api/courseApi";
-// Lorem ipsum dolo init lattè pasta pizza coffee jack and jones red bull gives you wings.
+
 const BasicCourseTab = () => {
   const params = useParams();
   const navigate = useNavigate();
@@ -49,21 +52,25 @@ const BasicCourseTab = () => {
   const [editCourse, { data, error, isLoading, isSuccess }] =
     useEditCourseMutation();
 
-  // const course = courseData?.course;
-  // useEffect(() => {
-  //   if (course) {
-  //     setInput({
-  //       courseTitle: course.courseTitle,
-  //       subTitle: course.subTitle,
-  //       description: course.description,
-  //       category: course.category,
-  //       courseLevel: course.courseLevel,
-  //       coursePrice: course.coursePrice,
-  //       courseThumbnail: "",
-  //     });
-  //     setPrevThumbnail(course.courseThumbnail);
-  //   }
-  // }, [course]);
+  const { data: courseData, isLoading: courseLoading } =
+    useGetCourseByIdQuery(courseId);
+
+  useEffect(() => {
+    if (courseData?.course) {
+      const course = courseData?.course;
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setInput({
+        courseTitle: course.courseTitle,
+        subTitle: course.subTitle,
+        description: course.description,
+        category: course.category,
+        courseLevel: course.courseLevel,
+        coursePrice: course.coursePrice,
+        courseThumbnail: "",
+      });
+      setPrevThumbnail(course.courseThumbnail);
+    }
+  }, [courseData]);
 
   const handleSelectChange = (name) => (value) => {
     setInput((prev) => ({ ...prev, [name]: value }));
@@ -96,6 +103,10 @@ const BasicCourseTab = () => {
       toast.error(error.data.message);
     }
   }, [data, isSuccess, error]);
+
+  if (courseLoading) {
+    return <Loader2 className="animate-spin fixed top-1/2 left-2/3" />;
+  }
 
   return (
     <Card>
@@ -148,14 +159,16 @@ const BasicCourseTab = () => {
             <Editor
               value={input.description}
               style={{ height: "320px" }}
-              onTextChange={(e) => setInput({ ...input, description: e.value })}
+              onTextChange={(e) =>
+                setInput({ ...input, description: e.htmlValue })
+              }
             />
           </div>
           <div className="flex items-center gap-5">
             <div>
               <Label className="mb-1">Category</Label>
               <Select
-                defaultValue={input.category}
+                value={input.category}
                 onValueChange={handleSelectChange("category")}
               >
                 <SelectTrigger className="w-[180px]">
@@ -190,7 +203,7 @@ const BasicCourseTab = () => {
             <div>
               <Label className="mb-1">Course Level</Label>
               <Select
-                defaultValue={input.courseLevel}
+                value={input.courseLevel}
                 onValueChange={handleSelectChange("courseLevel")}
               >
                 <SelectTrigger className="w-[180px]">
@@ -224,7 +237,7 @@ const BasicCourseTab = () => {
             {prevThumbnail && (
               <img
                 src={prevThumbnail}
-                className="w-64 my-2"
+                className="w-fit my-2"
                 alt="Course Thumbnail"
               />
             )}
