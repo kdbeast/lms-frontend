@@ -28,7 +28,7 @@ import { useSelector } from "react-redux";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const { user } = useSelector((state) => state.auth.user);
+  const { user } = useSelector((state) => state.auth);
 
   const [logoutUser, { data, isSuccess }] = useLogoutUserMutation();
 
@@ -81,9 +81,9 @@ const Navbar = () => {
                   Logout
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                {user.role === "instructor" && (
+                {user.user.role === "instructor" && (
                   <DropdownMenuItem>
-                    <Link to="/dashboard">Dashboard</Link>
+                    <Link to="/admin/dashboard">Dashboard</Link>
                   </DropdownMenuItem>
                 )}
               </DropdownMenuContent>

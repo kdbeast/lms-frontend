@@ -15,20 +15,21 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
-// import {
-//   useEditCourseMutation,
-//   useGetCourseByIdQuery,
-//   usePublishCourseMutation,
-// } from "@/api/courseApi";
 import { Loader2 } from "lucide-react";
-import { useNavigate } from "react-router";
+import { useParams } from "react-router";
 import { Editor } from "primereact/editor";
+import { useNavigate } from "react-router";
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
+import { useEditCourseMutation } from "../../../features/api/courseApi";
+// Lorem ipsum dolo init lattè pasta pizza coffee jack and jones red bull gives you wings.
+const BasicCourseTab = () => {
+  const params = useParams();
+  const navigate = useNavigate();
+  const courseId = params.courseId;
 
-const BasicCourseTab = ({ courseId }) => {
   const [input, setInput] = useState({
     courseTitle: "",
     subTitle: "",
@@ -38,38 +39,31 @@ const BasicCourseTab = ({ courseId }) => {
     coursePrice: "",
     courseThumbnail: "",
   });
-  const isLoading = false;
+  const [prevThumbnail, setPrevThumbnail] = useState(null);
 
   const changeEventHandler = (e) => {
     const { name, value } = e.target;
     setInput((prev) => ({ ...prev, [name]: value }));
   };
 
-  //   const { data: courseData, refetch } = useGetCourseByIdQuery(courseId, {
-  //     refetchOnMountOrArgChange: true,
-  //   });
-  //   const [editCourse, { data, error, isLoading, isSuccess }] =
-  //     useEditCourseMutation();
-  //   const [publishCourse] = usePublishCourseMutation();
-  const [prevThumbnail, setPrevThumbnail] = useState(null);
-  //   const course = courseData?.course;
+  const [editCourse, { data, error, isLoading, isSuccess }] =
+    useEditCourseMutation();
 
-  const navigate = useNavigate();
-
-  //   useEffect(() => {
-  //     if (course) {
-  //       setInput({
-  //         courseTitle: course.courseTitle,
-  //         subTitle: course.subTitle,
-  //         description: course.description,
-  //         category: course.category,
-  //         courseLevel: course.courseLevel,
-  //         coursePrice: course.coursePrice,
-  //         courseThumbnail: "",
-  //       });
-  //       setPrevThumbnail(course.courseThumbnail);
-  //     }
-  //   }, [course]);
+  // const course = courseData?.course;
+  // useEffect(() => {
+  //   if (course) {
+  //     setInput({
+  //       courseTitle: course.courseTitle,
+  //       subTitle: course.subTitle,
+  //       description: course.description,
+  //       category: course.category,
+  //       courseLevel: course.courseLevel,
+  //       coursePrice: course.coursePrice,
+  //       courseThumbnail: "",
+  //     });
+  //     setPrevThumbnail(course.courseThumbnail);
+  //   }
+  // }, [course]);
 
   const handleSelectChange = (name) => (value) => {
     setInput((prev) => ({ ...prev, [name]: value }));
@@ -85,43 +79,23 @@ const BasicCourseTab = ({ courseId }) => {
     }
   };
 
-  const submitHandler = async () => {
-    console.log(input);
-    //     const formData = new FormData();
-    //     Object.entries(input).forEach(([key, value]) => {
-    //       if (value) formData.append(key, key === "price" ? Number(value) : value);
-    //   });
+  const updateCourseHandler = async () => {
+    const formData = new FormData();
+    Object.entries(input).forEach(([key, value]) => {
+      if (value) formData.append(key, key === "price" ? Number(value) : value);
+    });
 
-    //     await editCourse({ id: courseId, formData });
+    await editCourse({ courseId, formData });
   };
 
-  //   const togglePublishUnpublishCourse = async (action) => {
-  //     try {
-  //       const response = await publishCourse({ courseId, query: action });
-  //       if (response.data) {
-  //         refetch();
-  //         toast.success(
-  //           response.data.message ||
-  //             `Course ${
-  //               action === "true" ? "published" : "unpublished"
-  //             } successfully.`
-  //         );
-  //       }
-  //     } catch (error) {
-  //       toast.error(
-  //         `Failed to ${action === "true" ? "publish" : "unpublish"} the course.`
-  //       );
-  //     }
-  //   };
-
-  //   useEffect(() => {
-  //     if (isSuccess && data) {
-  //       toast.success(data?.message || "Course updated successfully.");
-  //     }
-  //     if (error) {
-  //       toast.error(error.data.message);
-  //     }
-  //   }, [data, isSuccess, error]);
+  useEffect(() => {
+    if (isSuccess && data) {
+      toast.success(data?.message || "Course updated successfully.");
+    }
+    if (error) {
+      toast.error(error.data.message);
+    }
+  }, [data, isSuccess, error]);
 
   return (
     <Card>
@@ -259,7 +233,7 @@ const BasicCourseTab = ({ courseId }) => {
             <Button variant="outline" onClick={() => navigate("/admin/course")}>
               Cancel
             </Button>
-            <Button disabled={isLoading} onClick={submitHandler}>
+            <Button disabled={isLoading} onClick={updateCourseHandler}>
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 w-4 h-4 animate-spin" /> Please wait
