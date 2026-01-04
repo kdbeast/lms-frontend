@@ -27,6 +27,9 @@ const AddCourse = () => {
       toast.success(data.message || "Course created successfully");
       navigate("/admin/course");
     }
+    if (error) {
+      toast.error(error.data.message);
+    }
   }, [isSuccess, error, data, navigate]);
 
   const [category, setCategory] = useState("");
