@@ -10,65 +10,15 @@ import { useNavigate } from "react-router";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { TableCaption } from "@/components/ui/table";
+import { useGetAllAdminCourseQuery } from "../../../features/api/courseApi";
 
 const CourseTable = () => {
   const navigate = useNavigate();
-  const isLoading = false;
-  const isFetching = false;
 
-  const courses = [
-    {
-      id: 1,
-      courseTitle: "INV001",
-      status: "Paid",
-      coursePrice: "250",
-      isPublished: true,
-    },
-    {
-      id: 2,
-      courseTitle: "INV002",
-      status: "Pending",
-      coursePrice: "150",
-      isPublished: false,
-    },
-    {
-      id: 3,
-      courseTitle: "INV003",
-      status: "Unpaid",
-      coursePrice: "350",
-      isPublished: true,
-    },
-    {
-      id: 4,
-      courseTitle: "INV004",
-      status: "Paid",
-      coursePrice: "450",
-      isPublished: false,
-    },
-    {
-      id: 5,
-      courseTitle: "INV005",
-      status: "Paid",
-      coursePrice: "550",
-      isPublished: true,
-    },
-    {
-      id: 6,
-      courseTitle: "INV006",
-      status: "Pending",
-      coursePrice: "200",
-      isPublished: true,
-    },
-    {
-      id: 7,
-      courseTitle: "INV007",
-      status: "Unpaid",
-      coursePrice: "300",
-      isPublished: false,
-    },
-  ];
+  const { data, isLoading, isFetching } = useGetAllAdminCourseQuery();
 
-  //   const { courses, isLoading, isFetching } = useCoursesQuery();
+  const courses = data?.courses || [];
+
   return (
     <div className="flex-1 mx-10 mt-20">
       <Button onClick={() => navigate("create")}>Create New Course</Button>
@@ -95,7 +45,7 @@ const CourseTable = () => {
               </TableRow>
             ) : (
               courses.map((course) => (
-                <TableRow key={course.id}>
+                <TableRow key={course._id}>
                   <TableCell className="w-1/2 font-medium">
                     {course.courseTitle}
                   </TableCell>
