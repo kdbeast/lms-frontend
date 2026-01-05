@@ -1,7 +1,6 @@
-import { Button } from "@/components/ui/button";
-import { Link, useParams } from "react-router";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CourseTab from "./CourseTab";
+import { Link, useParams } from "react-router";
+import { Button } from "@/components/ui/button";
 
 const EditCourse = () => {
   const params = useParams();
@@ -12,13 +11,13 @@ const EditCourse = () => {
         <h1 className="font-bold text-xl">
           Add detail information regarding course
         </h1>
-        <Link to={`/admin/course/${params.id}/lecture`}>
+        <Link to={`/admin/course/${params.courseId}/lecture`}>
           <Button variant="link" className="hover:text-blue-600">
             Go to lectures page
           </Button>
         </Link>
       </div>
-      <CourseTab courseId={params.id} />
+      <CourseTab courseId={params.courseId} />
     </div>
   );
 };

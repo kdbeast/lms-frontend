@@ -16,7 +16,6 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
-import { useParams } from "react-router";
 import {
   useEditCourseMutation,
   useGetCourseByIdQuery,
@@ -28,10 +27,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 
-const BasicCourseTab = () => {
-  const params = useParams();
+const BasicCourseTab = ({courseId}) => {
   const navigate = useNavigate();
-  const courseId = params.courseId;
 
   const [input, setInput] = useState({
     courseTitle: "",
@@ -213,8 +210,8 @@ const BasicCourseTab = () => {
                   <SelectGroup>
                     <SelectLabel className="mb-1">Course Level</SelectLabel>
                     <SelectItem value="Beginner">Beginner</SelectItem>
-                    <SelectItem value="Medium">Medium</SelectItem>
-                    <SelectItem value="Advance">Advance</SelectItem>
+                    <SelectItem value="Intermediate">Intermediate</SelectItem>
+                    <SelectItem value="Advanced">Advanced</SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
