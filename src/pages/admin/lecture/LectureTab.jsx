@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import axios from "axios";
 import {
   Card,
   CardContent,
@@ -6,122 +6,124 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { toast } from "sonner";
+import {
+  useEditLectureMutation,
+  useGetLectureByIdQuery,
+  useDeleteLectureMutation,
+} from "../../../features/api/courseApi";
+import { Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Eye, Loader2 } from "lucide-react";
-import { Progress } from "@/components/ui/progress";
-// import axios from "axios";
-import { toast } from "sonner";
-import { useParams, useNavigate } from "react-router";
 import { Switch } from "@/components/ui/switch";
-// import {
-//   useEditLectureMutation,
-//   useGetLectureByIdQuery,
-  //   useRemoveLectureMutation,
-// } from "@/api/courseApi";
+import { Button } from "@/components/ui/button";
+import React, { useEffect, useState } from "react";
+import { Progress } from "@/components/ui/progress";
+import { useParams, useNavigate } from "react-router";
 
-const MEDIA_API = "https://lms-xrs4.onrender.com/api/v1/media";
+const MEDIA_API = "http://localhost:8080/api/v1/media";
 
 const LectureTab = () => {
   const navigate = useNavigate();
-  const { id: courseId, lectureId } = useParams();
+  const { courseId, lectureId } = useParams();
 
-//   const { data: lectureByIdData } = useGetLectureByIdQuery(lectureId, {
-//     refetchOnMountOrArgChange: true,
-//   });
+  const { data: lectureByIdData } = useGetLectureByIdQuery(lectureId);
 
-//   const lecture = lectureByIdData?.lecture;
-  const [title, setTitle] = useState("Loading...");
-  const [uploadedVideoInfo, setUploadedVideoInfo] = useState(null);
+  const lecture = lectureByIdData?.lecture;
+
   const [isFree, setIsFree] = useState(false);
-  //   const [mediaProgress, setMediaProgress] = useState(false);
-  //   const [uploadProgress, setUploadProgress] = useState(0);
-  //   const [btnDisable, setBtnDisable] = useState(true);
+  const [btnDisable, setBtnDisable] = useState(true);
+  const [lectureTitle, setLectureTitle] = useState("");
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [mediaProgress, setMediaProgress] = useState(false);
+  const [uploadedVideoInfo, setUploadedVideoInfo] = useState(null);
 
-//   useEffect(() => {
-//     if (lecture) {
-//       setTitle(lecture.lectureTitle);
-//       setIsFree(lecture.isPreviewFree);
-//       setUploadedVideoInfo(lecture.videoInfo);
-//     }
-//   }, [lecture]);
+  const [
+    deleteLecture,
+    { isLoading: deleteLoading, isSuccess: deleteSuccess, data: deleteData },
+  ] = useDeleteLectureMutation();
 
-  //   const handleFileChange = async (e) => {
-  //     const file = e.target.files[0];
-  //     if (file) {
-  //       const formData = new FormData();
-  //       formData.append("file", file);
-  //       setMediaProgress(true);
-  //       try {
-  //         const res = await axios.post(`${MEDIA_API}/upload-video`, formData, {
-  //           onUploadProgress: ({ loaded, total }) => {
-  //             setUploadProgress(Math.round((loaded * 100) / total));
-  //           },
-  //         });
+  const [editLecture, { isLoading, isSuccess, data, error }] =
+    useEditLectureMutation();
 
-  //         if (res.data.success) {
-  //           setUploadedVideoInfo({
-  //             videoUrl: res.data.data.url,
-  //             publicId: res.data.data.public_id,
-  //           });
-  //           setBtnDisable(false);
-  //           toast.success(res.data.message);
-  //         }
-  //       } catch (error) {
-  //         console.error("Upload failed", error);
-  //         toast.error("Video upload failed");
-  //       } finally {
-  //         setMediaProgress(false);
-  //       }
-  //     }
-  //   };
+  useEffect(() => {
+    if (deleteData && deleteSuccess) {
+      toast.success(deleteData.message || "Lecture Removed");
+      navigate(`/admin/course/${courseId}/lecture`);
+    }
+  }, [deleteData, deleteSuccess, navigate, courseId]);
 
-  //   const [
-  //     removeLecture,
-  //     {
-  //       isLoading: lectureRemoveLoading,
-  //       isSuccess: isLectureSuccess,
-  //       data: lectureData,
-  //     },
-  //   ] = useRemoveLectureMutation();
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success(data.message || "Lecture updated");
+    }
+    if (error) {
+      toast.error(error.message || "Lecture update failed");
+    }
+  }, [isSuccess, error, data]);
 
-  //   const handleRemoveLecture = async () => {
-  //     await removeLecture(lectureId);
-  //   };
+  useEffect(() => {
+    if (lecture) {
+      setLectureTitle(lecture.lectureTitle);
+      setIsFree(lecture.isPreviewFree);
+      setUploadedVideoInfo(lecture.videoInfo);
+    }
+  }, [lecture]);
 
-  //   useEffect(() => {
-  //     if (lectureData && isLectureSuccess) {
-  //       toast.success(lectureData.message || "Lecture Removed");
-  //       navigate(`/admin/course/${courseId}/lecture`);
-  //     }
-  //   }, [lectureData, isLectureSuccess, navigate, courseId]);
+  const handleRemoveLecture = async () => {
+    await deleteLecture(lectureId);
+  };
 
-//   const [editLecture, { isLoading, isSuccess, data }] =
-//     useEditLectureMutation();
+  const handleEditLecture = async () => {
+    console.log(courseId, lectureId, lectureTitle, isFree, uploadedVideoInfo);
+    await editLecture({
+      courseId,
+      lectureId,
+      lectureTitle,
+      isPreviewFree: isFree,
+      videoInfo: uploadedVideoInfo,
+    });
+  };
 
-//   const handleEditLecture = async () => {
-//     await editLecture({
-//       courseId,
-//       lectureId,
-//       data: { title, videoInfo: uploadedVideoInfo, isPreviewFree: isFree },
-//     });
-//   };
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append("file", file);
+      setMediaProgress(true);
+      try {
+        const res = await axios.post(`${MEDIA_API}/upload-video`, formData, {
+          onUploadProgress: ({ loaded, total }) => {
+            setUploadProgress(Math.round((loaded * 100) / total));
+          },
+        });
 
-//   useEffect(() => {
-//     if (data && isSuccess) {
-//       toast.success(data.message || "Lecture updated");
-//     }
-//   }, [data, isSuccess]);
+        if (res.data.success) {
+          console.log(res);
+          setUploadedVideoInfo({
+            videoUrl: res.data.data.url,
+            publicId: res.data.data.public_id,
+          });
+          setBtnDisable(false);
+          toast.success(res.data.message);
+        }
+      } catch (error) {
+        console.error("Upload failed", error);
+        toast.error("Video upload failed");
+      } finally {
+        setMediaProgress(false);
+      }
+    }
+  };
 
-//   const renderButtonContent = (loading, text) =>
-//     loading ? (
-//       <>
-//         <Loader2 className="mr-2 w-4 h-4 animate-spin" /> Please wait
-//       </>
-//     ) : (
-//       text
-//     );
+  const renderButtonContent = (loading, text) =>
+    loading ? (
+      <>
+        <Loader2 className="mr-2 w-4 h-4 animate-spin" /> Please wait
+      </>
+    ) : (
+      text
+    );
 
   return (
     <Card>
@@ -134,12 +136,11 @@ const LectureTab = () => {
         </div>
         <div className="flex items-center gap-2">
           <Button
-            // disabled={lectureRemoveLoading}
             variant="destructive"
-            // onClick={handleRemoveLecture}
+            disabled={deleteLoading}
+            onClick={handleRemoveLecture}
           >
-            {/* {renderButtonContent(lectureRemoveLoading, "Remove Lecture")} */}
-            hello
+            {renderButtonContent(deleteLoading, "Remove Lecture")}
           </Button>
         </div>
       </CardHeader>
@@ -148,9 +149,9 @@ const LectureTab = () => {
           <Label className="mb-2">Title</Label>
           <Input
             type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            value={lectureTitle}
             placeholder="Ex. Introduction to JavaScript"
+            onChange={(e) => setLectureTitle(e.target.value)}
           />
         </div>
         <div className="my-5">
@@ -160,32 +161,32 @@ const LectureTab = () => {
           <Input
             type="file"
             accept="video/*"
-            // onChange={handleFileChange}
             className="w-fit"
+            onChange={handleFileChange}
           />
         </div>
         <div className="flex items-center space-x-2 my-5">
           <Switch
             checked={isFree}
-            onCheckedChange={setIsFree}
             id="airplane-mode"
+            onCheckedChange={setIsFree}
           />
           <Label htmlFor="airplane-mode">Is this video FREE?</Label>
         </div>
 
-        {/* {mediaProgress && (
+        {mediaProgress && (
           <div className="my-4">
             <Progress value={uploadProgress} />
             <p>{uploadProgress}% uploaded</p>
           </div>
-        )} */}
+        )}
 
         <div className="mt-4">
           <Button
-            // disabled={isLoading || btnDisable}
-            // onClick={handleEditLecture}
+            onClick={handleEditLecture}
+            disabled={isLoading || btnDisable}
           >
-            {/* {renderButtonContent(isLoading, "Update Lecture")} */}hello
+            {renderButtonContent(isLoading, "Update Lecture")}
           </Button>
         </div>
       </CardContent>
