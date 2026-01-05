@@ -18,8 +18,8 @@ const Lecture = ({ lecture, courseId, index }) => {
         Lecture - {index + 1}: <span>{lecture.lectureTitle}</span>
       </h1>
       <EditIcon
-        onClick={goToUpdateLecture}
         size={20}
+        onClick={goToUpdateLecture}
         className="cursor-pointer text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
       />
     </div>

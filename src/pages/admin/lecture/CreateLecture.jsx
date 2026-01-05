@@ -2,7 +2,7 @@ import { toast } from "sonner";
 import Lecture from "./Lecture";
 import {
   useCreateLectureMutation,
-  //   useGetLecturesByCourseIdQuery,
+  useGetLectureByCourseIdQuery,
 } from "../../../features/api/courseApi";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -13,23 +13,18 @@ import { Button } from "@/components/ui/button";
 // import { addLecture } from "@/features/courseSlice";
 
 const CreateLecture = () => {
-  const [lectureTitle, setLectureTitle] = useState("");
   const params = useParams();
   const courseId = params.courseId;
   //   const navigate = useNavigate();
   //   const dispatch = useDispatch();
-
-  const lectureLoading = false;
-  const lectureError = false;
-  const lecturesData = [];
+  const [lectureTitle, setLectureTitle] = useState("");
 
   // Fetch all lectures by course id
-  //   const {
-  //     data: lecturesData,
-  //     isLoading: lectureLoading,
-  //     isError: lectureError,
-  //     refetch,
-  //   } = useGetLecturesByCourseIdQuery(courseId);
+  const {
+    data: lectureData,
+    isLoading: lectureLoading,
+    isError: lectureError,
+  } = useGetLectureByCourseIdQuery(courseId);
 
   // Add lectures
   const [createLecture, { data, isLoading, isSuccess, error }] =
@@ -90,10 +85,10 @@ const CreateLecture = () => {
           <p>Loading lectures...</p>
         ) : lectureError ? (
           <p>Failed to load lectures.</p>
-        ) : !lecturesData?.lectures?.length ? (
+        ) : !lectureData?.lectures?.length ? (
           <p>No lectures available.</p>
         ) : (
-          lecturesData.lectures.map((lecture, index) => (
+          lectureData.lectures.map((lecture, index) => (
             <Lecture
               index={index}
               lecture={lecture}

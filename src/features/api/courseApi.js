@@ -47,6 +47,14 @@ export const courseApi = createApi({
         method: "POST",
         body: { lectureTitle },
       }),
+      invalidatesTags: ["Refetch_Creator_Course"],
+    }),
+    getLectureByCourseId: builder.query({
+      query: (courseId) => ({
+        url: `/${courseId}/lecture`,
+        method: "GET",
+      }),
+      providesTags: ["Refetch_Creator_Course"],
     }),
   }),
 });
@@ -57,6 +65,7 @@ export const {
   useCreateCourseMutation,
   useCreateLectureMutation,
   useGetAllAdminCourseQuery,
+  useGetLectureByCourseIdQuery,
 } = courseApi;
 
 // mutation -> data bhejna

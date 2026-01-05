@@ -11,6 +11,7 @@ import CourseTable from "./pages/admin/course/CourseTable";
 
 import AddCourse from "./pages/admin/course/AddCourse";
 import EditCourse from "./pages/admin/course/EditCourse";
+import EditLecture from "./pages/admin/lecture/EditLecture";
 import CreateLecture from "./pages/admin/lecture/CreateLecture";
 import { createBrowserRouter, RouterProvider } from "react-router";
 
@@ -65,6 +66,10 @@ const router = createBrowserRouter([
           {
             path: "course/:courseId/lecture",
             element: <CreateLecture />,
+          },
+          {
+            path: "course/:courseId/lecture/:lectureId",
+            element: <EditLecture />,
           },
         ],
       },
