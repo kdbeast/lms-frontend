@@ -4,7 +4,7 @@ const COURSE_API = "http://localhost:8080/api/v1/course";
 
 export const courseApi = createApi({
   reducerPath: "courseApi",
-  tagTypes: ["Refetch_Creator_Course","Refetch_Lecture"],
+  tagTypes: ["Refetch_Creator_Course", "Refetch_Lecture"],
   baseQuery: fetchBaseQuery({
     baseUrl: COURSE_API,
     credentials: "include",
@@ -17,6 +17,13 @@ export const courseApi = createApi({
         body: { courseTitle, category },
       }),
       invalidatesTags: ["Refetch_Creator_Course"],
+    }),
+    getPublishedCourses: builder.query({
+      query: () => ({
+        url: "/published-courses",
+        method: "GET",
+      }),
+      providesTags: ["Refetch_Creator_Course"],
     }),
     getAllAdminCourse: builder.query({
       query: () => ({
@@ -57,7 +64,13 @@ export const courseApi = createApi({
       providesTags: ["Refetch_Lecture"],
     }),
     editLecture: builder.mutation({
-      query: ({ courseId, lectureId, lectureTitle, isPreviewFree, videoInfo }) => ({
+      query: ({
+        courseId,
+        lectureId,
+        lectureTitle,
+        isPreviewFree,
+        videoInfo,
+      }) => ({
         url: `/${courseId}/lecture/${lectureId}`,
         method: "POST",
         body: { lectureTitle, isPreviewFree, videoInfo },
@@ -78,6 +91,13 @@ export const courseApi = createApi({
       }),
       providesTags: ["Refetch_Creator_Course"],
     }),
+    togglePublishCourse: builder.mutation({
+      query: ({ courseId, query }) => ({
+        url: `/${courseId}?publish=${query}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["Refetch_Creator_Course"],
+    }),
   }),
 });
 
@@ -90,7 +110,9 @@ export const {
   useCreateLectureMutation,
   useDeleteLectureMutation,
   useGetAllAdminCourseQuery,
+  useGetPublishedCoursesQuery,
   useGetLectureByCourseIdQuery,
+  useTogglePublishCourseMutation,
 } = courseApi;
 
 // mutation -> data bhejna

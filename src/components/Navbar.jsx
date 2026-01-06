@@ -49,7 +49,7 @@ const Navbar = () => {
     >
       {/* Desktop Navbar */}
       <div className="max-w-7xl mx-auto hidden md:flex justify-between items-center gap-10 h-full">
-        <div className="flex items-center gap-2 m-5 p-5">
+        <div onClick={() => navigate("/")} className="flex items-center gap-2 m-5 p-5 cursor-pointer">
           <School size={"30"} />
           <h1 className="hidden md:block font-extrabold text-2xl">
             E-Learning
@@ -63,7 +63,7 @@ const Navbar = () => {
               <DropdownMenuTrigger>
                 <Avatar className="size-10">
                   <AvatarImage
-                    src={user.profilePhoto || "https://github.com/shadcn.png"}
+                    src={user.user.photoUrl || "https://github.com/shadcn.png"}
                   />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>

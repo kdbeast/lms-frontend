@@ -19,6 +19,7 @@ import { Loader2 } from "lucide-react";
 import {
   useEditCourseMutation,
   useGetCourseByIdQuery,
+  useTogglePublishCourseMutation,
 } from "../../../features/api/courseApi";
 import { Editor } from "primereact/editor";
 import { useNavigate } from "react-router";
@@ -27,7 +28,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 
-const BasicCourseTab = ({courseId}) => {
+const BasicCourseTab = ({ courseId }) => {
   const navigate = useNavigate();
 
   const [input, setInput] = useState({
@@ -86,7 +87,8 @@ const BasicCourseTab = ({courseId}) => {
   const updateCourseHandler = async () => {
     const formData = new FormData();
     Object.entries(input).forEach(([key, value]) => {
-      if (value) formData.append(key, key === "price" ? Number(value) : value);
+      if (value)
+        formData.append(key, key === "coursePrice" ? Number(value) : value);
     });
 
     await editCourse({ courseId, formData });
@@ -100,6 +102,33 @@ const BasicCourseTab = ({courseId}) => {
       toast.error(error.data.message);
     }
   }, [data, isSuccess, error]);
+
+  const [
+    togglePublishUnpublishCourse,
+    { data: publishData, isSuccess: publishSuccess, error: publishError },
+  ] = useTogglePublishCourseMutation();
+
+  const publishCourseHandler = async (action) => {
+    try {
+      await togglePublishUnpublishCourse({
+        courseId,
+        query: action,
+      });
+    } catch {
+      toast.error("Failed to update course status");
+    }
+  };
+
+  useEffect(() => {
+    if (publishSuccess) {
+      toast.success(publishData?.message || "Course status updated.");
+    }
+    if (publishError) {
+      toast.error(
+        publishError.data?.message || "Failed to update course status"
+      );
+    }
+  }, [publishSuccess, publishError, publishData]);
 
   if (courseLoading) {
     return <Loader2 className="animate-spin fixed top-1/2 left-2/3" />;
@@ -115,17 +144,17 @@ const BasicCourseTab = ({courseId}) => {
           </CardDescription>
         </div>
         <div className="flex gap-2">
-          {/* <Button
+          <Button
+            variant="outline"
             onClick={() =>
-              togglePublishUnpublishCourse(
-                course?.isPublished ? "false" : "true"
+              publishCourseHandler(
+                courseData?.course.isPublished ? "false" : "true"
               )
             }
-            variant="outline"
-            disabled={course?.lectures.length === 0}
+            disabled={courseData?.course.lectures.length === 0}
           >
-            {course?.isPublished ? "Unpublish" : "Publish"}
-          </Button> */}
+            {courseData?.course.isPublished ? "Unpublish" : "Publish"}
+          </Button>
           <Button>Remove Course</Button>
         </div>
       </CardHeader>

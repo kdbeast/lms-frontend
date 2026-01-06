@@ -11,9 +11,9 @@ const Course = ({ course }) => {
     >
       <div className="relative">
         <img
-          src={course.courseImage}
+          src={course.courseThumbnail}
           alt={course.courseTitle}
-          className="w-full h-64 object-cover rounded-t-lg"
+          className="w-full h-[200px] object-cover rounded-t-lg"
         />
         <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent rounded-t-lg"></div>
       </div>
@@ -26,10 +26,10 @@ const Course = ({ course }) => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Avatar className="h-8 w-8">
-              <AvatarImage src={course.photoUrl} />
+              <AvatarImage src={course.creator.photoUrl} />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
-            <h1 className="font-medium text-sm">{course.name}</h1>
+            <h1 className="font-medium text-sm">{course.creator.name}</h1>
           </div>
           <Badge className="bg-blue-600 text-white px-2 py-1 text-xs rounded-full">
             {course.courseLevel}
