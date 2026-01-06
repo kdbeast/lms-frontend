@@ -7,6 +7,7 @@ import HeroSection from "./pages/student/HeroSection";
 
 import Sidebar from "./pages/admin/Sidebar";
 import Dashboard from "./pages/admin/Dashboard";
+import CourseDetail from "./pages/student/CourseDetail";
 import CourseTable from "./pages/admin/course/CourseTable";
 
 import AddCourse from "./pages/admin/course/AddCourse";
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
       {
         path: "/profile",
         element: <Profile />,
+      },
+      {
+        path: "/course-detail/:courseId",
+        element: <CourseDetail />,
       },
 
       // Admin Routes
