@@ -11,7 +11,7 @@ import {
 } from "../../components/ui/card";
 // import ReactPlayer from "react-player/lazy";
 import { Separator } from "../../components/ui/separator";
-// import BuyCourseButton from "../../components/BuyCourseButton";
+import BuyCourseButton from "../../components/BuyCourseButton";
 // import { useGetCourseDetailsWithStatusQuery } from "../../api/purchaseApi";
 
 const CourseDetails = () => {
@@ -20,6 +20,7 @@ const CourseDetails = () => {
 
   const isLoading = false;
   const isError = false;
+  const purchased = false;
 
   // Use the new query to fetch both course details and purchase status
   //   const { data, isLoading, isError } =
@@ -31,9 +32,9 @@ const CourseDetails = () => {
   //   const { course, purchased } = data;
 
   const handleContinueCourse = () => {
-    // if (purchased) {
-    //   navigate(`/course-progress/${courseId}`);
-    // }
+    if (purchased) {
+      navigate(`/course-progress/${courseId}`);
+    }
   };
 
   return (
@@ -138,7 +139,7 @@ const CourseDetails = () => {
 
             {/* Card Footer */}
             <CardFooter className="flex justify-center p-4">
-              {/* {purchased ? (
+              {purchased ? (
                 <button
                   onClick={handleContinueCourse}
                   className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded transition"
@@ -147,7 +148,7 @@ const CourseDetails = () => {
                 </button>
               ) : (
                 <BuyCourseButton courseId={courseId} />
-              )} */}Purchase Course
+              )}
             </CardFooter>
           </Card>
         </div>

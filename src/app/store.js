@@ -2,10 +2,16 @@ import rootReducer from "./rootReducer";
 import { configureStore } from "@reduxjs/toolkit";
 import { authApi } from "../features/api/authApi";
 import { courseApi } from "../features/api/courseApi";
+import { purchaseApi } from "../features/api/purchaseApi";
 
 const appStore = configureStore({
   reducer: rootReducer,
-  middleware: (get) => get().concat(authApi.middleware, courseApi.middleware),
+  middleware: (get) =>
+    get().concat(
+      authApi.middleware,
+      courseApi.middleware,
+      purchaseApi.middleware
+    ),
 });
 
 const initialiseApp = async () => {
