@@ -17,6 +17,13 @@ import EditCourse from "./pages/admin/course/EditCourse";
 import EditLecture from "./pages/admin/lecture/EditLecture";
 import CreateLecture from "./pages/admin/lecture/CreateLecture";
 import { createBrowserRouter, RouterProvider } from "react-router";
+import PurchaseCourseProtectedRoute from "./components/PurchaseCourseProtectedRoute";
+
+import {
+  AdminRoute,
+  AuthenticatedUserRoute,
+  ProtectedRoute,
+} from "./components/ProtectedRoutes";
 
 const router = createBrowserRouter([
   {
@@ -34,33 +41,69 @@ const router = createBrowserRouter([
       },
       {
         path: "/login",
-        element: <Login />,
+        element: (
+          <AuthenticatedUserRoute>
+            {" "}
+            <Login />{" "}
+          </AuthenticatedUserRoute>
+        ),
       },
       {
         path: "/my-learning",
-        element: <MyLearning />,
+        element: (
+          <ProtectedRoute>
+            {" "}
+            <MyLearning />{" "}
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/profile",
-        element: <Profile />,
+        element: (
+          <ProtectedRoute>
+            {" "}
+            <Profile />{" "}
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/course/search",
-        element: <SearchPage />,
+        element: (
+          <ProtectedRoute>
+            {" "}
+            <SearchPage />{" "}
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/course-detail/:courseId",
-        element: <CourseDetail />,
+        element: (
+          <ProtectedRoute>
+            {" "}
+            <CourseDetail />{" "}
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/course-progress/:courseId",
-        element: <CourseProgress />,
+        element: (
+          <ProtectedRoute>
+            <PurchaseCourseProtectedRoute>
+              <CourseProgress />
+            </PurchaseCourseProtectedRoute>
+          </ProtectedRoute>
+        ),
       },
 
       // Admin Routes
       {
         path: "/admin",
-        element: <Sidebar />,
+        element: (
+          <AdminRoute>
+            {" "}
+            <Sidebar />{" "}
+          </AdminRoute>
+        ),
         children: [
           {
             path: "dashboard",

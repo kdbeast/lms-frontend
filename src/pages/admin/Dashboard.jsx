@@ -7,6 +7,7 @@ import {
   CartesianGrid,
   ResponsiveContainer,
 } from "recharts";
+import { PacmanLoader } from "react-spinners";
 import { useGetAllPurchasedCourseQuery } from "@/features/api/purchaseApi";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -14,7 +15,9 @@ const Dashboard = () => {
   const { data, isLoading, isError } = useGetAllPurchasedCourseQuery();
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div className="flex items-center justify-center text-center font-bold text-lg text-gray-500 dark:text-gray-400 p-4 mx-auto w-full dark:bg-[#0A0A0A] bg-gray-50 shadow-lg rounded-lg h-screen">
+        <PacmanLoader color="#000" size={20} />
+      </div>;
   }
 
   if (isError) {

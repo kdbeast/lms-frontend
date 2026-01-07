@@ -81,7 +81,7 @@ const Navbar = () => {
                   Logout
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                {user.user.role === "instructor" && (
+                {user?.user?.role === "instructor" && (
                   <DropdownMenuItem>
                     <Link to="/admin/dashboard">Dashboard</Link>
                   </DropdownMenuItem>
@@ -107,7 +107,7 @@ const Navbar = () => {
           <h1 className="font-extrabold text-2xl">E-Learning</h1>
         </div>
         <div className="flex items-center gap-5">
-          <MobileNavbar />
+          <MobileNavbar navigate={navigate} user={user} />
           <DarkMode />
         </div>
       </div>
@@ -117,8 +117,7 @@ const Navbar = () => {
 
 export default Navbar;
 
-const MobileNavbar = () => {
-  const role = "instructor";
+const MobileNavbar = ({ navigate ,user}) => {
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -133,24 +132,24 @@ const MobileNavbar = () => {
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle className="text-center font-extrabold text-2xl">
+          <SheetTitle onClick={() => navigate("/")} className="text-center font-extrabold text-2xl">
             E-Learning
           </SheetTitle>
         </SheetHeader>
         <Separator />
         <nav className="flex flex-col gap-2 p-2">
-          <span className="font-semibold cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800 hover:text-gray-800 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-800 hover:shadow-md dark:hover:shadow-md rounded-full hover:cursor-pointer p-2 flex justify-center items-center gap-2">
+          <Link to="/my-learning" className="font-semibold cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800 hover:text-gray-800 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-800 hover:shadow-md dark:hover:shadow-md rounded-full hover:cursor-pointer p-2 flex justify-center items-center gap-2">
             My Learning
-          </span>
-          <span className="font-semibold cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800 hover:text-gray-800 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-800 hover:shadow-md dark:hover:shadow-md rounded-full hover:cursor-pointer p-2 flex justify-center items-center gap-2">
+          </Link>
+          <Link to="/profile" className="font-semibold cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800 hover:text-gray-800 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-800 hover:shadow-md dark:hover:shadow-md rounded-full hover:cursor-pointer p-2 flex justify-center items-center gap-2">
             Edit Profile
-          </span>
-          <span className="font-semibold cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800 hover:text-gray-800 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-800 hover:shadow-md dark:hover:shadow-md rounded-full hover:cursor-pointer p-2 flex justify-center items-center gap-2">
+          </Link>
+          <Link to="/login" className="font-semibold cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800 hover:text-gray-800 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-800 hover:shadow-md dark:hover:shadow-md rounded-full hover:cursor-pointer p-2 flex justify-center items-center gap-2">
             Logout
-          </span>
-          {role === "instructor" && (
+          </Link>
+          {user?.user?.role === "instructor" && (
             <SheetFooter>
-              <Button type="submit" variant="outline">
+              <Button onClick={() => navigate("/admin/dashboard")} type="submit" variant="outline">
                 Dashboard
               </Button>
             </SheetFooter>

@@ -10,6 +10,7 @@ import {
   CardTitle,
 } from "../../components/ui/card";
 import ReactPlayer from "react-player";
+import { PacmanLoader } from "react-spinners";
 import { Separator } from "../../components/ui/separator";
 import BuyCourseButton from "../../components/BuyCourseButton";
 import { useGetCourseDetailWithStatusQuery } from "../../features/api/purchaseApi";
@@ -22,7 +23,12 @@ const CourseDetails = () => {
   const { data, isLoading, isError } =
     useGetCourseDetailWithStatusQuery(courseId);
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading)
+    return (
+      <div className="flex items-center justify-center text-center font-bold text-lg text-gray-500 dark:text-gray-400 p-4 mx-auto w-full dark:bg-[#0A0A0A] bg-gray-50 shadow-lg rounded-lg h-screen">
+        <PacmanLoader color="#000" size={20} />
+      </div>
+    );
   if (isError) return <p>Failed to load course details.</p>;
 
   const { course, purchased } = data;
@@ -34,7 +40,7 @@ const CourseDetails = () => {
   };
 
   return (
-    <div className="space-y-5 mt-16">
+    <div className="space-y-5">
       <div className="bg-[#2D2F31] text-white">
         <div className="max-w-7xl mx-auto py-8 px-4 md:px-8 flex flex-col gap-2">
           <h1 className="font-bold text-2xl md:text-3xl">

@@ -1,16 +1,17 @@
 import { toast } from "sonner";
+import { useParams } from "react-router";
+import {PacmanLoader} from "react-spinners";
+import { useEffect, useState } from "react";
 import {
   useGetCourseProgressQuery,
   useUpdateLectureProgressMutation,
   useCompleteCourseMutation,
   useInCompleteCourseMutation,
 } from "../../features/api/courseProgressApi";
-import { useParams } from "react-router";
-import { useEffect, useState } from "react";
 import { Badge } from "../../components/ui/badge";
 import { Button } from "../../components/ui/button";
+import { CheckCircle, CheckCircle2, CirclePlay } from "lucide-react";
 import { Card, CardContent, CardTitle } from "../../components/ui/card";
-import { BadgeInfo, CheckCircle, CheckCircle2, CirclePlay } from "lucide-react";
 
 const CourseProgress = () => {
   const { courseId } = useParams();
@@ -53,8 +54,18 @@ const CourseProgress = () => {
   const [currentLecture, setCurrentLecture] = useState(null);
 
   // Handle loading and error states
-  if (isLoading) return <p>Loading...</p>;
-  if (isError) return <p>Failed to load course details.</p>;
+  if (isLoading)
+    return (
+      <p className="flex items-center justify-center text-center font-bold text-lg text-gray-500 dark:text-gray-400 p-4 mx-auto w-full dark:bg-[#0A0A0A] bg-gray-50 shadow-lg rounded-lg h-screen">
+        <PacmanLoader color="#000" size={20} />
+      </p>
+    );
+  if (isError)
+    return (
+      <p className="flex items-center justify-center text-center font-bold text-lg text-gray-500 dark:text-gray-400 p-4 mx-auto w-full dark:bg-[#0A0A0A] bg-gray-50 shadow-lg rounded-lg h-screen">
+        Failed to load course details.
+      </p>
+    );
 
   const { courseDetails, progress, completed } = data.data;
 
@@ -104,7 +115,7 @@ const CourseProgress = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-4 mt-20">
+    <div className="max-w-7xl mx-auto p-4">
       {/* Display Course Name */}
       <div className="flex justify-between mb-4">
         <h1 className="text-2xl font-bold">{courseTitle}</h1>
