@@ -1,15 +1,38 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  ResponsiveContainer,
-  LineChart,
-  CartesianGrid,
+  Line,
   XAxis,
   YAxis,
   Tooltip,
-  Line,
+  LineChart,
+  CartesianGrid,
+  ResponsiveContainer,
 } from "recharts";
+import { useGetAllPurchasedCourseQuery } from "@/features/api/purchaseApi";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const Dashboard = () => {
+  const { data, isLoading, isError } = useGetAllPurchasedCourseQuery();
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (isError) {
+    return <div>Error fetching data</div>;
+  }
+
+  const courseData = data?.map((course) => ({
+    name: course.courseId.courseTitle,
+    price: course.courseId.coursePrice,
+  }));
+
+  const totalRevenue = data?.reduce(
+    (total, course) => total + (course.courseId.coursePrice || 0),
+    0
+  );
+
+  const totalSales = data?.length;
+
   return (
     <div className="mt-20 ml-10 grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
       {/* Total Sales Card */}
@@ -20,7 +43,7 @@ const Dashboard = () => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-3xl font-bold text-blue-600">0</p>
+          <p className="text-3xl font-bold text-blue-600">{totalSales}</p>
         </CardContent>
       </Card>
 
@@ -32,7 +55,7 @@ const Dashboard = () => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-3xl font-bold text-blue-600">0₹</p>
+          <p className="text-3xl font-bold text-blue-600">₹{totalRevenue}</p>
         </CardContent>
       </Card>
 
@@ -45,7 +68,7 @@ const Dashboard = () => {
         </CardHeader>
         <CardContent>
           <ResponsiveContainer width="100%" height={250}>
-            <LineChart data={[]}>
+            <LineChart data={courseData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
               <XAxis
                 dataKey="name"
