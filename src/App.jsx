@@ -9,6 +9,7 @@ import Sidebar from "./pages/admin/Sidebar";
 import Dashboard from "./pages/admin/Dashboard";
 import CourseDetail from "./pages/student/CourseDetail";
 import CourseTable from "./pages/admin/course/CourseTable";
+import CourseProgress from "./pages/student/CourseProgress";
 
 import AddCourse from "./pages/admin/course/AddCourse";
 import EditCourse from "./pages/admin/course/EditCourse";
@@ -45,6 +46,10 @@ const router = createBrowserRouter([
       {
         path: "/course-detail/:courseId",
         element: <CourseDetail />,
+      },
+      {
+        path: "/course-progress/:courseId",
+        element: <CourseProgress />,
       },
 
       // Admin Routes

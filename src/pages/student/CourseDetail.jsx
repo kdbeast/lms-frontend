@@ -9,27 +9,23 @@ import {
   CardHeader,
   CardTitle,
 } from "../../components/ui/card";
-// import ReactPlayer from "react-player/lazy";
+import ReactPlayer from "react-player"
 import { Separator } from "../../components/ui/separator";
 import BuyCourseButton from "../../components/BuyCourseButton";
-// import { useGetCourseDetailsWithStatusQuery } from "../../api/purchaseApi";
+import { useGetCourseDetailWithStatusQuery } from "../../features/api/purchaseApi";
 
 const CourseDetails = () => {
   const { courseId } = useParams();
   const navigate = useNavigate();
 
-  const isLoading = false;
-  const isError = false;
-  const purchased = false;
-
   // Use the new query to fetch both course details and purchase status
-  //   const { data, isLoading, isError } =
-  // useGetCourseDetailsWithStatusQuery(courseId);
+  const { data, isLoading, isError } =
+    useGetCourseDetailWithStatusQuery(courseId);
 
   if (isLoading) return <p>Loading...</p>;
   if (isError) return <p>Failed to load course details.</p>;
 
-  //   const { course, purchased } = data;
+  const { course, purchased } = data;
 
   const handleContinueCourse = () => {
     if (purchased) {
@@ -42,22 +38,20 @@ const CourseDetails = () => {
       <div className="bg-[#2D2F31] text-white">
         <div className="max-w-7xl mx-auto py-8 px-4 md:px-8 flex flex-col gap-2">
           <h1 className="font-bold text-2xl md:text-3xl">
-            {/* {course.courseTitle} */}Next.js Bootcamp Course
+            {course.courseTitle}
           </h1>
-          {/* <p className="text-base md:text-lg">{course.subTitle}</p> */}Lorem
-          ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.
+          <p className="text-base md:text-lg">{course.subTitle}</p>
           <p>
             Created By{" "}
             <span className="text-[#C0C4FC] underline italic">
-              {/* {course.creator.name} */}Karan Jamwal
+              {course.creator.name}
             </span>
           </p>
           <div className="flex items-center gap-2 text-sm">
             <BadgeInfo size={"16"} />
-            {/* <p>Last updated {course.createdAt.split("T")[0]}</p> */}
-            14/10/2004
+            <p>Last updated {course.createdAt.split("T")[0]}</p>
           </div>
-          {/* <p>Students enrolled: {course.enrolledStudents.length}</p> */}200
+          <p>Students enrolled: {course.enrolledStudents.length}</p>
         </div>
       </div>
 
@@ -66,38 +60,19 @@ const CourseDetails = () => {
           <h1 className="font-bold text-xl md:text-2xl">Description</h1>
           <p
             className="text-sm"
-            // dangerouslySetInnerHTML={{ __html: course.description }}
-          />{" "}
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Praesentium,
-          eius accusamus odio voluptate earum vitae ducimus. Totam maiores eius,
-          non dolorem optio tempore vel laudantium magnam hic itaque porro!
-          Aliquid nihil suscipit possimus ex deserunt ad repudiandae labore
-          ipsam cupiditate ea nam quis unde ut voluptatibus eius, aliquam minus,
-          obcaecati magni rem. Omnis tempora esse numquam accusantium neque id
-          autem vitae excepturi placeat! Sunt iure in aspernatur alias earum
-          vitae debitis quam corrupti, eligendi, nihil sed aliquid perferendis
-          adipisci nostrum! Commodi unde ut cum, explicabo tempora quos cumque
-          repellat iusto voluptas a illo odio ipsam eaque quidem accusantium eum
-          aperiam!
+            dangerouslySetInnerHTML={{ __html: course.description }}
+          />
           <Card>
             <CardHeader>
               <CardTitle className="font-bold text-lg md:text-2xl">
                 Course Content
               </CardTitle>
               <CardDescription>
-                {/* {course.lectures.length} lectures */}10 lectures
+                {course.lectures.length} lectures
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((lecture) => (
-                <div key={lecture} className="flex items-center gap-3 text-sm">
-                  <span>
-                    <PlayCircle size={"14"} />
-                  </span>
-                  <p>Lecture {lecture}</p>
-                </div>
-              ))}
-              {/* {course.lectures.map((lecture) => (
+              {course.lectures.map((lecture) => (
                 <div
                   key={lecture._id}
                   className="flex items-center gap-3 text-sm"
@@ -111,7 +86,7 @@ const CourseDetails = () => {
                   </span>
                   <p>{lecture.lectureTitle}</p>
                 </div>
-              ))} */}
+              ))}
             </CardContent>
           </Card>
         </div>
@@ -121,19 +96,19 @@ const CourseDetails = () => {
             {/* Card Content */}
             <CardContent className="p-4 flex flex-col">
               <div className="w-full aspect-video mb-4">
-                {/* <ReactPlayer
+                <ReactPlayer
                   width="100%"
                   height="100%"
-                //   url={course.lectures[0].videoUrl}
                   controls={true}
-                /> */}
+                  src={course.lectures[0].videoUrl}
+                />
               </div>
               <h1 className="text-lg md:text-xl font-semibold">
-                {/* {course.lectures[0].lectureTitle} */}Lecture 1
+                {course.lectures[0].lectureTitle}
               </h1>
               <Separator className="my-2" />
               <h1 className="text-lg md:text-xl font-semibold">
-                {/* ₹{course.coursePrice} */}₹100
+                ₹{course.coursePrice}
               </h1>
             </CardContent>
 
