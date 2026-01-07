@@ -11,6 +11,7 @@ import CourseDetail from "./pages/student/CourseDetail";
 import CourseTable from "./pages/admin/course/CourseTable";
 import CourseProgress from "./pages/student/CourseProgress";
 
+import SearchPage from "./pages/student/SearchPage";
 import AddCourse from "./pages/admin/course/AddCourse";
 import EditCourse from "./pages/admin/course/EditCourse";
 import EditLecture from "./pages/admin/lecture/EditLecture";
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
       {
         path: "/profile",
         element: <Profile />,
+      },
+      {
+        path: "/course/search",
+        element: <SearchPage />,
       },
       {
         path: "/course-detail/:courseId",

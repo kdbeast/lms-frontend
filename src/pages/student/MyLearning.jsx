@@ -1,11 +1,12 @@
 import React from "react";
 import Course from "./Course";
+import { useGetUserProfileQuery } from "../../features/api/authApi";
 
 const MyLearning = () => {
-  const isLoading = false;
-
   // Ensure myLearning is initialized to an empty array if userProfile is not yet loaded
-  const myLearning = [];
+  const { data, isLoading } = useGetUserProfileQuery();
+
+  const myLearning = data?.user?.enrolledCourses || [];
 
   return (
     <div className="max-w-4xl mx-auto my-24 px-4 md:px-0">

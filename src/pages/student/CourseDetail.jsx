@@ -9,7 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "../../components/ui/card";
-import ReactPlayer from "react-player"
+import ReactPlayer from "react-player";
 import { Separator } from "../../components/ui/separator";
 import BuyCourseButton from "../../components/BuyCourseButton";
 import { useGetCourseDetailWithStatusQuery } from "../../features/api/purchaseApi";
@@ -58,10 +58,11 @@ const CourseDetails = () => {
       <div className="max-w-7xl mx-auto my-5 px-4 md:px-8 flex flex-col lg:flex-row justify-between gap-10">
         <div className="w-full lg:w-1/2 space-y-5">
           <h1 className="font-bold text-xl md:text-2xl">Description</h1>
-          <p
+          <div
             className="text-sm"
             dangerouslySetInnerHTML={{ __html: course.description }}
           />
+
           <Card>
             <CardHeader>
               <CardTitle className="font-bold text-lg md:text-2xl">
