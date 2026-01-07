@@ -4,7 +4,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const Course = ({ course }) => {
-  console.log(course._id);
   return (
     <Link to={`/course-detail/${course._id}`}>
       <Card

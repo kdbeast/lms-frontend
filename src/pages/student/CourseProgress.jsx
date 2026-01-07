@@ -1,10 +1,10 @@
 import { toast } from "sonner";
-// import {
-//   useGetCourseProgressQuery,
-//   useUpdateLectureProgressMutation,
-//   useCompleteCourseMutation,
-//   useInCompleteCourseMutation,
-// } from "../../features/api/courseProgressApi";
+import {
+  useGetCourseProgressQuery,
+  useUpdateLectureProgressMutation,
+  useCompleteCourseMutation,
+  useInCompleteCourseMutation,
+} from "../../features/api/courseProgressApi";
 import { useParams } from "react-router";
 import { useEffect, useState } from "react";
 import { Badge } from "../../components/ui/badge";
@@ -13,73 +13,41 @@ import { Card, CardContent, CardTitle } from "../../components/ui/card";
 import { BadgeInfo, CheckCircle, CheckCircle2, CirclePlay } from "lucide-react";
 
 const CourseProgress = () => {
-  const params = useParams();
-
-  const isLoading = false;
-  const isError = false;
-  const data = {
-    data: {
-      courseDetails: {
-        courseTitle: "Course Title",
-        lectures: [
-          {
-            _id: "lecture1",
-            lectureTitle: "Lecture 1",
-            videoUrl: "https://example.com/lecture1.mp4",
-          },
-          {
-            _id: "lecture2",
-            lectureTitle: "Lecture 2",
-            videoUrl: "https://example.com/lecture2.mp4",
-          },
-        ],
-      },
-      progress: [
-        {
-          lectureId: "lecture1",
-          viewed: true,
-        },
-        {
-          lectureId: "lecture2",
-          viewed: false,
-        },
-      ],
-      completed: false,
-    },
-  };
+  const { courseId } = useParams();
 
   // Fetch course progress
-  // const { data, isLoading, isError, refetch } = useGetCourseProgressQuery(
-  //   params.courseId
-  // );
+  const { data, isLoading, isError, refetch } =
+    useGetCourseProgressQuery(courseId);
 
   // Mutation hooks
-  // const [updateLectureProgress] = useUpdateLectureProgressMutation();
-  // const [
-  //   completeCourse,
-  //   { data: markCompletedData, isSuccess: completedSuccess },
-  // ] = useCompleteCourseMutation();
-  // const [
-  //   inCompleteCourse,
-  //   { data: markInCompletedData, isSuccess: inCompletedSuccess },
-  // ] = useInCompleteCourseMutation();
+  const [updateLectureProgress] = useUpdateLectureProgressMutation();
 
-  // useEffect(() => {
-  //   if (completedSuccess) {
-  //     refetch();
-  //     toast.success(markCompletedData.message || "Marked as complete");
-  //   }
-  //   if (inCompletedSuccess) {
-  //     refetch();
-  //     toast.success(markInCompletedData.message || "Marked as incomplete");
-  //   }
-  // }, [
-  //   completedSuccess,
-  //   inCompletedSuccess,
-  //   markCompletedData,
-  //   markInCompletedData,
-  //   refetch,
-  // ]);
+  const [
+    completeCourse,
+    { data: markCompletedData, isSuccess: completedSuccess },
+  ] = useCompleteCourseMutation();
+
+  const [
+    inCompleteCourse,
+    { data: markInCompletedData, isSuccess: inCompletedSuccess },
+  ] = useInCompleteCourseMutation();
+
+  useEffect(() => {
+    if (completedSuccess) {
+      refetch();
+      toast.success(markCompletedData.message || "Marked as complete");
+    }
+    if (inCompletedSuccess) {
+      refetch();
+      toast.success(markInCompletedData.message || "Marked as incomplete");
+    }
+  }, [
+    completedSuccess,
+    inCompletedSuccess,
+    markCompletedData,
+    markInCompletedData,
+    refetch,
+  ]);
 
   // State for the current lecture
   const [currentLecture, setCurrentLecture] = useState(null);
@@ -89,6 +57,7 @@ const CourseProgress = () => {
   if (isError) return <p>Failed to load course details.</p>;
 
   const { courseDetails, progress, completed } = data.data;
+
   const { courseTitle } = courseDetails;
 
   // Initialize the first lecture if not set
@@ -96,36 +65,37 @@ const CourseProgress = () => {
     currentLecture || (courseDetails.lectures && courseDetails.lectures[0]);
 
   // Update lecture progress when the user watches a lecture video
-  // const handleLectureProgress = async (lectureId) => {
-  //   await updateLectureProgress({ courseId: params.courseId, lectureId });
-  //   refetch();
-  // };
+  const handleLectureProgress = async (lectureId) => {
+    await updateLectureProgress({ courseId: courseId, lectureId });
+    refetch();
+  };
 
   // Move to the next lecture automatically when current is completed
   const handleLectureEnd = () => {
+    const activeLecture = currentLecture || courseDetails.lectures[0];
     const currentIndex = courseDetails.lectures.findIndex(
-      (lecture) => lecture._id === currentLecture._id
+      (lecture) => lecture._id === activeLecture?._id
     );
     const nextLecture = courseDetails.lectures[currentIndex + 1];
     if (nextLecture) {
       setCurrentLecture(nextLecture);
-      // handleLectureProgress(nextLecture._id);
+      handleLectureProgress(nextLecture._id);
     }
   };
 
   // Handle selecting a specific lecture to watch
   const handleSelectLecture = (lecture) => {
     setCurrentLecture(lecture);
-    // handleLectureProgress(lecture._id);
+    handleLectureProgress(lecture._id);
   };
 
   // Handle marking the course as completed
   const handleCompleteCourse = async () => {
-    // await completeCourse(params.courseId);
+    await completeCourse(courseId);
   };
   // Handle marking the course as incompleted
   const handleInCompleteCourse = async () => {
-    // await inCompleteCourse(params.courseId);
+    await inCompleteCourse(courseId);
   };
 
   // Determine if a lecture is completed by checking progress array
@@ -139,10 +109,10 @@ const CourseProgress = () => {
       <div className="flex justify-between mb-4">
         <h1 className="text-2xl font-bold">{courseTitle}</h1>
         <Button
-          onClick={completed ? handleInCompleteCourse : handleCompleteCourse}
           variant={`${completed ? "outline" : "default"}`}
+          onClick={completed ? handleInCompleteCourse : handleCompleteCourse}
         >
-          {completed ? (
+          {completed || progress.length === courseDetails.lectures.length ? (
             <div className="flex items-center">
               <CheckCircle className="h-4 w-4 mr-2" /> <span>Completed</span>
             </div>
@@ -153,17 +123,16 @@ const CourseProgress = () => {
       </div>
 
       <div className="flex flex-col md:flex-row gap-6">
-
         {/* Video Section */}
         <div className="flex-1 md:w-3/5 h-fit rounded-lg shadow-lg p-4">
           <div className="relative overflow-hidden md:rounded-lg shadow-md">
             <video
-              src={currentLecture?.videoUrl || initialLecture.videoUrl}
               controls
               className="w-full h-auto md:rounded-lg"
-              // onPlay={() =>
-              //   handleLectureProgress(currentLecture?._id || initialLecture._id)
-              // } // Call when video starts playing
+              src={currentLecture?.videoUrl || initialLecture.videoUrl}
+              onPlay={() =>
+                handleLectureProgress(currentLecture?._id || initialLecture._id)
+              } // Call when video starts playing
               onEnded={handleLectureEnd} // Move to the next lecture automatically
             />
           </div>
@@ -190,13 +159,14 @@ const CourseProgress = () => {
             className="flex-1 overflow-y-auto"
             style={{ maxHeight: "500px" }}
           >
-            
             {/* Set a max height for the scrollable area */}
             {courseDetails?.lectures.map((lecture) => (
               <Card
                 key={lecture._id}
                 className={`mb-3 hover:cursor-pointer transition transform ${
-                  lecture._id === currentLecture?._id ? "bg-gray-200" : ""
+                  lecture._id === currentLecture?._id
+                    ? "bg-gray-200 dark:bg-gray-700"
+                    : ""
                 }`}
                 onClick={() => handleSelectLecture(lecture)} // Enable lecture selection
               >
