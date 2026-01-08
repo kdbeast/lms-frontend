@@ -1,4 +1,5 @@
 import Login from "./pages/Login";
+import Register from "./pages/Register";
 import MainLayout from "./layout/MainLayout";
 import Courses from "./pages/student/Courses";
 import Profile from "./pages/student/Profile";
@@ -37,6 +38,15 @@ const router = createBrowserRouter([
             <HeroSection />
             <Courses />
           </>
+        ),
+      },
+      {
+        path: "/register",
+        element: (
+          <AuthenticatedUserRoute>
+            {" "}
+            <Register />{" "}
+          </AuthenticatedUserRoute>
         ),
       },
       {

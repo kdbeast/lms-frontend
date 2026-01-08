@@ -135,7 +135,7 @@ const BasicCourseTab = ({ courseId }) => {
   }
 
   return (
-    <Card>
+    <Card className="py-6">
       <CardHeader className="flex flex-row justify-between">
         <div>
           <CardTitle>Basic Information</CardTitle>

@@ -52,7 +52,7 @@ const Sidebar = () => {
             side="left"
             className="bg-[#f0f0f0] dark:bg-[#0A0A0A] p-5"
           >
-            <div className="space-y-4">
+            <div className="space-y-4 mt-5">
               <Link
                 to="dashboard"
                 className={`flex items-center gap-4 font-semibold transition ${

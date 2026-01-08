@@ -93,10 +93,20 @@ const Navbar = () => {
             </DropdownMenu>
           ) : (
             <div className="flex items-center gap-2">
-              <Button variant="outline" onClick={() => navigate("/login")}>
+              <Button
+                variant={"default"}
+                onClick={() => navigate("/login")}
+                className="dark:bg-white dark:text-black"
+              >
                 Login
               </Button>
-              <Button onClick={() => navigate("/login")}>Register</Button>
+              <Button
+                variant={"default"}
+                onClick={() => navigate("/register")}
+                className="dark:bg-white dark:text-black"
+              >
+                Register
+              </Button>
             </div>
           )}
           <DarkMode />

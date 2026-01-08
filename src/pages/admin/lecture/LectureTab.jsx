@@ -126,7 +126,7 @@ const LectureTab = () => {
     );
 
   return (
-    <Card>
+    <Card className="py-6">
       <CardHeader className="flex justify-between">
         <div>
           <CardTitle>Edit Lecture</CardTitle>

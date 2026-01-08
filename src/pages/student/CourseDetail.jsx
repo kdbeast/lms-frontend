@@ -69,7 +69,7 @@ const CourseDetails = () => {
             dangerouslySetInnerHTML={{ __html: course.description }}
           />
 
-          <Card>
+          <Card className="py-6">
             <CardHeader>
               <CardTitle className="font-bold text-lg md:text-2xl">
                 Course Content

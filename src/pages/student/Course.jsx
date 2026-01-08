@@ -4,11 +4,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const Course = ({ course }) => {
+  
   return (
     <Link to={`/course-detail/${course._id}`}>
       <Card
         key={course._id}
-        className="overflow-hidden rounded-lg dark:bg-gray-800 bg-white shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 "
+        className="overflow-hidden rounded-lg dark:bg-gray-800 bg-white shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
       >
         <div className="relative">
           <img
@@ -19,9 +20,9 @@ const Course = ({ course }) => {
           <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent rounded-t-lg"></div>
         </div>
         <CardContent className="px-5 py-2 space-y-2">
-          <h1 className="hover:underline font-bold text-lg truncate">
-            {course.courseTitle}
-          </h1>
+            <h1 className="hover:underline font-bold text-lg truncate">
+              {course.courseTitle}
+            </h1>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Avatar className="h-8 w-8">

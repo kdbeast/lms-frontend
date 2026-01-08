@@ -1,3 +1,4 @@
+import { toast } from "sonner";
 import { userLoggedIn, userLoggedOut } from "../authSlice";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
@@ -17,10 +18,12 @@ export const authApi = createApi({
       }),
       async onQueryStarted(_, { queryFulfilled, dispatch }) {
         try {
-          const result = await queryFulfilled;
-          dispatch(userLoggedIn({ user: result.data.user }));
+          const { data } = await queryFulfilled;
+          dispatch(userLoggedIn({ user: data.user }));
+          toast.success(data.message || "User registered successfully");
         } catch (error) {
           console.log(error);
+          toast.error(error.error.data.message || "User registration failed");
         }
       },
     }),
@@ -32,10 +35,12 @@ export const authApi = createApi({
       }),
       async onQueryStarted(_, { queryFulfilled, dispatch }) {
         try {
-          const result = await queryFulfilled;
-          dispatch(userLoggedIn({ user: result.data.user }));
+          const { data } = await queryFulfilled;
+          dispatch(userLoggedIn({ user: data.user }));
+          toast.success(data.message || "User logged in successfully");
         } catch (error) {
           console.log(error);
+          toast.error(error.error.data.message || "User login failed");
         }
       },
     }),
