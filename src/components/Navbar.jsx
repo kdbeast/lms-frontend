@@ -49,7 +49,10 @@ const Navbar = () => {
     >
       {/* Desktop Navbar */}
       <div className="max-w-7xl mx-auto hidden md:flex justify-between items-center gap-10 h-full">
-        <div onClick={() => navigate("/")} className="flex items-center gap-2 m-5 p-5 cursor-pointer">
+        <div
+          onClick={() => navigate("/")}
+          className="flex items-center gap-2 m-5 p-5 cursor-pointer"
+        >
           <School size={"30"} />
           <h1 className="hidden md:block font-extrabold text-2xl">
             E-Learning
@@ -104,7 +107,9 @@ const Navbar = () => {
       <div className="flex md:hidden items-center justify-between px-4 h-full">
         <div className="flex items-center gap-2">
           <School size={"30"} />
-          <h1 className="font-extrabold text-2xl">E-Learning</h1>
+          <h1 onClick={() => navigate("/")} className="font-extrabold text-2xl">
+            E-Learning
+          </h1>
         </div>
         <div className="flex items-center gap-5">
           <MobileNavbar navigate={navigate} user={user} />
@@ -117,7 +122,7 @@ const Navbar = () => {
 
 export default Navbar;
 
-const MobileNavbar = ({ navigate ,user}) => {
+const MobileNavbar = ({ navigate, user }) => {
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -132,24 +137,40 @@ const MobileNavbar = ({ navigate ,user}) => {
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle onClick={() => navigate("/")} className="text-center font-extrabold text-2xl">
+          <SheetTitle
+            onClick={() => navigate("/")}
+            className="text-center font-extrabold text-2xl"
+          >
             E-Learning
           </SheetTitle>
         </SheetHeader>
         <Separator />
         <nav className="flex flex-col gap-2 p-2">
-          <Link to="/my-learning" className="font-semibold cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800 hover:text-gray-800 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-800 hover:shadow-md dark:hover:shadow-md rounded-full hover:cursor-pointer p-2 flex justify-center items-center gap-2">
+          <Link
+            to="/my-learning"
+            className="font-semibold cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800 hover:text-gray-800 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-800 hover:shadow-md dark:hover:shadow-md rounded-full hover:cursor-pointer p-2 flex justify-center items-center gap-2"
+          >
             My Learning
           </Link>
-          <Link to="/profile" className="font-semibold cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800 hover:text-gray-800 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-800 hover:shadow-md dark:hover:shadow-md rounded-full hover:cursor-pointer p-2 flex justify-center items-center gap-2">
+          <Link
+            to="/profile"
+            className="font-semibold cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800 hover:text-gray-800 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-800 hover:shadow-md dark:hover:shadow-md rounded-full hover:cursor-pointer p-2 flex justify-center items-center gap-2"
+          >
             Edit Profile
           </Link>
-          <Link to="/login" className="font-semibold cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800 hover:text-gray-800 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-800 hover:shadow-md dark:hover:shadow-md rounded-full hover:cursor-pointer p-2 flex justify-center items-center gap-2">
+          <Link
+            to="/login"
+            className="font-semibold cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800 hover:text-gray-800 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-800 hover:shadow-md dark:hover:shadow-md rounded-full hover:cursor-pointer p-2 flex justify-center items-center gap-2"
+          >
             Logout
           </Link>
           {user?.user?.role === "instructor" && (
             <SheetFooter>
-              <Button onClick={() => navigate("/admin/dashboard")} type="submit" variant="outline">
+              <Button
+                onClick={() => navigate("/admin/dashboard")}
+                type="submit"
+                variant="outline"
+              >
                 Dashboard
               </Button>
             </SheetFooter>

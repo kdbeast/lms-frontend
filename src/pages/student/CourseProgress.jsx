@@ -1,6 +1,6 @@
 import { toast } from "sonner";
 import { useParams } from "react-router";
-import {PacmanLoader} from "react-spinners";
+import { PacmanLoader } from "react-spinners";
 import { useEffect, useState } from "react";
 import {
   useGetCourseProgressQuery,
@@ -120,10 +120,18 @@ const CourseProgress = () => {
       <div className="flex justify-between mb-4">
         <h1 className="text-2xl font-bold">{courseTitle}</h1>
         <Button
-          variant={`${completed ? "outline" : "default"}`}
+          variant={
+            completed ||
+            (progress.filter(p => p.viewed).length === courseDetails.lectures.length &&
+              courseDetails.lectures.length > 0)
+              ? "outline"
+              : "default"
+          }
           onClick={completed ? handleInCompleteCourse : handleCompleteCourse}
         >
-          {completed || progress.length === courseDetails.lectures.length ? (
+          {completed ||
+          (progress.filter(p => p.viewed).length === courseDetails.lectures.length &&
+            courseDetails.lectures.length > 0) ? (
             <div className="flex items-center">
               <CheckCircle className="h-4 w-4 mr-2" /> <span>Completed</span>
             </div>
