@@ -50,7 +50,7 @@ const Register = () => {
   };
 
   return (
-    <div className="w-full max-w-sm mx-auto mt-48">
+    <div className="w-full max-w-sm mx-auto mt-36">
       <Tabs defaultValue="signup">
         <TabsList>
           <TabsTrigger value="signup">Sign Up</TabsTrigger>
@@ -66,6 +66,22 @@ const Register = () => {
             </CardHeader>
 
             <CardContent className="grid gap-6">
+              <div className="grid gap-3">
+                <Label>Select Role</Label>
+                <Select value={isSignup.role} onValueChange={handleRoleChange}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select Your Role" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Select Your Role</SelectLabel>
+                      <SelectItem value="student">Student</SelectItem>
+                      <SelectItem value="instructor">Instructor</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+
               <div className="grid gap-3">
                 <Label>Name</Label>
                 <Input
@@ -105,7 +121,7 @@ const Register = () => {
 
             <CardFooter>
               <Button
-                className="w-2/3 mr-2"
+                className="w-full"
                 disabled={registerLoading}
                 onClick={() => handleRegistration("signup")}
               >
@@ -118,18 +134,6 @@ const Register = () => {
                   "Sign Up"
                 )}
               </Button>
-              <Select value={isSignup.role} onValueChange={handleRoleChange}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Role" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel className="mb-1">Role</SelectLabel>
-                    <SelectItem value="student">Student</SelectItem>
-                    <SelectItem value="instructor">Instructor</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
             </CardFooter>
           </Card>
         </TabsContent>
