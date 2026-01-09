@@ -68,8 +68,8 @@ export const authApi = createApi({
         try {
           const result = await queryFulfilled;
           dispatch(userLoggedIn({ user: result.data.user }));
-        } catch (error) {
-          console.log(error);
+        } catch {
+          // ignore error for guest users
         }
       },
     }),
@@ -80,6 +80,14 @@ export const authApi = createApi({
         body: credentials,
         credentials: "include",
       }),
+      async onQueryStarted(_, { queryFulfilled, dispatch }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(userLoggedIn({ user: data.user }));
+        } catch (error) {
+          console.log(error);
+        }
+      },
     }),
   }),
 });

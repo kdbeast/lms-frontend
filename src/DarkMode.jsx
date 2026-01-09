@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Moon, Sun } from "lucide-react";
 import {
   DropdownMenu,
@@ -10,7 +11,17 @@ import { Button } from "../src/components/ui/button";
 const DarkMode = () => {
   const setTheme = (theme) => {
     document.documentElement.className = theme;
+    localStorage.setItem("theme", theme);
   };
+
+  // local storage
+  useEffect(() => {
+    const theme = localStorage.getItem("theme");
+    if (theme) {
+      setTheme(theme);
+    }
+  }, []);
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

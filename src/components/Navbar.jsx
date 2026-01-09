@@ -17,14 +17,14 @@ import {
 import { toast } from "sonner";
 import { useEffect } from "react";
 import DarkMode from "../DarkMode";
-import { Link, useNavigate } from "react-router";
 import { Button } from "./ui/button";
-import { SheetTrigger } from "./ui/sheet";
+import { useSelector } from "react-redux";
+import { SheetClose, SheetTrigger } from "./ui/sheet";
 import { Menu, School } from "lucide-react";
-import { Separator } from "@radix-ui/react-dropdown-menu";
+import { Link, useNavigate } from "react-router";
+import { Separator } from "./ui/separator";
 import { useLogoutUserMutation } from "@/features/api/authApi";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { useSelector } from "react-redux";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -34,14 +34,14 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     await logoutUser();
-    navigate("/login");
+    navigate("/");
   };
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success(data.message || "Logout successful");
+      toast.success(data?.message || "Logout successful");
     }
-  }, [isSuccess, data]);
+  }, [isSuccess, data, navigate]);
 
   return (
     <div
@@ -95,14 +95,14 @@ const Navbar = () => {
             <div className="flex items-center gap-2">
               <Button
                 variant={"default"}
-                onClick={() => navigate("/login")}
+                onClick={() => navigate("/login?tab=login")}
                 className="dark:bg-white dark:text-black"
               >
                 Login
               </Button>
               <Button
                 variant={"default"}
-                onClick={() => navigate("/register")}
+                onClick={() => navigate("/login?tab=signup")}
                 className="dark:bg-white dark:text-black"
               >
                 Register
@@ -122,7 +122,11 @@ const Navbar = () => {
           </h1>
         </div>
         <div className="flex items-center gap-5">
-          <MobileNavbar navigate={navigate} user={user} />
+          <MobileNavbar
+            navigate={navigate}
+            user={user}
+            handleLogout={handleLogout}
+          />
           <DarkMode />
         </div>
       </div>
@@ -132,7 +136,7 @@ const Navbar = () => {
 
 export default Navbar;
 
-const MobileNavbar = ({ navigate, user }) => {
+const MobileNavbar = ({ navigate, user, handleLogout }) => {
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -145,6 +149,7 @@ const MobileNavbar = ({ navigate, user }) => {
           <Menu />
         </Button>
       </SheetTrigger>
+
       <SheetContent>
         <SheetHeader>
           <SheetTitle
@@ -154,36 +159,71 @@ const MobileNavbar = ({ navigate, user }) => {
             E-Learning
           </SheetTitle>
         </SheetHeader>
-        <Separator />
+        <Separator className="my-2" />
         <nav className="flex flex-col gap-2 p-2">
-          <Link
-            to="/my-learning"
-            className="font-semibold cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800 hover:text-gray-800 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-800 hover:shadow-md dark:hover:shadow-md rounded-full hover:cursor-pointer p-2 flex justify-center items-center gap-2"
-          >
-            My Learning
-          </Link>
-          <Link
-            to="/profile"
-            className="font-semibold cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800 hover:text-gray-800 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-800 hover:shadow-md dark:hover:shadow-md rounded-full hover:cursor-pointer p-2 flex justify-center items-center gap-2"
-          >
-            Edit Profile
-          </Link>
-          <Link
-            to="/login"
-            className="font-semibold cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800 hover:text-gray-800 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-800 hover:shadow-md dark:hover:shadow-md rounded-full hover:cursor-pointer p-2 flex justify-center items-center gap-2"
-          >
-            Logout
-          </Link>
-          {user?.user?.role === "instructor" && (
-            <SheetFooter>
-              <Button
-                onClick={() => navigate("/admin/dashboard")}
-                type="submit"
-                variant="outline"
-              >
-                Dashboard
-              </Button>
-            </SheetFooter>
+          {user ? (
+            <>
+              <SheetClose asChild>
+                <Link
+                  to="/my-learning"
+                  className="font-semibold cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800 hover:text-gray-800 dark:hover:text-gray-300 rounded-lg p-2 flex items-center gap-2"
+                >
+                  My Learning
+                </Link>
+              </SheetClose>
+              <SheetClose asChild>
+                <Link
+                  to="/profile"
+                  className="font-semibold cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800 hover:text-gray-800 dark:hover:text-gray-300 rounded-lg p-2 flex items-center gap-2"
+                >
+                  Edit Profile
+                </Link>
+              </SheetClose>
+              <SheetClose asChild>
+                <Button
+                  variant="ghost"
+                  onClick={handleLogout}
+                  className="font-semibold cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800 hover:text-gray-800 dark:hover:text-gray-300 rounded-lg p-2 flex justify-start items-center gap-2"
+                >
+                  Logout
+                </Button>
+              </SheetClose>
+              {user?.user?.role === "instructor" && (
+                <SheetFooter>
+                  <SheetClose asChild>
+                    <Button
+                      onClick={() => navigate("/admin/dashboard")}
+                      type="submit"
+                      variant="outline"
+                      className="w-full"
+                    >
+                      Dashboard
+                    </Button>
+                  </SheetClose>
+                </SheetFooter>
+              )}
+            </>
+          ) : (
+            <>
+              <SheetClose asChild>
+                <Button
+                  variant={"default"}
+                  onClick={() => navigate("/login?tab=login")}
+                  className="dark:bg-white dark:text-black w-full"
+                >
+                  Login
+                </Button>
+              </SheetClose>
+              <SheetClose asChild>
+                <Button
+                  variant={"default"}
+                  onClick={() => navigate("/login?tab=signup")}
+                  className="dark:bg-white dark:text-black w-full"
+                >
+                  Register
+                </Button>
+              </SheetClose>
+            </>
           )}
         </nav>
       </SheetContent>

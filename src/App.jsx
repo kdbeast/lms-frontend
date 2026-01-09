@@ -1,5 +1,4 @@
-import Login from "./pages/Login";
-import Register from "./pages/Register";
+import AuthPage from "./pages/AuthPage";
 import MainLayout from "./layout/MainLayout";
 import Courses from "./pages/student/Courses";
 import Profile from "./pages/student/Profile";
@@ -42,22 +41,8 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/register",
-        element: (
-          <AuthenticatedUserRoute>
-            {" "}
-            <Register />{" "}
-          </AuthenticatedUserRoute>
-        ),
-      },
-      {
         path: "/login",
-        element: (
-          <AuthenticatedUserRoute>
-            {" "}
-            <Login />{" "}
-          </AuthenticatedUserRoute>
-        ),
+        element: <AuthPage />,
       },
       {
         path: "/my-learning",

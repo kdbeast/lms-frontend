@@ -74,7 +74,7 @@ const Profile = () => {
         <div className="flex flex-col items-center">
           <Avatar className="h-24 w-24 md:h-32 md:w-32 mb-4">
             <AvatarImage
-              src={user.photoUrl || "https://github.com/shadcn.png"}
+              src={user?.photoUrl || "https://github.com/shadcn.png"}
             />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
@@ -84,7 +84,7 @@ const Profile = () => {
             <h2 className="font-semibold text-gray-900 dark:text-gray-100">
               Name:
               <span className="font-normal text-gray-700 dark:text-gray-300 ml-2">
-                {user.name}
+                {user?.name}
               </span>
             </h2>
           </div>
@@ -92,7 +92,7 @@ const Profile = () => {
             <h2 className="font-semibold text-gray-900 dark:text-gray-100">
               Email:
               <span className="font-normal text-gray-700 dark:text-gray-300 ml-2">
-                {user.email}
+                {user?.email}
               </span>
             </h2>
           </div>

@@ -16,12 +16,12 @@ const appStore = configureStore({
     ),
 });
 
-const initialiseApp = async () => {
-  await appStore.dispatch(
-    authApi.endpoints.getUserProfile.initiate({}, { forceRefetch: true })
-  );
-};
+// const initialiseApp = async () => {
+//   await appStore.dispatch(
+//     authApi.endpoints.getUserProfile.initiate({}, { forceRefetch: true })
+//   );
+// };
 
-initialiseApp();
+// initialiseApp();
 
 export default appStore;

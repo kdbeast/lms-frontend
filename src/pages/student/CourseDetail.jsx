@@ -33,6 +33,8 @@ const CourseDetails = () => {
 
   const { course, purchased } = data;
 
+  const videoUrl = course.lectures[0]?.videoUrl;
+
   const handleContinueCourse = () => {
     if (purchased) {
       navigate(`/course-progress/${courseId}`);
@@ -72,7 +74,7 @@ const CourseDetails = () => {
           <Card className="py-6">
             <CardHeader>
               <CardTitle className="font-bold text-lg md:text-2xl">
-                Course Content
+                Free Preview Lectures
               </CardTitle>
               <CardDescription>
                 {course.lectures.length} lectures
@@ -102,16 +104,23 @@ const CourseDetails = () => {
           <Card className="max-w-full mx-auto border rounded-lg shadow-lg">
             {/* Card Content */}
             <CardContent className="p-4 flex flex-col">
-              <div className="w-full aspect-video mb-4">
-                <ReactPlayer
-                  width="100%"
-                  height="100%"
-                  controls={true}
-                  src={course.lectures[0].videoUrl}
-                />
+              <div className="w-full mb-4">
+                {videoUrl && (
+                  <ReactPlayer
+                    width="100%"
+                    height="100%"
+                    controls={true}
+                    src={videoUrl}
+                  />
+                )}
+                {!videoUrl && (
+                  <p className="text-center flex items-center justify-center h-[200px] w-full bg-gray-200 dark:bg-gray-800 rounded-lg text-gray-500 dark:text-gray-400 font-bold text-lg">
+                    No video available
+                  </p>
+                )}
               </div>
               <h1 className="text-lg md:text-xl font-semibold">
-                {course.lectures[0].lectureTitle}
+                {course.lectures[0]?.lectureTitle}
               </h1>
               <Separator className="my-2" />
               <h1 className="text-lg md:text-xl font-semibold">
