@@ -1,23 +1,12 @@
-import { toast } from "sonner";
 import Lecture from "./Lecture";
-import {
-  useCreateLectureMutation,
-  useGetLectureByCourseIdQuery,
-} from "../../../features/api/courseApi";
-import { Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import { useGetLectureByCourseIdQuery } from "../../../features/api/courseApi";
+import CreateDialog from "./CreateDialog";
 import { Link, useParams } from "react-router";
 import { Button } from "@/components/ui/button";
-// import { addLecture } from "@/features/courseSlice";
 
 const CreateLecture = () => {
   const params = useParams();
   const courseId = params.courseId;
-  //   const navigate = useNavigate();
-  //   const dispatch = useDispatch();
-  const [lectureTitle, setLectureTitle] = useState("");
 
   // Fetch all lectures by course id
   const {
@@ -25,24 +14,6 @@ const CreateLecture = () => {
     isLoading: lectureLoading,
     isError: lectureError,
   } = useGetLectureByCourseIdQuery(courseId);
-
-  // Add lectures
-  const [createLecture, { data, isLoading, isSuccess, error }] =
-    useCreateLectureMutation();
-
-  const createLectureHandler = async () => {
-    await createLecture({ courseId, lectureTitle });
-  };
-
-  useEffect(() => {
-    if (isSuccess) {
-      toast.success(data?.message || "Lecture created.");
-      // dispatch(addLecture(data.lecture));
-    }
-    if (error) {
-      toast.error(error?.data?.message);
-    }
-  }, [data, isSuccess, error]);
 
   return (
     <div>
@@ -54,29 +25,11 @@ const CreateLecture = () => {
           Lorem ipsum dolor sit, amet consectetur adipisicing elit.
         </p>
       </div>
-      <div>
-        <Label className="mb-2">Title</Label>
-        <Input
-          type="text"
-          value={lectureTitle}
-          placeholder="Your Lecture Title Name"
-          onChange={(e) => setLectureTitle(e.target.value)}
-        />
-      </div>
       <div className="flex items-center gap-2 my-5">
         <Link to={`/admin/course/${courseId}`}>
           <Button variant="outline">Back to course</Button>
         </Link>
-        <Button disabled={isLoading} onClick={createLectureHandler}>
-          {isLoading ? (
-            <>
-              <Loader2 className="mr-2 w-4 h-4 animate-spin" />
-              Please wait
-            </>
-          ) : (
-            "Create Lecture"
-          )}
-        </Button>
+          <CreateDialog courseId={courseId} />
       </div>
 
       {/* Display all lectures here */}

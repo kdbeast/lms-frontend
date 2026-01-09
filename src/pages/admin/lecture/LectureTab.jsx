@@ -13,11 +13,12 @@ import {
   useDeleteLectureMutation,
 } from "../../../features/api/courseApi";
 import { Loader2 } from "lucide-react";
+import ReactPlayer from "react-player";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Progress } from "@/components/ui/progress";
 import { useParams, useNavigate } from "react-router";
 
@@ -27,7 +28,11 @@ const LectureTab = () => {
   const navigate = useNavigate();
   const { courseId, lectureId } = useParams();
 
-  const { data: lectureByIdData } = useGetLectureByIdQuery(lectureId);
+  const {
+    data: lectureByIdData,
+    isLoading: isLoadingLecture,
+    isError: isErrorLecture,
+  } = useGetLectureByIdQuery(lectureId);
 
   const lecture = lectureByIdData?.lecture;
 
@@ -58,15 +63,20 @@ const LectureTab = () => {
       toast.success(data.message || "Lecture updated");
     }
     if (error) {
-      toast.error(error.message || "Lecture update failed");
+      toast.error(error.data?.message || "Lecture update failed");
     }
   }, [isSuccess, error, data]);
 
   useEffect(() => {
     if (lecture) {
-      setLectureTitle(lecture.lectureTitle);
-      setIsFree(lecture.isPreviewFree);
-      setUploadedVideoInfo(lecture.videoInfo);
+      setLectureTitle(lecture.lectureTitle || "");
+      setIsFree(lecture.isPreviewFree || false);
+      if (lecture.videoUrl) {
+        setUploadedVideoInfo({
+          videoUrl: lecture.videoUrl,
+        });
+      }
+      setBtnDisable(false);
     }
   }, [lecture]);
 
@@ -75,7 +85,6 @@ const LectureTab = () => {
   };
 
   const handleEditLecture = async () => {
-    console.log(courseId, lectureId, lectureTitle, isFree, uploadedVideoInfo);
     await editLecture({
       courseId,
       lectureId,
@@ -101,7 +110,7 @@ const LectureTab = () => {
         if (res.data.success) {
           console.log(res);
           setUploadedVideoInfo({
-            videoUrl: res.data.data.url,
+            videoUrl: res.data.data.secure_url || res.data.data.url,
             publicId: res.data.data.public_id,
           });
           setBtnDisable(false);
@@ -124,6 +133,22 @@ const LectureTab = () => {
     ) : (
       text
     );
+
+  if (isLoadingLecture)
+    return (
+      <div className="flex items-center justify-center h-40">
+        <Loader2 className="animate-spin" /> Please wait...
+      </div>
+    );
+
+  if (isErrorLecture)
+    return (
+      <div className="text-red-500 text-center">
+        Failed to load lecture details.
+      </div>
+    );
+
+  if (!lecture) return <div className="text-center">Lecture not found.</div>;
 
   return (
     <Card className="py-6">
@@ -165,6 +190,17 @@ const LectureTab = () => {
             onChange={handleFileChange}
           />
         </div>
+        {uploadedVideoInfo?.videoUrl && (
+          <div className="w-full mb-4">
+            <ReactPlayer
+              width="50%"
+              height="50%"
+              controls={true}
+              src={uploadedVideoInfo.videoUrl}
+              url={uploadedVideoInfo.videoUrl}
+            />
+          </div>
+        )}
         <div className="flex items-center space-x-2 my-5">
           <Switch
             checked={isFree}

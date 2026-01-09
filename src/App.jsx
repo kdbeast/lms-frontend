@@ -16,6 +16,7 @@ import SearchPage from "./pages/student/SearchPage";
 import AddCourse from "./pages/admin/course/AddCourse";
 import EditCourse from "./pages/admin/course/EditCourse";
 import EditLecture from "./pages/admin/lecture/EditLecture";
+import CreateDialog from "./pages/admin/lecture/CreateDialog";
 import CreateLecture from "./pages/admin/lecture/CreateLecture";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import PurchaseCourseProtectedRoute from "./components/PurchaseCourseProtectedRoute";
@@ -122,6 +123,10 @@ const router = createBrowserRouter([
           {
             path: "course",
             element: <CourseTable />,
+          },
+          {
+            path: "course/create-dialog/:courseId/:lectureId",
+            element: <CreateDialog />,
           },
           {
             path: "course/create",

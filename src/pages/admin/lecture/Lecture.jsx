@@ -1,14 +1,10 @@
 import { EditIcon } from "lucide-react";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
-// import { addLecture } from "@/features/courseSlice";
 
 const Lecture = ({ lecture, courseId, index }) => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const goToUpdateLecture = async () => {
-    // dispatch(addLecture(lecture));
     navigate(`/admin/course/${courseId}/lecture/${lecture._id}`);
   };
 
