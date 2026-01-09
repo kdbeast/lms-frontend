@@ -20,7 +20,7 @@ import { Switch } from "@/components/ui/switch";
 import { Progress } from "@/components/ui/progress";
 import { useCreateLectureMutation } from "@/features/api/courseApi";
 
-const MEDIA_API = "http://localhost:8080/api/v1/media";
+const MEDIA_API = `${import.meta.env.VITE_API_URL}/api/v1/media`;
 
 const CreateDialog = ({ courseId }) => {
   const [isFree, setIsFree] = useState(false);
