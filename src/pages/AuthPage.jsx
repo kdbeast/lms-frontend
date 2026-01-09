@@ -57,8 +57,8 @@ const Login = () => {
     const action = type === "signup" ? registerUser : loginUser;
 
     try {
-      await action(inputData).unwrap();
-      if (type === "login") {
+      const result = await action(inputData).unwrap();
+      if (result?.success) {
         navigate("/");
       }
     } catch (error) {
