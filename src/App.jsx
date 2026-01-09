@@ -42,7 +42,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/login",
-        element: <AuthPage />,
+        element: (
+          <AuthenticatedUserRoute>
+            <AuthPage />
+          </AuthenticatedUserRoute>
+        ),
       },
       {
         path: "/my-learning",
