@@ -58,7 +58,7 @@ const Login = () => {
 
     try {
       const result = await action(inputData).unwrap();
-      if (result?.success) {
+      if (result) {
         navigate("/");
       }
     } catch (error) {
