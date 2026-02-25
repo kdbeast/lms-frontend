@@ -1,8 +1,7 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import Filter from "./Filter";
 import SearchResult from "./SearchResult";
 import { AlertCircle } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "../../components/ui/button";
 import { Link, useSearchParams } from "react-router";
@@ -11,72 +10,59 @@ import { useSearchCoursesQuery } from "../../features/api/courseApi";
 
 const SearchPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const query = searchParams.get("query") || "";
 
-  // Read categories and sortByPrice from URL on mount
-  const initialCategories = (() => {
-    const single = searchParams.get("category");
-    return single ? [single] : [];
-  })();
-  const initialSort = searchParams.get("sortByPrice") || "";
+  const query = searchParams.get("keyword") || "";
+  const categories = searchParams.get("category");
+  const sortByPrice = searchParams.get("sortByPrice") || "";
+  const priceRange = searchParams.get("priceRange") || "";
 
-  const [selectedCategories, setSelectedCategories] =
-    useState(initialCategories);
-  const [sortByPrice, setSortByPrice] = useState(initialSort);
-  const [searchQuery, setSearchQuery] = useState(query);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  // Keep URL in sync when filters change
-  useEffect(() => {
-    const params = {};
-    if (query) params.query = query;
-    if (selectedCategories.length > 0) params.category = selectedCategories;
-    if (sortByPrice) params.sortByPrice = sortByPrice;
-    setSearchParams(params, { replace: true });
-  }, [selectedCategories, sortByPrice, query]);
-
-  // Fetch courses based on query and selected filters
   const { data, isLoading } = useSearchCoursesQuery({
     searchQuery: query,
-    categories: selectedCategories,
+    categories,
     sortByPrice,
+    priceRange,
   });
 
-  // Determine if there are no courses found
   const isEmpty = !isLoading && data?.courses?.length === 0;
 
-  // Handler to receive category and level selection changes from Filter component
-  const handleFilterChange = (categories, price) => {
-    setSelectedCategories(categories);
-    setSortByPrice(price);
-  };
+  const handleFilterChange = (
+    categories = [],
+    sortByPrice = "",
+    priceRange,
+    keyword = searchQuery,
+  ) => {
+    const params = {};
 
-  const onSubmitHandler = (e) => {
-    e.preventDefault();
-    if (!searchQuery) return;
-    if (searchQuery.trim() !== "") {
-      setSearchParams({ query: searchQuery });
-    }
-    setSearchQuery("");
+    if (categories.length > 0) params.category = categories.join(",");
+    if (sortByPrice) params.sortByPrice = sortByPrice;
+    if (priceRange) params.priceRange = JSON.stringify(priceRange);
+    if (keyword && keyword.trim() !== "") params.keyword = keyword;
+
+    setSearchParams(params, { replace: true });
   };
 
   return (
     <div className="max-w-7xl mx-auto p-4 md:p-8">
-      <form
-        onSubmit={onSubmitHandler}
-        className="flex items-center bg-white dark:bg-gray-800 rounded-full shadow-lg overflow-hidden max-w-xl mx-auto mb-6"
-      >
+      <form className="flex items-center bg-white dark:bg-gray-800 rounded-full shadow-lg overflow-hidden max-w-xl mx-auto mb-6">
         <Input
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          onChange={(e) => {
+            const value = e.target.value;
+            setSearchQuery(value);
+
+            // 🔑 THIS IS THE MISSING LINK
+            handleFilterChange(
+              categories ? categories.split(",") : [],
+              sortByPrice,
+              priceRange ? JSON.parse(priceRange) : undefined,
+              value,
+            );
+          }}
           className="grow border-none focus-visible:ring-0 px-6 py-3 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
           placeholder="Search Courses"
         />
-        <Button
-          type="submit"
-          className="bg-blue-600 dark:bg-blue-700 text-white px-6 py-3 rounded-r-full hover:bg-blue-700 dark:hover:bg-blue-800"
-        >
-          Search
-        </Button>
       </form>
 
       {query && (
@@ -94,8 +80,9 @@ const SearchPage = () => {
       <div className="flex flex-col md:flex-row gap-10">
         <Filter
           onFilterChange={handleFilterChange}
-          selectedCategories={selectedCategories}
-          sortByPrice={sortByPrice}
+          initialCategories={categories}
+          initialSort={sortByPrice}
+          initialPriceRange={priceRange}
         />
         <div className="flex-1">
           {isLoading ? (

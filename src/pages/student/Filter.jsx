@@ -28,35 +28,37 @@ const categories = [
 
 const Filter = ({
   onFilterChange,
-  selectedCategories: initialSelectedCategories,
-  sortByPrice: initialSortByPrice,
+  initialCategories,
+  initialSort,
+  initialPriceRange,
 }) => {
-  const [sortByPrice, setSortByPrice] = useState(initialSortByPrice || "");
-  const [priceRange, setPriceRange] = useState([500, 5000]);
+  const [sortByPrice, setSortByPrice] = useState(initialSort || "");
+  const [priceRange, setPriceRange] = useState(
+    initialPriceRange ? JSON.parse(initialPriceRange) : [0, 5000],
+  );
   const [selectedCategories, setSelectedCategories] = useState(
-    initialSelectedCategories || [],
+    initialCategories ? initialCategories.split(",") : [],
   );
 
-  const handleCategoryChange = (categoryId) => {
-    setSelectedCategories((prevCategories) => {
-      const newCategories = prevCategories.includes(categoryId)
-        ? prevCategories.filter((id) => id !== categoryId)
-        : [...prevCategories, categoryId];
-      onFilterChange(newCategories, sortByPrice);
-      return newCategories;
-    });
+  const handleCategoryChange = (catId) => {
+    const updated = selectedCategories.includes(catId)
+      ? selectedCategories.filter((id) => id !== catId)
+      : [...selectedCategories, catId];
+
+    setSelectedCategories(updated);
+    onFilterChange(updated, sortByPrice);
   };
 
-  const selectByPriceHandler = (selectedValue) => {
-    setSortByPrice(selectedValue);
-    onFilterChange(selectedCategories, selectedValue);
+  const selectByPriceHandler = (val) => {
+    setSortByPrice(val);
+    onFilterChange(selectedCategories, val, priceRange);
   };
 
   return (
     <div className="w-full md:w-[20%]">
       <div className="flex items-center justify-between">
         <h1 className="font-semibold text-lg md:text-xl">Filter Options</h1>
-        <Select onValueChange={selectByPriceHandler}>
+        <Select onValueChange={selectByPriceHandler} value={sortByPrice}>
           <SelectTrigger className="w-25">
             <SelectValue placeholder="Sort by" />
           </SelectTrigger>
@@ -73,13 +75,15 @@ const Filter = ({
       </div>
       <Separator className="my-4" />
       <div className="mb-4 px-2">
-        <h1 className="font-semibold mb-2">{`Price Range ₹${priceRange[0]}-₹${priceRange[1]}`}</h1>
+        <h1 className="font-semibold mb-2">{`Price ₹${priceRange[0]}-₹${priceRange[1]}`}</h1>
         <Slider
           max={5000}
           step={500}
-          value={priceRange}
-          defaultValue={[25, 50]}
-          onValueChange={(value) => setPriceRange(value)}
+          defaultValue={priceRange}
+          onValueChange={(value) => {
+            setPriceRange(value);
+            onFilterChange(selectedCategories, sortByPrice, value);
+          }}
         />
       </div>
       <div>
@@ -101,9 +105,7 @@ const Filter = ({
         ))}
         <button
           onClick={() => {
-            onFilterChange([], ""); // Clear filters in parent component
-            setSelectedCategories([]);
-            setSortByPrice("");
+            onFilterChange([], "", undefined, "");
           }}
           className="text-sm text-blue-500 hover:underline mt-6"
         >

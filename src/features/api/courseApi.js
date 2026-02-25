@@ -19,17 +19,26 @@ export const courseApi = createApi({
       invalidatesTags: ["Refetch_Creator_Course"],
     }),
     searchCourses: builder.query({
-      query: ({ searchQuery, categories, sortByPrice }) => {
-        let queryString = `/search?query=${encodeURIComponent(searchQuery)}`;
+      query: ({ searchQuery, categories, sortByPrice, priceRange }) => {
+        let queryString = `/search?keyword=${encodeURIComponent(searchQuery || "")}`;
 
-        // append categories as multiple 'category' parameters for Express array parsing
-        if (categories && categories.length > 0) {
-          categories.forEach((cat) => {
+        const categoryArray = Array.isArray(categories)
+          ? categories
+          : typeof categories === "string" && categories.length > 0
+            ? categories.split(",")
+            : [];
+
+        if (categoryArray.length > 0) {
+          categoryArray.forEach((cat) => {
             queryString += `&category=${encodeURIComponent(cat)}`;
           });
         }
 
-        // append sortByPrice
+        // append priceRange
+        if (priceRange) {
+          queryString += `&priceRange=${encodeURIComponent(priceRange)}`;
+        }
+
         if (sortByPrice) {
           queryString += `&sortByPrice=${encodeURIComponent(sortByPrice)}`;
         }

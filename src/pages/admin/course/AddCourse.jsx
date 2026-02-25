@@ -66,31 +66,31 @@ const AddCourse = () => {
         <div>
           <Label className="mb-2">Category</Label>
           <Select onValueChange={(value) => getSelectedCategory(value)}>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-45">
               <SelectValue placeholder="Select a category" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>Category</SelectLabel>
-                <SelectItem value="nextjs">Next JS</SelectItem>
-                <SelectItem value="data science">Data Science</SelectItem>
-                <SelectItem value="frontend development">
+                <SelectItem value="Next Js">Next JS</SelectItem>
+                <SelectItem value="Data Science">Data Science</SelectItem>
+                <SelectItem value="Frontend Development">
                   Frontend Development
                 </SelectItem>
-                <SelectItem value="fullstack development">
+                <SelectItem value="Fullstack Development">
                   Fullstack Development
                 </SelectItem>
-                <SelectItem value="mern stack development">
+                <SelectItem value="MERN Stack Development">
                   MERN Stack Development
                 </SelectItem>
-                <SelectItem value="backend development">
+                <SelectItem value="Backend Development">
                   Backend Development
                 </SelectItem>
-                <SelectItem value="javascript">Javascript</SelectItem>
-                <SelectItem value="python">Python</SelectItem>
-                <SelectItem value="docker">Docker</SelectItem>
-                <SelectItem value="mongodb">MongoDB</SelectItem>
-                <SelectItem value="html">HTML</SelectItem>
+                <SelectItem value="Javascript">Javascript</SelectItem>
+                <SelectItem value="Python">Python</SelectItem>
+                <SelectItem value="Docker">Docker</SelectItem>
+                <SelectItem value="MongoDB">MongoDB</SelectItem>
+                <SelectItem value="HTML">HTML</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
