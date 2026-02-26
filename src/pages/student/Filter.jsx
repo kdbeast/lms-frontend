@@ -80,6 +80,14 @@ const Filter = ({
           </SelectContent>
         </Select>
       </div>
+      <button
+        onClick={() => {
+          setSortByPrice("");
+        }}
+        className="text-sm text-blue-500 hover:underline mt-6"
+      >
+        Clear
+      </button>
       <Separator className="my-4" />
       <div className="mb-4 px-2">
         <h1 className="font-semibold mb-2">{`Price ₹${priceRange[0]}-₹${priceRange[1]}`}</h1>
@@ -91,6 +99,15 @@ const Filter = ({
             setPriceRange(value);
           }}
         />
+        <button
+          onClick={() => {
+            setSortByPrice("");
+            setPriceRange([0, 5000]);
+          }}
+          className="text-sm text-blue-500 hover:underline mt-6"
+        >
+          Clear
+        </button>
       </div>
       <div>
         <h1 className="font-semibold mb-2">CATEGORY</h1>
@@ -111,10 +128,7 @@ const Filter = ({
         ))}
         <button
           onClick={() => {
-            onFilterChange([], "", undefined, "");
             setSelectedCategories([]);
-            setSortByPrice("");
-            setPriceRange([0, 5000]);
           }}
           className="text-sm text-blue-500 hover:underline mt-6"
         >
