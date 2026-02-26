@@ -75,7 +75,7 @@ const Login = () => {
       <Tabs
         value={tab}
         onValueChange={(val) => setDefaultTab({ tab: val })}
-        className="w-full sm:w-[400px]"
+        className="w-full sm:w-100"
       >
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="signup">Signup</TabsTrigger>

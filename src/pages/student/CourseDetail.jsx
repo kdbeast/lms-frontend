@@ -114,7 +114,7 @@ const CourseDetails = () => {
                   />
                 )}
                 {!videoUrl && (
-                  <p className="text-center flex items-center justify-center h-[200px] w-full bg-gray-200 dark:bg-gray-800 rounded-lg text-gray-500 dark:text-gray-400 font-bold text-lg">
+                  <p className="text-center flex items-center justify-center h-50 w-full bg-gray-200 dark:bg-gray-800 rounded-lg text-gray-500 dark:text-gray-400 font-bold text-lg">
                     No video available
                   </p>
                 )}

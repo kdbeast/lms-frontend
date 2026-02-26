@@ -15,7 +15,7 @@ const Course = ({ course }) => {
           <img
             src={course.courseThumbnail}
             alt={course.courseTitle}
-            className="w-full md:h-[200px] lg:h-[240px] object-cover rounded-t-lg"
+            className="w-full md:h-50 lg:h-60 object-cover rounded-t-lg"
           />
           <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent rounded-t-lg"></div>
         </div>
