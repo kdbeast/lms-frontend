@@ -1,7 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import Filter from "./Filter";
 import SearchResult from "./SearchResult";
 import { AlertCircle } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "../../components/ui/button";
 import { Link, useSearchParams } from "react-router";
@@ -26,6 +27,7 @@ const SearchPage = () => {
   });
 
   const isEmpty = !isLoading && data?.courses?.length === 0;
+  const DEFAULT_PRICE_RANGE = [0, 5000];
 
   const handleFilterChange = (
     categories = [],
@@ -37,29 +39,43 @@ const SearchPage = () => {
 
     if (categories.length > 0) params.category = categories.join(",");
     if (sortByPrice) params.sortByPrice = sortByPrice;
-    if (priceRange) params.priceRange = JSON.stringify(priceRange);
+    const isDefaultPrice =
+      Array.isArray(priceRange) &&
+      priceRange[0] === DEFAULT_PRICE_RANGE[0] &&
+      priceRange[1] === DEFAULT_PRICE_RANGE[1];
+
+    if (priceRange && !isDefaultPrice) {
+      params.priceRange = JSON.stringify(priceRange);
+    }
     if (keyword && keyword.trim() !== "") params.keyword = keyword;
 
     setSearchParams(params, { replace: true });
   };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      // when user stops typing, update URL
+      handleFilterChange(
+        categories ? categories.split(",") : [],
+        sortByPrice,
+        priceRange ? JSON.parse(priceRange) : undefined,
+        searchQuery,
+      );
+    }, 500); // 500ms debounce delay
+
+    return () => clearTimeout(timer); // cancel previous timer
+  }, [searchQuery]);
+
+  useEffect(() => {
+    setSearchQuery(query);
+  }, [query]);
 
   return (
     <div className="max-w-7xl mx-auto p-4 md:p-8">
       <form className="flex items-center bg-white dark:bg-gray-800 rounded-full shadow-lg overflow-hidden max-w-xl mx-auto mb-6">
         <Input
           value={searchQuery}
-          onChange={(e) => {
-            const value = e.target.value;
-            setSearchQuery(value);
-
-            // 🔑 THIS IS THE MISSING LINK
-            handleFilterChange(
-              categories ? categories.split(",") : [],
-              sortByPrice,
-              priceRange ? JSON.parse(priceRange) : undefined,
-              value,
-            );
-          }}
+          onChange={(e) => setSearchQuery(e.target.value)}
           className="grow border-none focus-visible:ring-0 px-6 py-3 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
           placeholder="Search Courses"
         />

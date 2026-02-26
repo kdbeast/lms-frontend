@@ -1,4 +1,5 @@
-import { useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect, useState } from "react";
 import {
   Select,
   SelectContent,
@@ -46,13 +47,19 @@ const Filter = ({
       : [...selectedCategories, catId];
 
     setSelectedCategories(updated);
-    onFilterChange(updated, sortByPrice);
   };
 
   const selectByPriceHandler = (val) => {
     setSortByPrice(val);
-    onFilterChange(selectedCategories, val, priceRange);
   };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      onFilterChange(selectedCategories, sortByPrice, priceRange);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [selectedCategories, sortByPrice, priceRange]);
 
   return (
     <div className="w-full md:w-[20%]">
@@ -79,10 +86,9 @@ const Filter = ({
         <Slider
           max={5000}
           step={500}
-          defaultValue={priceRange}
+          value={priceRange}
           onValueChange={(value) => {
             setPriceRange(value);
-            onFilterChange(selectedCategories, sortByPrice, value);
           }}
         />
       </div>
@@ -106,6 +112,9 @@ const Filter = ({
         <button
           onClick={() => {
             onFilterChange([], "", undefined, "");
+            setSelectedCategories([]);
+            setSortByPrice("");
+            setPriceRange([0, 5000]);
           }}
           className="text-sm text-blue-500 hover:underline mt-6"
         >
