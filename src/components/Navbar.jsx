@@ -3,7 +3,6 @@ import {
   Sheet,
   SheetTitle,
   SheetHeader,
-  SheetFooter,
   SheetContent,
   SheetClose,
   SheetTrigger,
@@ -36,13 +35,7 @@ const Navbar = () => {
             <div className="flex items-center gap-4">
               <InstructorLink />
 
-              <UserButton
-                appearance={{
-                  elements: {
-                    avatarBox: "w-10 h-10 cursor-pointer",
-                  },
-                }}
-              />
+              <UserButton />
             </div>
             <Link to="/profile" className="menu-item">
               Profile
@@ -114,23 +107,29 @@ const MobileNavbar = () => {
 
         <Separator className="my-4" />
 
-        <nav className="flex flex-col gap-2">
+        <nav className="flex flex-col gap-2 justify-center text-center">
+          <div>
+            <UserButton />
+          </div>
+
           <SignedIn>
             <SheetClose asChild>
-              <Link to="/my-learning" className="menu-item">
+              <Link
+                to="/my-learning"
+                className="bg-gray-800 rounded-2xl m-2 p-5 hover:bg-gray-700"
+              >
                 My Learning
               </Link>
             </SheetClose>
 
             <SheetClose asChild>
-              <Link to="/profile" className="menu-item">
-                Profilee
+              <Link
+                to="/profile"
+                className="bg-gray-800 rounded-2xl m-2 p-5 hover:bg-gray-700"
+              >
+                Profile
               </Link>
             </SheetClose>
-
-            <SheetFooter className="mt-4">
-              <UserButton afterSignOutUrl="/" />
-            </SheetFooter>
           </SignedIn>
 
           <SignedOut>

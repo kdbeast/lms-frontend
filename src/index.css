@@ -3,6 +3,30 @@
 
 @custom-variant dark (&:is(.dark *));
 
+:root {
+  --clerk-color-background: #212126;
+  --clerk-color-neutral: white;
+  --clerk-color-primary: #FFFFFF;
+  --clerk-color-primary-foreground: black;
+  --clerk-color-foreground: white;
+  --clerk-color-input-foreground: white;
+  --clerk-color-input: #26262B;
+  --clerk-spacing: 1rem;
+  --clerk-border-radius: 0.5rem;
+}
+
+.dark {
+  --clerk-color-background: #212126;
+  --clerk-color-neutral: white;
+  --clerk-color-primary: #FFFFFF;
+  --clerk-color-primary-foreground: black;
+  --clerk-color-foreground: white;
+  --clerk-color-input-foreground: white;
+  --clerk-color-input: #26262B;
+  --clerk-spacing: 1rem;
+  --clerk-border-radius: 0.5rem;
+}
+
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
