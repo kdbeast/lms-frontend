@@ -2,7 +2,6 @@
 import Course from "./Course";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
-import { Loader2 } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -18,15 +17,15 @@ import {
 } from "@/components/ui/dialog";
 
 import { useUser } from "@clerk/clerk-react";
-import { useGetEnrolledCoursesQuery } from "@/features/api/courseApi"; // create this if not exists
+import { useGetEnrolledCoursesQuery } from "@/features/api/authApi"; // create this if not exists
 
 const Profile = () => {
-  const { user, isLoaded } = useUser();
+  const { user } = useUser();
 
   const [name, setName] = useState("");
   const [profilePhoto, setProfilePhoto] = useState(null);
 
-  const { data: coursesData, isLoading } = useGetEnrolledCoursesQuery();
+  const { data: coursesData } = useGetEnrolledCoursesQuery();
 
   useEffect(() => {
     if (user) {
@@ -34,12 +33,12 @@ const Profile = () => {
     }
   }, [user]);
 
-  if (!isLoaded || isLoading)
-    return (
-      <div className="my-24">
-        <ProfileSkeleton />
-      </div>
-    );
+  // if (!isLoaded || isLoading)
+  //   return (
+  //     <div className="my-24">
+  //       <ProfileSkeleton />
+  //     </div>
+  //   );
 
   const onChangeHandler = (e) => {
     const file = e.target.files?.[0];

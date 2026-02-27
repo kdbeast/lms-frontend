@@ -7,9 +7,12 @@ export const courseProgressApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: COURSE_PROGRESS_API,
     prepareHeaders: async (headers) => {
-      const token = await window.Clerk.session?.getToken();
-      if (token) {
-        headers.set("Authorization", `Bearer ${token}`);
+      if (window.Clerk?.session) {
+        const token = await window.Clerk.session.getToken();
+
+        if (token) {
+          headers.set("Authorization", `Bearer ${token}`);
+        }
       }
       return headers;
     },

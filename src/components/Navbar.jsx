@@ -13,7 +13,7 @@ import { Button } from "./ui/button";
 import { Menu, School } from "lucide-react";
 import { Link, useNavigate } from "react-router";
 import { Separator } from "./ui/separator";
-import { SignedIn, SignedOut, UserButton, useUser } from "@clerk/clerk-react";
+import { SignedIn, SignedOut, useAuth, UserButton } from "@clerk/clerk-react";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -37,14 +37,16 @@ const Navbar = () => {
               <InstructorLink />
 
               <UserButton
-                afterSignOutUrl="/"
                 appearance={{
                   elements: {
-                    avatarBox: "w-10 h-10",
+                    avatarBox: "w-10 h-10 cursor-pointer",
                   },
                 }}
               />
             </div>
+            <Link to="/profile" className="menu-item">
+              Profile
+            </Link>
           </SignedIn>
 
           {/* GUEST USER */}
@@ -122,7 +124,7 @@ const MobileNavbar = () => {
 
             <SheetClose asChild>
               <Link to="/profile" className="menu-item">
-                Profile
+                Profilee
               </Link>
             </SheetClose>
 
@@ -156,18 +158,20 @@ const MobileNavbar = () => {
 /* ----------------- Instructor Dashboard Button ----------------- */
 
 const InstructorLink = () => {
-  const { user, isLoaded } = useUser();
+  const navigate = useNavigate();
+  const { sessionClaims, isLoaded } = useAuth();
 
   if (!isLoaded) return null;
 
-  const role = user?.publicMetadata?.role;
+  const role = sessionClaims?.role;
 
   if (role !== "instructor") return null;
 
   return (
     <Button
       variant="outline"
-      onClick={() => (window.location.href = "/admin/dashboard")}
+      className="cursor-pointer"
+      onClick={() => navigate("/admin/dashboard")}
     >
       Dashboard
     </Button>

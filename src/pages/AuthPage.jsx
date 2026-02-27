@@ -8,7 +8,7 @@ const AuthPage = () => {
   return (
     <div className="flex items-center justify-center min-h-screen">
       {mode === "sign-up" ? (
-        <SignUp routing="path" path="/auth" />
+        <SignUp routing="path" path="/auth" afterSignUpUrl="/select-role" />
       ) : (
         <SignIn routing="path" path="/auth" />
       )}

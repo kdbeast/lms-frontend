@@ -7,9 +7,12 @@ export const purchaseApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: COURSE_PURCHASE_API,
     prepareHeaders: async (headers) => {
-      const token = await window.Clerk.session?.getToken();
-      if (token) {
-        headers.set("Authorization", `Bearer ${token}`);
+      if (window.Clerk?.session) {
+        const token = await window.Clerk.session.getToken();
+
+        if (token) {
+          headers.set("Authorization", `Bearer ${token}`);
+        }
       }
       return headers;
     },

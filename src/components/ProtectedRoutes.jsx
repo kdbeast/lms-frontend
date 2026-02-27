@@ -1,8 +1,8 @@
 import {
+  useAuth,
   SignedIn,
   SignedOut,
   RedirectToSignIn,
-  useUser,
 } from "@clerk/clerk-react";
 import { Navigate } from "react-router";
 
@@ -29,13 +29,13 @@ export const AuthenticatedUserRoute = ({ children }) => {
 };
 
 export const AdminRoute = ({ children }) => {
-  const { user, isLoaded } = useUser();
+  const { isLoaded, isSignedIn, sessionClaims } = useAuth();
 
   if (!isLoaded) return null;
 
-  if (!user) return <RedirectToSignIn />;
+  if (!isSignedIn) return <Navigate to="/auth" />;
 
-  const role = user.publicMetadata?.role;
+  const role = sessionClaims?.role;
 
   if (role !== "instructor") return <Navigate to="/" />;
 

@@ -12,7 +12,7 @@ const Sidebar = () => {
   return (
     <div className="flex ">
       {/* Left Sidebar (Desktop) */}
-      <div className="hidden lg:block w-[250px] sm:w-[200px] md:w-[250px] lg:w-[300px] space-y-8 border-r border-gray-300 dark:border-gray-700 dark:bg-[#0A0A0A] bg-[#f0f0f0] p-5 sticky top-0 h-screen">
+      <div className="hidden lg:block w-62.5 sm:w-50 md:w-62.5 lg:w-75 space-y-8 border-r border-gray-300 dark:border-gray-700 dark:bg-[#0A0A0A] bg-[#f0f0f0] p-5 sticky top-0 h-screen">
         <div className="space-y-4">
           <Link
             to="dashboard"

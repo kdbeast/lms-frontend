@@ -18,7 +18,7 @@ import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import {
   useEditCourseMutation,
-  useGetEnrolledCoursesQuery,
+  useGetCourseByIdQuery,
   useTogglePublishCourseMutation,
 } from "../../../features/api/courseApi";
 import { Editor } from "primereact/editor";
@@ -51,7 +51,7 @@ const BasicCourseTab = ({ courseId }) => {
     useEditCourseMutation();
 
   const { data: courseData, isLoading: courseLoading } =
-    useGetEnrolledCoursesQuery();
+    useGetCourseByIdQuery(courseId);
 
   useEffect(() => {
     if (courseData?.course) {

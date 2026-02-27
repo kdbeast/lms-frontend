@@ -35,7 +35,7 @@ const Filter = ({
 }) => {
   const [sortByPrice, setSortByPrice] = useState(initialSort || "");
   const [priceRange, setPriceRange] = useState(
-    initialPriceRange ? JSON.parse(initialPriceRange) : [0, 5000],
+    initialPriceRange ? JSON.parse(initialPriceRange) : [0, 15000],
   );
   const [selectedCategories, setSelectedCategories] = useState(
     initialCategories ? initialCategories.split(",") : [],
@@ -92,7 +92,7 @@ const Filter = ({
       <div className="mb-4 px-2">
         <h1 className="font-semibold mb-2">{`Price ₹${priceRange[0]}-₹${priceRange[1]}`}</h1>
         <Slider
-          max={5000}
+          max={15000}
           step={500}
           value={priceRange}
           onValueChange={(value) => {
@@ -102,7 +102,7 @@ const Filter = ({
         <button
           onClick={() => {
             setSortByPrice("");
-            setPriceRange([0, 5000]);
+            setPriceRange([0, 15000]);
           }}
           className="text-sm text-blue-500 hover:underline mt-6"
         >

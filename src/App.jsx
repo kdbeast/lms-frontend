@@ -1,4 +1,5 @@
 import AuthPage from "./pages/AuthPage";
+import SelectRole from "./pages/SelectRole";
 import MainLayout from "./layout/MainLayout";
 import Courses from "./pages/student/Courses";
 import Profile from "./pages/student/Profile";
@@ -47,6 +48,10 @@ const router = createBrowserRouter([
             <AuthPage />
           </AuthenticatedUserRoute>
         ),
+      },
+      {
+        path: "/select-role",
+        element: <SelectRole />,
       },
       {
         path: "/my-learning",

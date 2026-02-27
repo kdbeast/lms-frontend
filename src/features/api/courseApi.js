@@ -8,9 +8,12 @@ export const courseApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: COURSE_API,
     prepareHeaders: async (headers) => {
-      const token = await window.Clerk.session?.getToken();
-      if (token) {
-        headers.set("Authorization", `Bearer ${token}`);
+      if (window.Clerk?.session) {
+        const token = await window.Clerk.session.getToken();
+
+        if (token) {
+          headers.set("Authorization", `Bearer ${token}`);
+        }
       }
       return headers;
     },
@@ -136,16 +139,11 @@ export const courseApi = createApi({
       }),
       invalidatesTags: ["Refetch_Creator_Course"],
     }),
-    getEnrolledCourses: builder.query({
-      query: () => ({
-        url: "/api/v1/user/enrolled-courses",
-        method: "GET",
-      }),
-    }),
   }),
 });
 
 export const {
+  useGetCourseByIdQuery,
   useEditCourseMutation,
   useSearchCoursesQuery,
   useGetLectureByIdQuery,
@@ -157,7 +155,6 @@ export const {
   useGetPublishedCoursesQuery,
   useGetLectureByCourseIdQuery,
   useTogglePublishCourseMutation,
-  useGetEnrolledCoursesQuery,
 } = courseApi;
 
 // mutation -> data bhejna
