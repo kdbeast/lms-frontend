@@ -101,7 +101,7 @@ const CourseDetails = () => {
         </div>
 
         <div className="w-full lg:w-1/3">
-          <Card className="max-w-full mx-auto border rounded-lg shadow-lg">
+          <Card className="sticky max-w-full mx-auto border rounded-lg shadow-lg">
             {/* Card Content */}
             <CardContent className="p-4 flex flex-col">
               <div className="w-full mb-4">

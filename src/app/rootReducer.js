@@ -1,4 +1,3 @@
-import authReducer from "../features/authSlice";
 import { authApi } from "../features/api/authApi";
 import { combineReducers } from "@reduxjs/toolkit";
 import { courseApi } from "../features/api/courseApi";
@@ -10,7 +9,6 @@ const rootReducer = combineReducers({
   [courseApi.reducerPath]: courseApi.reducer,
   [purchaseApi.reducerPath]: purchaseApi.reducer,
   [courseProgressApi.reducerPath]: courseProgressApi.reducer,
-  auth: authReducer,
 });
 
 export default rootReducer;

@@ -22,8 +22,8 @@ import PurchaseCourseProtectedRoute from "./components/PurchaseCourseProtectedRo
 
 import {
   AdminRoute,
-  AuthenticatedUserRoute,
   ProtectedRoute,
+  AuthenticatedUserRoute,
 } from "./components/ProtectedRoutes";
 
 const router = createBrowserRouter([
@@ -41,7 +41,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/login",
+        path: "/auth/*",
         element: (
           <AuthenticatedUserRoute>
             <AuthPage />

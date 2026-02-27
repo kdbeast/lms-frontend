@@ -27,7 +27,7 @@ export function CarouselDemo() {
 
     autoplayRef.current = setInterval(() => {
       api.scrollNext();
-    }, 5000); // ⏱️ 3 seconds
+    }, 3000); // ⏱️ 3 seconds
 
     return () => clearInterval(autoplayRef.current);
   }, [api]);

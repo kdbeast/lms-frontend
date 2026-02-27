@@ -1,9 +1,9 @@
 import React from "react";
 import Course from "./Course";
-import { useSelector } from "react-redux";
+import { useUser } from "@clerk/clerk-react";
 
 const MyLearning = () => {
-  const { user } = useSelector((state) => state.auth);
+  const { user } = useUser();
   const myLearning = user?.enrolledCourses || [];
   const isLoading = false; // Data comes from global state now
 

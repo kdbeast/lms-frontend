@@ -1,29 +1,43 @@
+import {
+  SignedIn,
+  SignedOut,
+  RedirectToSignIn,
+  useUser,
+} from "@clerk/clerk-react";
 import { Navigate } from "react-router";
-import { useSelector } from "react-redux";
 
 export const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated } = useSelector((state) => state.auth);
-  if (!isAuthenticated) {
-    return <Navigate to="/login" />;
-  }
-  return children;
+  return (
+    <>
+      <SignedIn>{children}</SignedIn>
+      <SignedOut>
+        <RedirectToSignIn />
+      </SignedOut>
+    </>
+  );
 };
 
 export const AuthenticatedUserRoute = ({ children }) => {
-  const { isAuthenticated } = useSelector((state) => state.auth);
-  if (isAuthenticated) {
-    return <Navigate to="/" />;
-  }
-  return children;
+  return (
+    <>
+      <SignedOut>{children}</SignedOut>
+      <SignedIn>
+        <Navigate to="/" />
+      </SignedIn>
+    </>
+  );
 };
 
 export const AdminRoute = ({ children }) => {
-  const { user, isAuthenticated } = useSelector((state) => state.auth);
-  if (!isAuthenticated) {
-    return <Navigate to="/login" />;
-  }
-  if (user?.user?.role !== "instructor") {
-    return <Navigate to="/" />;
-  }
+  const { user, isLoaded } = useUser();
+
+  if (!isLoaded) return null;
+
+  if (!user) return <RedirectToSignIn />;
+
+  const role = user.publicMetadata?.role;
+
+  if (role !== "instructor") return <Navigate to="/" />;
+
   return children;
 };

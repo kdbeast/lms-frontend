@@ -18,7 +18,7 @@ import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import {
   useEditCourseMutation,
-  useGetCourseByIdQuery,
+  useGetEnrolledCoursesQuery,
   useTogglePublishCourseMutation,
 } from "../../../features/api/courseApi";
 import { Editor } from "primereact/editor";
@@ -51,7 +51,7 @@ const BasicCourseTab = ({ courseId }) => {
     useEditCourseMutation();
 
   const { data: courseData, isLoading: courseLoading } =
-    useGetCourseByIdQuery(courseId);
+    useGetEnrolledCoursesQuery();
 
   useEffect(() => {
     if (courseData?.course) {
@@ -197,7 +197,7 @@ const BasicCourseTab = ({ courseId }) => {
                 value={input.category}
                 onValueChange={handleSelectChange("category")}
               >
-                <SelectTrigger className="w-[180px]">
+                <SelectTrigger className="w-45">
                   <SelectValue placeholder="Select a category" />
                 </SelectTrigger>
                 <SelectContent>
@@ -232,7 +232,7 @@ const BasicCourseTab = ({ courseId }) => {
                 value={input.courseLevel}
                 onValueChange={handleSelectChange("courseLevel")}
               >
-                <SelectTrigger className="w-[180px]">
+                <SelectTrigger className="w-45">
                   <SelectValue placeholder="Select a course level" />
                 </SelectTrigger>
                 <SelectContent>

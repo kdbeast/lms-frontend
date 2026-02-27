@@ -6,7 +6,13 @@ export const courseProgressApi = createApi({
   reducerPath: "courseProgressApi",
   baseQuery: fetchBaseQuery({
     baseUrl: COURSE_PROGRESS_API,
-    credentials: "include",
+    prepareHeaders: async (headers) => {
+      const token = await window.Clerk.session?.getToken();
+      if (token) {
+        headers.set("Authorization", `Bearer ${token}`);
+      }
+      return headers;
+    },
   }),
   endpoints: (builder) => ({
     getCourseProgress: builder.query({
