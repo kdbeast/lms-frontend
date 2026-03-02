@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Sheet,
   SheetTitle,
@@ -7,12 +6,13 @@ import {
   SheetClose,
   SheetTrigger,
 } from "./ui/sheet";
+import React from "react";
 import DarkMode from "../DarkMode";
 import { Button } from "./ui/button";
+import { Separator } from "./ui/separator";
 import { Menu, School } from "lucide-react";
 import { Link, useNavigate } from "react-router";
-import { Separator } from "./ui/separator";
-import { SignedIn, SignedOut, useAuth, UserButton } from "@clerk/clerk-react";
+import { useUser, SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -46,13 +46,13 @@ const Navbar = () => {
           <SignedOut>
             <div className="flex items-center gap-2">
               <Button
-                onClick={() => navigate("/auth")}
+                onClick={() => navigate("/auth?tab=login")}
                 className="dark:bg-white dark:text-black"
               >
                 Login
               </Button>
               <Button
-                onClick={() => navigate("/auth?mode=sign-up")}
+                onClick={() => navigate("/auth?tab=signup")}
                 className="dark:bg-white dark:text-black"
               >
                 Register
@@ -158,20 +158,17 @@ const MobileNavbar = () => {
 
 const InstructorLink = () => {
   const navigate = useNavigate();
-  const { sessionClaims, isLoaded } = useAuth();
+  const { user, isLoaded } = useUser();
 
+  console.log('userrrrrrr', user)
   if (!isLoaded) return null;
 
-  const role = sessionClaims?.role;
+  const role = user?.unsafeMetadata?.role;
 
   if (role !== "instructor") return null;
 
   return (
-    <Button
-      variant="outline"
-      className="cursor-pointer"
-      onClick={() => navigate("/admin/dashboard")}
-    >
+    <Button variant="outline" onClick={() => navigate("/admin/dashboard")}>
       Dashboard
     </Button>
   );
