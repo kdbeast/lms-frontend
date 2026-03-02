@@ -12,10 +12,23 @@ import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
 import { Menu, School } from "lucide-react";
 import { Link, useNavigate } from "react-router";
-import { useUser, SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
+import { useUser, SignedIn, SignedOut, useClerk } from "@clerk/clerk-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { useGetEnrolledCoursesQuery } from "@/features/api/authApi";
 
 const Navbar = () => {
+  const { user } = useUser();
   const navigate = useNavigate();
+  const { signOut } = useClerk();
+  const { data } = useGetEnrolledCoursesQuery();
 
   return (
     <div className="h-16 dark:bg-[#0A0A0A] bg-white border-b dark:border-b-gray-800 border-b-gray-200 fixed top-0 left-0 right-0 z-10">
@@ -29,37 +42,58 @@ const Navbar = () => {
           <h1 className="font-extrabold text-2xl">E-Learning</h1>
         </div>
 
-        <div className="flex items-center gap-5">
-          {/* AUTHED USER */}
-          <SignedIn>
-            <div className="flex items-center gap-4">
-              <InstructorLink />
-
-              <UserButton />
-            </div>
-            <Link to="/profile" className="menu-item">
-              Profile
-            </Link>
-          </SignedIn>
-
-          {/* GUEST USER */}
-          <SignedOut>
+        <div className="flex items-center gap-5 m-5 p-5">
+          {user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <Avatar className="size-10 cursor-pointer">
+                  <AvatarImage
+                    src={data?.photoUrl || "https://github.com/shadcn.png"}
+                  />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuSeparator className="bg-black m-0.5" />
+                <DropdownMenuItem>
+                  <Link to="/my-learning">My Learning</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link to="/profile">Edit Profile</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="cursor-pointer"
+                  onClick={() => signOut(() => navigate("/"))}
+                >
+                  Logout
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                {user?.unsafeMetadata?.role === "instructor" && (
+                  <DropdownMenuItem>
+                    <Link to="/admin/dashboard">Dashboard</Link>
+                  </DropdownMenuItem>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
             <div className="flex items-center gap-2">
               <Button
+                variant={"default"}
                 onClick={() => navigate("/auth?tab=login")}
                 className="dark:bg-white dark:text-black"
               >
                 Login
               </Button>
               <Button
+                variant={"default"}
                 onClick={() => navigate("/auth?tab=signup")}
                 className="dark:bg-white dark:text-black"
               >
                 Register
               </Button>
             </div>
-          </SignedOut>
-
+          )}
           <DarkMode />
         </div>
       </div>
@@ -89,6 +123,9 @@ export default Navbar;
 
 const MobileNavbar = () => {
   const navigate = useNavigate();
+  const { user } = useUser();
+  const { signOut } = useClerk();
+  const { data } = useGetEnrolledCoursesQuery();
 
   return (
     <Sheet>
@@ -109,67 +146,60 @@ const MobileNavbar = () => {
 
         <nav className="flex flex-col gap-2 justify-center text-center">
           <div>
-            <UserButton />
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <Avatar className="size-10 cursor-pointer">
+                    <AvatarImage
+                      src={data?.photoUrl || "https://github.com/shadcn.png"}
+                    />
+                    <AvatarFallback>CN</AvatarFallback>
+                  </Avatar>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuSeparator className="bg-black m-0.5" />
+                  <DropdownMenuItem>
+                    <Link to="/my-learning">My Learning</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link to="/profile">Edit Profile</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    className="cursor-pointer"
+                    onClick={() => signOut(() => navigate("/"))}
+                  >
+                    Logout
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  {user?.unsafeMetadata?.role === "instructor" && (
+                    <DropdownMenuItem>
+                      <Link to="/admin/dashboard">Dashboard</Link>
+                    </DropdownMenuItem>
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <div className="flex items-center justify-center gap-2">
+                <Button
+                  variant={"default"}
+                  onClick={() => navigate("/auth?tab=login")}
+                  className="dark:bg-white dark:text-black"
+                >
+                  Login
+                </Button>
+                <Button
+                  variant={"default"}
+                  onClick={() => navigate("/auth?tab=signup")}
+                  className="dark:bg-white dark:text-black"
+                >
+                  Register
+                </Button>
+              </div>
+            )}
           </div>
-
-          <SignedIn>
-            <SheetClose asChild>
-              <Link
-                to="/my-learning"
-                className="bg-gray-800 rounded-2xl m-2 p-5 hover:bg-gray-700"
-              >
-                My Learning
-              </Link>
-            </SheetClose>
-
-            <SheetClose asChild>
-              <Link
-                to="/profile"
-                className="bg-gray-800 rounded-2xl m-2 p-5 hover:bg-gray-700"
-              >
-                Profile
-              </Link>
-            </SheetClose>
-          </SignedIn>
-
-          <SignedOut>
-            <SheetClose asChild>
-              <Button onClick={() => navigate("/auth")} className="w-full">
-                Login
-              </Button>
-            </SheetClose>
-
-            <SheetClose asChild>
-              <Button
-                onClick={() => navigate("/auth?mode=sign-up")}
-                className="w-full"
-              >
-                Register
-              </Button>
-            </SheetClose>
-          </SignedOut>
         </nav>
       </SheetContent>
     </Sheet>
-  );
-};
-
-/* ----------------- Instructor Dashboard Button ----------------- */
-
-const InstructorLink = () => {
-  const navigate = useNavigate();
-  const { user, isLoaded } = useUser();
-
-  console.log('userrrrrrr', user)
-  if (!isLoaded) return null;
-
-  const role = user?.unsafeMetadata?.role;
-
-  if (role !== "instructor") return null;
-
-  return (
-    <Button variant="outline" onClick={() => navigate("/admin/dashboard")}>
-      Dashboard
-    </Button>
   );
 };

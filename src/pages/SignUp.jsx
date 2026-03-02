@@ -2,7 +2,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -21,17 +20,6 @@ import { Loader2 } from "lucide-react";
 import { useAuth, useSignUp } from "@clerk/clerk-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
-// import { z } from "zod";
-// import { toast } from "sonner";
-
-// const signupSchema = z.object({
-//   name: z.string().min(2, "Name must be at least 2 characters"),
-//   role: z.enum(["student", "instructor"], {
-//     errorMap: () => ({ message: "Select a role" }),
-//   }),
-//   email: z.string().email("Invalid email"),
-//   password: z.string().min(6, "Password must be at least 6 characters"),
-// });
 
 const SignUp = ({ signupInput, handleInputChange, handleRoleChange }) => {
   const { getToken } = useAuth();
@@ -127,16 +115,16 @@ const SignUp = ({ signupInput, handleInputChange, handleRoleChange }) => {
               {errors.verification && (
                 <p className="text-red-500 text-sm">{errors.verification}</p>
               )}
-              {loading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Please wait
-                </>
-              ) : (
-                <Button onClick={handleVerify} className="w-full mt-2">
-                  Verify Email
+                <Button onClick={handleVerify} className="w-full mt-2 cursor-pointer">
+                  {loading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Please wait
+                  </>
+                ) : (
+                  "Verify"
+                )}
                 </Button>
-              )}
             </>
           ) : (
             <>

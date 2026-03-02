@@ -1,41 +1,34 @@
-import {
-  useAuth,
-  SignedIn,
-  SignedOut,
-  RedirectToSignIn,
-} from "@clerk/clerk-react";
 import { Navigate } from "react-router";
+import { useUser } from "@clerk/clerk-react";
 
 export const ProtectedRoute = ({ children }) => {
-  return (
-    <>
-      <SignedIn>{children}</SignedIn>
-      <SignedOut>
-        <RedirectToSignIn />
-      </SignedOut>
-    </>
-  );
-};
-
-export const AuthenticatedUserRoute = ({ children }) => {
-  return (
-    <>
-      <SignedOut>{children}</SignedOut>
-      <SignedIn>
-        <Navigate to="/" />
-      </SignedIn>
-    </>
-  );
-};
-
-export const AdminRoute = ({ children }) => {
-  const { isLoaded, isSignedIn, sessionClaims } = useAuth();
+  const { isLoaded, isSignedIn } = useUser();
 
   if (!isLoaded) return null;
 
   if (!isSignedIn) return <Navigate to="/auth" />;
 
-  const role = sessionClaims?.role;
+  return children;
+};
+
+export const AuthenticatedUserRoute = ({ children }) => {
+  const { isSignedIn, isLoaded } = useUser();
+
+  if (!isLoaded) return null;
+
+  if (isSignedIn) return <Navigate to="/" />;
+
+  return children;
+};
+
+export const AdminRoute = ({ children }) => {
+  const { isLoaded, isSignedIn, user } = useUser();
+
+  if (!isLoaded) return null;
+
+  if (!isSignedIn) return <Navigate to="/auth" />;
+
+  const role = user?.unsafeMetadata?.role;
 
   if (role !== "instructor") return <Navigate to="/" />;
 

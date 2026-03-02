@@ -21,7 +21,7 @@ const HeroSection = () => {
 
             <Button
               onClick={() => navigate("/course/search")}
-              className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-4 rounded-full font-semibold"
+              className="bg-white text-blue-600 hover:bg-gray-300 px-8 py-4 rounded-full font-semibold cursor-pointer"
             >
               Explore Courses
             </Button>

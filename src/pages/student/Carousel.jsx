@@ -55,8 +55,8 @@ export function CarouselDemo() {
           </CarouselItem>
         ))}
       </CarouselContent>
-      <CarouselPrevious className="absolute left-3 top-1/2 transform -translate-y-1/2 bg-blue-400 dark:bg-blue-500 dark:hover:bg-blue-600 hover:bg-blue-500 border-0" />
-      <CarouselNext className="absolute right-3 top-1/2 transform -translate-y-1/2 bg-blue-400 dark:bg-blue-500 dark:hover:bg-blue-600 hover:bg-blue-500 border-0" />
+      <CarouselPrevious className="absolute left-3 top-1/2 transform -translate-y-1/2 bg-blue-400 dark:bg-blue-500 dark:hover:bg-blue-600 hover:bg-blue-500 border-0 cursor-pointer" />
+      <CarouselNext className="absolute right-3 top-1/2 transform -translate-y-1/2 bg-blue-400 dark:bg-blue-500 dark:hover:bg-blue-600 hover:bg-blue-500 border-0 cursor-pointer" />
     </Carousel>
   );
 }

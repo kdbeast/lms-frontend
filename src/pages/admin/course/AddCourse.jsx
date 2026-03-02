@@ -28,7 +28,7 @@ const AddCourse = () => {
       navigate("/admin/course");
     }
     if (error) {
-      toast.error(error.data.message);
+      toast.error(error?.data?.message);
     }
   }, [isSuccess, error, data, navigate]);
 
