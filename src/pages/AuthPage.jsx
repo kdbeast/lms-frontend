@@ -8,29 +8,14 @@ const Login = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const tab = searchParams.get("tab") || "login";
 
-  const [signupInput, setSignupInput] = useState({
-    name: "",
-    role: "",
-    email: "",
-    password: "",
-  });
-
   const [loginInput, setLoginInput] = useState({
     email: "",
     password: "",
   });
 
-  const handleInputChange = (e, type) => {
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
-    if (type === "signup") {
-      setSignupInput({ ...signupInput, [name]: value });
-    } else {
       setLoginInput({ ...loginInput, [name]: value });
-    }
-  };
-
-  const handleRoleChange = (value) => {
-    setSignupInput({ ...signupInput, role: value });
   };
 
   return (
@@ -45,11 +30,7 @@ const Login = () => {
           <TabsTrigger value="login">Login</TabsTrigger>
         </TabsList>
 
-        <SignUp
-          signupInput={signupInput}
-          handleRoleChange={handleRoleChange}
-          handleInputChange={handleInputChange}
-        />
+        <SignUp />
 
         <SignIn loginInput={loginInput} handleInputChange={handleInputChange} />
       </Tabs>

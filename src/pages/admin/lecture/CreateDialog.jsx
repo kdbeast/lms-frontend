@@ -109,7 +109,7 @@ const CreateDialog = ({ courseId }) => {
         <DialogTrigger asChild onClick={() => setIsModalOpen(true)}>
           <Button>Add Lecture</Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-106.25">
           <DialogHeader>
             <DialogTitle>Create Lecture</DialogTitle>
             <DialogDescription>

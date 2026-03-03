@@ -27,7 +27,7 @@ const SearchPage = () => {
   });
 
   const isEmpty = !isLoading && data?.courses?.length === 0;
-  const DEFAULT_PRICE_RANGE = [0, 5000];
+  const DEFAULT_PRICE_RANGE = [0, 15000];
 
   const handleFilterChange = (
     categories = [],

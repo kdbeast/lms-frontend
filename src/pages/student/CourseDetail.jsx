@@ -22,6 +22,7 @@ const CourseDetails = () => {
   // Use the new query to fetch both course details and purchase status
   const { data, isLoading, isError } =
     useGetCourseDetailWithStatusQuery(courseId);
+    console.log(data)
 
   if (isLoading)
     return (
@@ -32,6 +33,7 @@ const CourseDetails = () => {
   if (isError) return <p>Failed to load course details.</p>;
 
   const { course, purchased } = data;
+  console.log(course)
 
   const videoUrl = course.lectures[0]?.videoUrl;
 

@@ -3,16 +3,9 @@ import {
   SheetTitle,
   SheetHeader,
   SheetContent,
-  SheetClose,
   SheetTrigger,
 } from "./ui/sheet";
 import React from "react";
-import DarkMode from "../DarkMode";
-import { Button } from "./ui/button";
-import { Separator } from "./ui/separator";
-import { Menu, School } from "lucide-react";
-import { Link, useNavigate } from "react-router";
-import { useUser, SignedIn, SignedOut, useClerk } from "@clerk/clerk-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,14 +14,22 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import DarkMode from "../DarkMode";
+import { Button } from "./ui/button";
+import { Separator } from "./ui/separator";
+import { Menu, School } from "lucide-react";
+import { Link, useNavigate } from "react-router";
+import { useUser, useClerk } from "@clerk/clerk-react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { useGetEnrolledCoursesQuery } from "@/features/api/authApi";
 
 const Navbar = () => {
-  const { user } = useUser();
+  const { user, isSignedIn } = useUser();
   const navigate = useNavigate();
   const { signOut } = useClerk();
-  const { data } = useGetEnrolledCoursesQuery();
+  const { data } = useGetEnrolledCoursesQuery(undefined, {
+    skip: !isSignedIn,
+  });
 
   return (
     <div className="h-16 dark:bg-[#0A0A0A] bg-white border-b dark:border-b-gray-800 border-b-gray-200 fixed top-0 left-0 right-0 z-10">
@@ -45,7 +46,7 @@ const Navbar = () => {
         <div className="flex items-center gap-5 m-5 p-5">
           {user ? (
             <DropdownMenu>
-              <DropdownMenuTrigger>
+              <DropdownMenuTrigger asChild>
                 <Avatar className="size-10 cursor-pointer">
                   <AvatarImage
                     src={data?.photoUrl || "https://github.com/shadcn.png"}
@@ -123,14 +124,16 @@ export default Navbar;
 
 const MobileNavbar = () => {
   const navigate = useNavigate();
-  const { user } = useUser();
+  const { user, isSignedIn } = useUser();
   const { signOut } = useClerk();
-  const { data } = useGetEnrolledCoursesQuery();
+  const { data } = useGetEnrolledCoursesQuery(undefined, {
+    skip: !isSignedIn,
+  });
 
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button size="icon" variant="ghost">
+        <Button size="icon" variant="ghost" className="cursor-pointer">
           <Menu />
         </Button>
       </SheetTrigger>
@@ -148,7 +151,7 @@ const MobileNavbar = () => {
           <div>
             {user ? (
               <DropdownMenu>
-                <DropdownMenuTrigger>
+                <DropdownMenuTrigger asChild>
                   <Avatar className="size-10 cursor-pointer">
                     <AvatarImage
                       src={data?.photoUrl || "https://github.com/shadcn.png"}

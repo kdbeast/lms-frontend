@@ -84,7 +84,7 @@ const Filter = ({
         onClick={() => {
           setSortByPrice("");
         }}
-        className="text-sm text-blue-500 hover:underline mt-6"
+        className="text-sm text-blue-500 hover:underline mt-6 cursor-pointer"
       >
         Clear
       </button>
@@ -98,13 +98,14 @@ const Filter = ({
           onValueChange={(value) => {
             setPriceRange(value);
           }}
+          className="cursor-pointer"
         />
         <button
           onClick={() => {
             setSortByPrice("");
             setPriceRange([0, 15000]);
           }}
-          className="text-sm text-blue-500 hover:underline mt-6"
+          className="text-sm text-blue-500 hover:underline mt-6 cursor-pointer"
         >
           Clear
         </button>
@@ -115,6 +116,7 @@ const Filter = ({
           <div key={category.id} className="flex items-center space-x-2 my-2">
             <Checkbox
               id={category.id}
+              className="cursor-pointer"
               checked={selectedCategories.includes(category.id)}
               onCheckedChange={() => handleCategoryChange(category.id)}
             />
@@ -130,7 +132,7 @@ const Filter = ({
           onClick={() => {
             setSelectedCategories([]);
           }}
-          className="text-sm text-blue-500 hover:underline mt-6"
+          className="text-sm text-blue-500 hover:underline mt-6 cursor-pointer"
         >
           Clear
         </button>

@@ -20,43 +20,61 @@ import { Loader2 } from "lucide-react";
 import { useAuth, useSignUp } from "@clerk/clerk-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 
-const SignUp = ({ signupInput, handleInputChange, handleRoleChange }) => {
+const SignUp = () => {
   const { getToken } = useAuth();
-  const { signUp, setActive, isLoaded } = useSignUp();
   const navigate = useNavigate();
+  const { signUp, setActive, isLoaded } = useSignUp();
 
-  const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [verifying, setVerifying] = useState(false);
   const [verificationCode, setVerificationCode] = useState("");
 
-  const handleSignup = async () => {
+  const {
+    control,
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      role: "student",
+      name: "",
+      email: "",
+      password: "",
+    },
+  });
+  console.log(errors);
+
+  const handleSignup = async (data) => {
     if (!isLoaded) return;
 
     setLoading(true);
 
     try {
-      console.log("creating user");
       await signUp.create({
-        emailAddress: signupInput.email,
-        password: signupInput.password,
-        firstName: signupInput.name,
+        emailAddress: data.email,
+        password: data.password,
+        firstName: data.name,
         unsafeMetadata: {
-          role: signupInput.role,
+          role: data.role,
         },
       });
-      console.log("User created");
 
       await signUp.prepareEmailAddressVerification({
         strategy: "email_code",
       });
       setVerifying(true);
     } catch (err) {
-      console.log(err, "user created fail");
-      setErrors({
-        general: err.errors?.[0]?.message || "Something went wrong",
-      });
+      console.log("Verification error:", err);
+
+      const message =
+        err?.errors?.[0]?.longMessage ||
+        err?.errors?.[0]?.message ||
+        "Verification failed";
+
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -87,8 +105,14 @@ const SignUp = ({ signupInput, handleInputChange, handleRoleChange }) => {
         navigate("/");
       }
     } catch (err) {
-      setErrors({ verification: "Invalid verification code" });
-      console.log(err);
+      console.log("Verification error:", err);
+
+      const message =
+        err?.errors?.[0]?.longMessage ||
+        err?.errors?.[0]?.message ||
+        "Verification failed";
+
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -115,8 +139,11 @@ const SignUp = ({ signupInput, handleInputChange, handleRoleChange }) => {
               {errors.verification && (
                 <p className="text-red-500 text-sm">{errors.verification}</p>
               )}
-                <Button onClick={handleVerify} className="w-full mt-2 cursor-pointer">
-                  {loading ? (
+              <Button
+                onClick={handleVerify}
+                className="w-full mt-2 cursor-pointer"
+              >
+                {loading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Please wait
@@ -124,63 +151,84 @@ const SignUp = ({ signupInput, handleInputChange, handleRoleChange }) => {
                 ) : (
                   "Verify"
                 )}
-                </Button>
+              </Button>
             </>
           ) : (
-            <>
+            <form onSubmit={handleSubmit(handleSignup)} className="space-y-4">
               <Label>Select Role</Label>
-              <Select value={signupInput.role} onValueChange={handleRoleChange}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select Role" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="student">Student</SelectItem>
-                  <SelectItem value="instructor">Instructor</SelectItem>
-                </SelectContent>
-              </Select>
-              {errors.role && (
-                <p className="text-red-500 text-sm">{errors.role}</p>
-              )}
+              <Controller
+                name="role"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select Role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="student">Student</SelectItem>
+                      <SelectItem value="instructor">Instructor</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
 
               <Input
-                name="name"
                 placeholder="Name"
-                value={signupInput.name}
-                onChange={(e) => handleInputChange(e, "signup")}
+                {...register("name", {
+                  required: "This is required",
+                  minLength: {
+                    value: 3,
+                    message: "Min length is 3",
+                  },
+                })}
               />
               {errors.name && (
-                <p className="text-red-500 text-sm">{errors.name}</p>
+                <p className="text-red-500 text-sm">{errors.name.message}</p>
               )}
 
               <Input
                 name="email"
                 placeholder="Email"
-                value={signupInput.email}
-                onChange={(e) => handleInputChange(e, "signup")}
+                {...register("email", {
+                  required: {
+                    value: true,
+                    message: "Email is required",
+                  },
+                  pattern: {
+                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                    message: "Invalid email address",
+                  },
+                })}
               />
               {errors.email && (
-                <p className="text-red-500 text-sm">{errors.email}</p>
+                <p className="text-red-500 text-sm">{errors.email.message}</p>
               )}
 
               <Input
                 type="password"
                 name="password"
                 placeholder="Password"
-                value={signupInput.password}
-                onChange={(e) => handleInputChange(e, "signup")}
+                {...register("password", {
+                  required: "This is required",
+                  minLength: {
+                    value: 8,
+                    message: "Min length is 8",
+                  },
+                })}
               />
               {errors.password && (
-                <p className="text-red-500 text-sm">{errors.password}</p>
-              )}
-
-              {errors.general && (
-                <p className="text-red-500 text-sm">{errors.general}</p>
+                <p className="text-red-500 text-sm">
+                  {errors.password.message}
+                </p>
               )}
 
               <Button
-                onClick={handleSignup}
-                className="w-full"
+                type="submit"
                 disabled={loading}
+                className="w-full cursor-pointer"
               >
                 {loading ? (
                   <>
@@ -191,7 +239,7 @@ const SignUp = ({ signupInput, handleInputChange, handleRoleChange }) => {
                   "Signup"
                 )}
               </Button>
-            </>
+            </form>
           )}
         </CardContent>
       </Card>

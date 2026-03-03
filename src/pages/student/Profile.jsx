@@ -20,13 +20,16 @@ import {
   useUpdateProfileMutation,
 } from "@/features/api/authApi";
 import { Loader2 } from "lucide-react";
+import { useUser } from "@clerk/clerk-react";
 
 const Profile = () => {
-
+  const { isSignedIn } = useUser();
   const [name, setName] = useState("");
   const [profilePhoto, setProfilePhoto] = useState(null);
-
-  const { data, isLoading, refetch } = useGetEnrolledCoursesQuery();
+  const [open, setOpen] = useState(false);
+  const { data, isLoading, refetch } = useGetEnrolledCoursesQuery(undefined, {
+    skip: !isSignedIn,
+  });
   const [
     updateProfile,
     {
@@ -36,7 +39,6 @@ const Profile = () => {
       isLoading: updateProfileLoading,
     },
   ] = useUpdateProfileMutation();
-  console.log(data);
 
   useEffect(() => {
     if (isSuccess) {
@@ -65,6 +67,7 @@ const Profile = () => {
     formData.append("name", name);
     if (profilePhoto) formData.append("profilePhoto", profilePhoto);
     await updateProfile(formData);
+    setOpen(!open);
   };
 
   return (
@@ -103,12 +106,18 @@ const Profile = () => {
             </h2>
           </div>
 
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button size="sm" className="mt-2">
-                Edit Profile
-              </Button>
-            </DialogTrigger>
+          <Dialog
+            open={open}
+            onOpenChange={(s) => {
+              console.log("sss", s);
+              setOpen(!open);
+            }}
+          >
+            {/* <DialogTrigger asChild> */}
+            <Button size="sm" className="mt-2" onClick={() => setOpen(true)}>
+              Edit Profile
+            </Button>
+            {/* </DialogTrigger> */}
 
             <DialogContent>
               <DialogHeader>

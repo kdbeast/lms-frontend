@@ -42,7 +42,7 @@ const Sidebar = () => {
       {/* Mobile Sidebar (using ShadCN UI Sheet) */}
       <div className="lg:hidden">
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
-          <SheetTrigger>
+          <SheetTrigger asChild>
             <button className="p-4 text-gray-700 dark:text-gray-300">
               <span className="text-xl">☰</span> {/* Hamburger Icon */}
             </button>

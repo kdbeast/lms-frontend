@@ -9,31 +9,42 @@ import {
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { TabsContent } from "@/components/ui/tabs";
 import { useAuth, useSignIn, useUser } from "@clerk/clerk-react";
 import { Loader2 } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
-const SignIn = ({ loginInput, handleInputChange }) => {
+const SignIn = () => {
   const { user } = useUser();
   const { getToken } = useAuth();
   const navigate = useNavigate();
   const { signIn, setActive, isLoaded } = useSignIn();
 
-  const [error, setError] = useState("");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+  console.log(errors);
+
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = async () => {
+  const handleLogin = async (data) => {
     if (!isLoaded) return;
 
     setLoading(true);
-    setError("");
 
     try {
       const complete = await signIn.create({
-        identifier: loginInput.email,
-        password: loginInput.password,
+        identifier: data.email,
+        password: data.password,
       });
 
       if (complete.status === "complete") {
@@ -53,7 +64,7 @@ const SignIn = ({ loginInput, handleInputChange }) => {
         navigate("/");
       }
     } catch (err) {
-      setError(err.errors?.[0]?.message || "Login failed");
+      toast.error(err?.errors?.[0]?.message);
     } finally {
       setLoading(false);
     }
@@ -69,44 +80,57 @@ const SignIn = ({ loginInput, handleInputChange }) => {
           </CardDescription>
         </CardHeader>
 
-        <CardContent className="space-y-2">
-          <div className="space-y-1">
-            <Label>Email</Label>
-            <Input
-              type="email"
-              name="email"
-              value={loginInput.email}
-              placeholder="abc@gmail.com"
-              onChange={(e) => handleInputChange(e, "login")}
-            />
-          </div>
+        <form onSubmit={handleSubmit(handleLogin)} className="space-y-4 m-5">
+          <Input
+            name="email"
+            placeholder="Email"
+            {...register("email", {
+              required: {
+                value: true,
+                message: "Email is required",
+              },
+              pattern: {
+                value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                message: "Invalid email address",
+              },
+            })}
+          />
+          {errors.email && (
+            <p className="text-red-500 text-sm">{errors.email.message}</p>
+          )}
 
-          <div className="space-y-1">
-            <Label>Password</Label>
-            <Input
-              type="password"
-              name="password"
-              placeholder="Password"
-              value={loginInput.password}
-              onChange={(e) => handleInputChange(e, "login")}
-            />
-          </div>
-
-          {error && <p className="text-red-500 text-sm">{error}</p>}
-        </CardContent>
-
-        <CardFooter>
-          <Button onClick={handleLogin} className="w-full" disabled={loading}>
-            {loading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Please wait
-              </>
-            ) : (
-              "Login"
-            )}
-          </Button>
-        </CardFooter>
+          <Input
+            type="password"
+            name="password"
+            placeholder="Password"
+            {...register("password", {
+              required: "This is required",
+              minLength: {
+                value: 8,
+                message: "Min length is 8",
+              },
+            })}
+          />
+          {errors.password && (
+            <p className="text-red-500 text-sm">{errors.password.message}</p>
+          )}
+          <CardFooter>
+            <Button
+              type="submit"
+              disabled={loading}
+              className="w-full cursor-pointer"
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Please wait
+                </>
+              ) : (
+                "Login"
+              )}
+            </Button>
+          </CardFooter>
+        </form>
       </Card>
     </TabsContent>
   );
