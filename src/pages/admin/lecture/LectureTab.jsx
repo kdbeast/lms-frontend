@@ -108,7 +108,6 @@ const LectureTab = () => {
         });
 
         if (res.data.success) {
-          console.log(res);
           setUploadedVideoInfo({
             videoUrl: res.data.data.secure_url || res.data.data.url,
             publicId: res.data.data.public_id,

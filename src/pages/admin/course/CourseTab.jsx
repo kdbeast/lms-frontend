@@ -21,12 +21,12 @@ import {
   useGetCourseByIdQuery,
   useTogglePublishCourseMutation,
 } from "../../../features/api/courseApi";
-import { Editor } from "primereact/editor";
 import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import CourseEditor from "@/pages/admin/course/CourseEditor";
 
 const BasicCourseTab = ({ courseId }) => {
   const navigate = useNavigate();
@@ -125,7 +125,7 @@ const BasicCourseTab = ({ courseId }) => {
     }
     if (publishError) {
       toast.error(
-        publishError.data?.message || "Failed to update course status"
+        publishError.data?.message || "Failed to update course status",
       );
     }
   }, [publishSuccess, publishError, publishData]);
@@ -148,7 +148,7 @@ const BasicCourseTab = ({ courseId }) => {
             variant="outline"
             onClick={() =>
               publishCourseHandler(
-                courseData?.course.isPublished ? "false" : "true"
+                courseData?.course.isPublished ? "false" : "true",
               )
             }
             disabled={courseData?.course.lectures.length === 0}
@@ -180,13 +180,12 @@ const BasicCourseTab = ({ courseId }) => {
               placeholder="Ex. Become a MERN Stack developer from Zero to Hero in 2 months"
             />
           </div>
-          <div>
+          <div className="w-full overflow-hidden">
             <Label className="mb-1">Description</Label>
-            <Editor
+            <CourseEditor
               value={input.description}
-              style={{ height: "320px" }}
-              onTextChange={(e) =>
-                setInput({ ...input, description: e.htmlValue })
+              onChange={(value) =>
+                setInput((prev) => ({ ...prev, description: value }))
               }
             />
           </div>

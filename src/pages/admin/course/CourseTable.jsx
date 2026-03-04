@@ -9,7 +9,6 @@ import {
 import { useNavigate } from "react-router";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { TableCaption } from "@/components/ui/table";
 import { useGetAllAdminCourseQuery } from "../../../features/api/courseApi";
 
 const CourseTable = () => {
@@ -23,7 +22,7 @@ const CourseTable = () => {
     <div className="flex-1 mx-10 mt-20">
       <Button onClick={() => navigate("create")}>Create New Course</Button>
       <Table className="mt-5">
-        <TableCaption>A list of your recent courses.</TableCaption>
+        {/* <TableCaption>A list of your recent courses.</TableCaption> */}
         <TableHeader>
           <TableRow>
             <TableHead className="w-1/2">Title</TableHead>
@@ -88,12 +87,25 @@ const CourseTableSkeleton = () => {
   return (
     <TableBody>
       {Array.from({ length: 5 }).map((_, index) => (
-        <TableRow key={index} className="animate-pulse w-full">
-          <TableCell className="w-1/2 h-6 bg-gray-200 rounded"></TableCell>
-          <TableCell className="w-1/4 h-6 bg-gray-200 rounded"></TableCell>
-          <TableCell className="w-1/4 h-6 bg-gray-200 rounded"></TableCell>
-          <TableCell className="w-1/4 text-right">
-            <span className="h-6 bg-gray-200 rounded inline-block w-20"></span>
+        <TableRow key={index} className="animate-pulse">
+          {/* Title */}
+          <TableCell>
+            <div className="h-6 w-[70%] bg-gray-300 dark:bg-gray-700 rounded"></div>
+          </TableCell>
+
+          {/* Price */}
+          <TableCell>
+            <div className="h-6 w-[40%] bg-gray-300 dark:bg-gray-700 rounded"></div>
+          </TableCell>
+
+          {/* Status */}
+          <TableCell>
+            <div className="h-6 w-[50%] bg-gray-300 dark:bg-gray-700 rounded"></div>
+          </TableCell>
+
+          {/* Action */}
+          <TableCell className="text-right">
+            <div className="h-8 w-20 bg-gray-300 dark:bg-gray-700 rounded-md ml-auto"></div>
           </TableCell>
         </TableRow>
       ))}

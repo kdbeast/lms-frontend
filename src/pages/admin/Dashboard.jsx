@@ -15,9 +15,11 @@ const Dashboard = () => {
   const { data, isLoading, isError } = useGetAllPurchasedCourseQuery();
 
   if (isLoading) {
-    return <div className="flex items-center justify-center text-center font-bold text-lg text-gray-500 dark:text-gray-400 p-4 mx-auto w-full dark:bg-[#0A0A0A] bg-gray-50 shadow-lg rounded-lg h-screen">
+    return (
+      <div className="flex items-center justify-center text-center font-bold text-lg text-gray-500 dark:text-gray-400 p-4 mx-auto w-full dark:bg-[#0A0A0A] bg-gray-50 shadow-lg rounded-lg h-screen">
         <PacmanLoader color="#000" size={20} />
-      </div>;
+      </div>
+    );
   }
 
   if (isError) {
@@ -31,13 +33,13 @@ const Dashboard = () => {
 
   const totalRevenue = data?.reduce(
     (total, course) => total + (course.courseId.coursePrice || 0),
-    0
+    0,
   );
 
   const totalSales = data?.length;
 
   return (
-    <div className="mt-20 ml-10 grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+    <div className="mt-20 ml-5 grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
       {/* Total Sales Card */}
       <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300 py-6">
         <CardHeader>

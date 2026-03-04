@@ -45,7 +45,6 @@ const SignUp = () => {
       password: "",
     },
   });
-  console.log(errors);
 
   const handleSignup = async (data) => {
     if (!isLoaded) return;
@@ -91,16 +90,13 @@ const SignUp = () => {
         await setActive({ session: complete.createdSessionId });
 
         const token = await getToken();
-        console.log("TOKEN:", token);
-        const res = await fetch("http://localhost:8080/api/v1/user/sync-user", {
+        await fetch("http://localhost:8080/api/v1/user/sync-user", {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
         });
-        const data = await res.json();
-        console.log(data);
 
         navigate("/");
       }

@@ -108,8 +108,7 @@ const Profile = () => {
 
           <Dialog
             open={open}
-            onOpenChange={(s) => {
-              console.log("sss", s);
+            onOpenChange={() => {
               setOpen(!open);
             }}
           >

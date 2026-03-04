@@ -32,7 +32,6 @@ const SignIn = () => {
       password: "",
     },
   });
-  console.log(errors);
 
   const [loading, setLoading] = useState(false);
 
