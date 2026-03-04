@@ -14,7 +14,10 @@ import { useNavigate } from "react-router";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useCreateCourseMutation } from "../../../features/api/courseApi";
+import {
+  useCreateCourseMutation,
+  useGetAllAdminCourseQuery,
+} from "../../../features/api/courseApi";
 
 const AddCourse = () => {
   const navigate = useNavigate();
@@ -22,15 +25,19 @@ const AddCourse = () => {
   const [createCourse, { data, error, isLoading, isSuccess }] =
     useCreateCourseMutation();
 
+  const { data: getCourse } = useGetAllAdminCourseQuery();
+
+  const courseId = getCourse?.courses[getCourse?.courses.length - 1]?._id;
+
   useEffect(() => {
     if (isSuccess) {
       toast.success(data.message || "Course created successfully");
-      navigate("/admin/course");
+      navigate(`/admin/course/${courseId}`);
     }
     if (error) {
       toast.error(error?.data?.message);
     }
-  }, [isSuccess, error, data, navigate]);
+  }, [isSuccess, error, data, navigate, courseId]);
 
   const [category, setCategory] = useState("");
   const [courseTitle, setCourseTitle] = useState("");
@@ -49,9 +56,6 @@ const AddCourse = () => {
         <h1 className="font-bold text-xl">
           Lets add course, add some basic details for your new course
         </h1>
-        <p className="text-sm">
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-        </p>
       </div>
       <div className="space-y-4">
         <div>

@@ -1,6 +1,3 @@
-import { BadgeInfo, Lock, PlayCircle } from "lucide-react";
-import React from "react";
-import { useNavigate, useParams } from "react-router";
 import {
   Card,
   CardContent,
@@ -11,7 +8,9 @@ import {
 } from "../../components/ui/card";
 import ReactPlayer from "react-player";
 import { PacmanLoader } from "react-spinners";
+import { useNavigate, useParams } from "react-router";
 import { Separator } from "../../components/ui/separator";
+import { BadgeInfo, Lock, PlayCircle } from "lucide-react";
 import BuyCourseButton from "../../components/BuyCourseButton";
 import { useGetCourseDetailWithStatusQuery } from "../../features/api/purchaseApi";
 
@@ -32,6 +31,7 @@ const CourseDetails = () => {
   if (isError) return <p>Failed to load course details.</p>;
 
   const { course, purchased } = data;
+  console.log(course);
 
   const videoUrl = course.lectures[0]?.videoUrl;
 
@@ -65,7 +65,9 @@ const CourseDetails = () => {
 
       <div className="max-w-7xl mx-auto my-5 px-4 md:px-8 flex flex-col lg:flex-row justify-between gap-10">
         <div className="w-full lg:w-1/2 space-y-5">
-          <h1 className="font-bold text-xl md:text-2xl underline">Description</h1>
+          <h1 className="font-bold text-xl md:text-2xl underline">
+            Description
+          </h1>
           <div
             className="prose dark:prose-invert max-w-none"
             dangerouslySetInnerHTML={{ __html: course.description }}

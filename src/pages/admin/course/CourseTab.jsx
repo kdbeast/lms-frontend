@@ -19,7 +19,7 @@ import { Loader2 } from "lucide-react";
 import {
   useEditCourseMutation,
   useGetCourseByIdQuery,
-  useTogglePublishCourseMutation,
+  // useTogglePublishCourseMutation,
 } from "../../../features/api/courseApi";
 import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
@@ -97,38 +97,39 @@ const BasicCourseTab = ({ courseId }) => {
   useEffect(() => {
     if (isSuccess && data) {
       toast.success(data?.message || "Course updated successfully.");
+      navigate(`/admin/course/${courseId}/lecture`);
     }
     if (error) {
       toast.error(error.data.message);
     }
-  }, [data, isSuccess, error]);
+  }, [data, isSuccess, error, navigate, courseId]);
 
-  const [
-    togglePublishUnpublishCourse,
-    { data: publishData, isSuccess: publishSuccess, error: publishError },
-  ] = useTogglePublishCourseMutation();
+  // const [
+  //   togglePublishUnpublishCourse,
+  //   { data: publishData, isSuccess: publishSuccess, error: publishError },
+  // ] = useTogglePublishCourseMutation();
 
-  const publishCourseHandler = async (action) => {
-    try {
-      await togglePublishUnpublishCourse({
-        courseId,
-        query: action,
-      });
-    } catch {
-      toast.error("Failed to update course status");
-    }
-  };
+  // const publishCourseHandler = async (action) => {
+  //   try {
+  //     await togglePublishUnpublishCourse({
+  //       courseId,
+  //       query: action,
+  //     });
+  //   } catch {
+  //     toast.error("Failed to update course status");
+  //   }
+  // };
 
-  useEffect(() => {
-    if (publishSuccess) {
-      toast.success(publishData?.message || "Course status updated.");
-    }
-    if (publishError) {
-      toast.error(
-        publishError.data?.message || "Failed to update course status",
-      );
-    }
-  }, [publishSuccess, publishError, publishData]);
+  // useEffect(() => {
+  //   if (publishSuccess) {
+  //     toast.success(publishData?.message || "Course status updated.");
+  //   }
+  //   if (publishError) {
+  //     toast.error(
+  //       publishError.data?.message || "Failed to update course status",
+  //     );
+  //   }
+  // }, [publishSuccess, publishError, publishData]);
 
   if (courseLoading) {
     return <Loader2 className="animate-spin fixed top-1/2 left-2/3" />;
@@ -143,7 +144,7 @@ const BasicCourseTab = ({ courseId }) => {
             Make changes to your courses here. Click save when you're done.
           </CardDescription>
         </div>
-        <div className="flex gap-2">
+        {/* <div className="flex gap-2">
           <Button
             variant="outline"
             onClick={() =>
@@ -155,8 +156,7 @@ const BasicCourseTab = ({ courseId }) => {
           >
             {courseData?.course.isPublished ? "Unpublish" : "Publish"}
           </Button>
-          <Button>Remove Course</Button>
-        </div>
+        </div> */}
       </CardHeader>
       <CardContent>
         <div className="space-y-4 mt-5">
