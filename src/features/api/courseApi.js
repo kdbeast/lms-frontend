@@ -143,6 +143,14 @@ export const courseApi = createApi({
       }),
       invalidatesTags: ["Refetch_Creator_Course"],
     }),
+    reorderLectures: builder.mutation({
+      query: (lectures) => ({
+        url: "/lecture/reorder",
+        method: "PATCH",
+        body: { lectures },
+      }),
+      invalidatesTags: ["Refetch_Section"],
+    }),
   }),
 });
 
@@ -156,6 +164,7 @@ export const {
   useCreateLectureMutation,
   useDeleteLectureMutation,
   useGetAllAdminCourseQuery,
+  useReorderLecturesMutation,
   useGetPublishedCoursesQuery,
   useGetLectureByCourseIdQuery,
   useTogglePublishCourseMutation,

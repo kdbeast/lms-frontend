@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import { toast } from "sonner";
 import Lecture from "./Lecture";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Accordion,
   AccordionItem,
@@ -24,13 +25,22 @@ import {
 import CreateDialog from "./CreateDialog";
 import { GripVertical, Pencil, Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { useSortable } from "@dnd-kit/sortable";
+import {
+  arrayMove,
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { useReorderLecturesMutation } from "@/features/api/courseApi";
+import { closestCenter, DndContext } from "@dnd-kit/core";
 
 const Section = ({ section, index }) => {
   const [updateSection] = useUpdateSectionMutation();
   const [deleteSection] = useDeleteSectionMutation();
+  const [reorderLectures] = useReorderLecturesMutation();
   const [title, setTitle] = useState(section.sectionTitle);
+  const [lectures, setLectures] = useState(section.lectures);
 
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: section._id });
@@ -62,6 +72,31 @@ const Section = ({ section, index }) => {
       toast.error(res.error?.data?.message);
     }
   };
+
+  const handleLectureDragEnd = async (event) => {
+    const { active, over } = event;
+
+    if (!over || active.id === over.id) return;
+
+    const oldIndex = lectures.findIndex((l) => l._id === active.id);
+    const newIndex = lectures.findIndex((l) => l._id === over.id);
+
+    const newLectures = arrayMove(lectures, oldIndex, newIndex);
+
+    setLectures(newLectures);
+
+    const payload = newLectures.map((lecture, index) => ({
+      _id: lecture._id,
+      order: index,
+    }));
+
+    await reorderLectures(payload);
+  };
+
+  useEffect(() => {
+    setLectures(section.lectures);
+  }, [section.lectures]);
+
   return (
     <div ref={setNodeRef} style={style}>
       <Accordion type="single" collapsible>
@@ -165,15 +200,27 @@ const Section = ({ section, index }) => {
             </div>
 
             {/* Lecture list */}
-            <div className="space-y-2">
-              {section.lectures?.length ? (
-                section.lectures.map((lecture, index) => (
-                  <Lecture key={lecture._id} lecture={lecture} index={index} />
-                ))
-              ) : (
-                <p className="text-sm text-muted-foreground">No lectures yet</p>
-              )}
-            </div>
+            <DndContext
+              collisionDetection={closestCenter}
+              onDragEnd={handleLectureDragEnd}
+            >
+              <SortableContext
+                items={lectures.map((l) => l._id)}
+                strategy={verticalListSortingStrategy}
+              >
+                <div className="space-y-2">
+                  {lectures?.length ? (
+                    lectures.map((lecture) => (
+                      <Lecture key={lecture._id} lecture={lecture} />
+                    ))
+                  ) : (
+                    <p className="text-sm text-muted-foreground">
+                      No lectures yet
+                    </p>
+                  )}
+                </div>
+              </SortableContext>
+            </DndContext>
           </AccordionContent>
         </AccordionItem>
       </Accordion>

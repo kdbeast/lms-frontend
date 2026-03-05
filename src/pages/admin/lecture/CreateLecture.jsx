@@ -1,3 +1,8 @@
+import {
+  arrayMove,
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 import Section from "./Section";
 import {
   useGetSectionsByCourseIdQuery,
@@ -6,7 +11,6 @@ import {
 import { Link, useParams } from "react-router";
 import { Button } from "@/components/ui/button";
 import CreateSectionDialog from "./CreateSectionDialog";
-import { arrayMove } from "@dnd-kit/sortable";
 import { closestCenter, DndContext } from "@dnd-kit/core";
 
 const CreateLecture = () => {
@@ -67,9 +71,14 @@ const CreateLecture = () => {
             collisionDetection={closestCenter}
             onDragEnd={handleDragEnd}
           >
-            {data.sections.map((section, index) => (
-              <Section index={index} key={section._id} section={section} />
-            ))}
+            <SortableContext
+              items={data.sections.map((s) => s._id)}
+              strategy={verticalListSortingStrategy}
+            >
+              {data.sections.map((section, index) => (
+                <Section index={index} key={section._id} section={section} />
+              ))}
+            </SortableContext>
           </DndContext>
         )}
       </div>
