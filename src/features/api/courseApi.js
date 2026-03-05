@@ -90,12 +90,16 @@ export const courseApi = createApi({
       providesTags: ["Refetch_Creator_Course"],
     }),
     createLecture: builder.mutation({
-      query: ({ lectureTitle, courseId, isPreviewFree, videoInfo }) => ({
-        url: `/${courseId}/lecture`,
+      query: ({ lectureTitle, sectionId, isPreviewFree, videoInfo }) => ({
+        url: `/${sectionId}/lecture`,
         method: "POST",
-        body: { lectureTitle, isPreviewFree, videoInfo },
+        body: { lectureTitle, isPreviewFree, videoInfo, sectionId },
       }),
-      invalidatesTags: ["Refetch_Lecture"],
+      invalidatesTags: [
+        "Refetch_Lecture",
+        "Refetch_Section",
+        "Refetch_Creator_Course",
+      ],
     }),
     getLectureByCourseId: builder.query({
       query: (courseId) => ({

@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Loader2 } from "lucide-react";
 import ReactPlayer from "react-player";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -22,7 +22,7 @@ import { useCreateLectureMutation } from "@/features/api/courseApi";
 
 const MEDIA_API = `${import.meta.env.VITE_API_URL}/api/v1/media`;
 
-const CreateDialog = ({ courseId }) => {
+const CreateDialog = ({ sectionId }) => {
   const [isFree, setIsFree] = useState(false);
   const [lectureTitle, setLectureTitle] = useState("");
   const [mediaProgress, setMediaProgress] = useState(false);
@@ -31,6 +31,7 @@ const CreateDialog = ({ courseId }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [createLecture, { data, isLoading }] = useCreateLectureMutation();
+  console.log(data);
 
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
@@ -61,22 +62,10 @@ const CreateDialog = ({ courseId }) => {
     }
   };
 
-  useEffect(() => {
-    if (data) {
-      setLectureTitle(data.lectureTitle || "");
-      setIsFree(data.isPreviewFree || false);
-      if (data.videoUrl) {
-        setUploadedVideoInfo({
-          videoUrl: data.videoUrl,
-        });
-      }
-    }
-  }, [data]);
-
   const handleCreateLecture = async (e) => {
     if (e) e.preventDefault();
     const res = await createLecture({
-      courseId,
+      sectionId,
       lectureTitle,
       isPreviewFree: isFree,
       videoInfo: uploadedVideoInfo,
@@ -101,13 +90,25 @@ const CreateDialog = ({ courseId }) => {
       text
     );
 
-  const disabled = !lectureTitle || !uploadedVideoInfo.videoUrl;
+  const disabled =
+    !lectureTitle || !uploadedVideoInfo.videoUrl || mediaProgress || isLoading;
 
   return (
-    <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+    <Dialog
+      open={isModalOpen}
+      onOpenChange={(open) => {
+        setIsModalOpen(open);
+        if (!open) {
+          setLectureTitle("");
+          setUploadedVideoInfo({});
+          setIsFree(false);
+          setUploadProgress(0);
+        }
+      }}
+    >
       <form>
         <DialogTrigger asChild onClick={() => setIsModalOpen(true)}>
-          <Button>Add Lecture</Button>
+          <Button className="cursor-pointer">Add Lecture</Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-106.25">
           <DialogHeader>
