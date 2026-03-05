@@ -41,7 +41,7 @@ const CreateSectionDialog = ({ courseId }) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>Add Section</Button>
+        <Button className="cursor-pointer">Add Section</Button>
       </DialogTrigger>
 
       <DialogContent>
@@ -50,13 +50,17 @@ const CreateSectionDialog = ({ courseId }) => {
         </DialogHeader>
 
         <Input
-          placeholder="Ex. Introduction"
           value={title}
+          placeholder="Ex. Introduction"
           onChange={(e) => setTitle(e.target.value)}
         />
 
         <DialogFooter>
-          <Button onClick={handleCreateSection} disabled={isLoading}>
+          <Button
+            disabled={isLoading || !title}
+            className="cursor-pointer"
+            onClick={handleCreateSection}
+          >
             {isLoading ? "Creating..." : "Create Section"}
           </Button>
         </DialogFooter>

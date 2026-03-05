@@ -7,19 +7,15 @@ import {
   CartesianGrid,
   ResponsiveContainer,
 } from "recharts";
-import { PacmanLoader } from "react-spinners";
 import { useGetAllPurchasedCourseQuery } from "@/features/api/purchaseApi";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Dashboard = () => {
   const { data, isLoading, isError } = useGetAllPurchasedCourseQuery();
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center text-center font-bold text-lg text-gray-500 dark:text-gray-400 p-4 mx-auto w-full dark:bg-[#0A0A0A] bg-gray-50 shadow-lg rounded-lg h-screen">
-        <PacmanLoader color="#000" size={20} />
-      </div>
-    );
+    return <DashboardSkeleton />;
   }
 
   if (isError) {
@@ -39,7 +35,7 @@ const Dashboard = () => {
   const totalSales = data?.length;
 
   return (
-    <div className="mt-20 ml-5 grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+    <div className="mt-20 ml-5 mr-5 grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
       {/* Total Sales Card */}
       <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300 py-6">
         <CardHeader>
@@ -100,3 +96,27 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
+const DashboardSkeleton = () => {
+  return (
+    <div className="mt-20 ml-5 mr-5 grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      {/* Total Sales Skeleton */}
+      <div className="shadow-lg rounded-lg p-6 space-y-4">
+        <Skeleton className="h-6 w-32" />
+        <Skeleton className="h-10 w-24" />
+      </div>
+
+      {/* Total Revenue Skeleton */}
+      <div className="shadow-lg rounded-lg p-6 space-y-4">
+        <Skeleton className="h-6 w-36" />
+        <Skeleton className="h-10 w-28" />
+      </div>
+
+      {/* Chart Skeleton */}
+      <div className="shadow-lg rounded-lg p-6 col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4 space-y-4">
+        <Skeleton className="h-6 w-40" />
+        <Skeleton className="h-[350px] w-full" />
+      </div>
+    </div>
+  );
+};

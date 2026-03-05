@@ -57,10 +57,10 @@ const Navbar = () => {
               <DropdownMenuContent>
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator className="bg-black m-0.5" />
-                <DropdownMenuItem>
+                <DropdownMenuItem asChild>
                   <Link to="/my-learning">My Learning</Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
+                <DropdownMenuItem asChild>
                   <Link to="/profile">Edit Profile</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem
@@ -71,7 +71,7 @@ const Navbar = () => {
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 {user?.unsafeMetadata?.role === "instructor" && (
-                  <DropdownMenuItem>
+                  <DropdownMenuItem asChild>
                     <Link to="/admin/dashboard">Dashboard</Link>
                   </DropdownMenuItem>
                 )}
@@ -162,10 +162,10 @@ const MobileNavbar = () => {
                 <DropdownMenuContent>
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
                   <DropdownMenuSeparator className="bg-black m-0.5" />
-                  <DropdownMenuItem>
+                  <DropdownMenuItem asChild>
                     <Link to="/my-learning">My Learning</Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem asChild>
                     <Link to="/profile">Edit Profile</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem
@@ -176,7 +176,7 @@ const MobileNavbar = () => {
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   {user?.unsafeMetadata?.role === "instructor" && (
-                    <DropdownMenuItem>
+                    <DropdownMenuItem asChild>
                       <Link to="/admin/dashboard">Dashboard</Link>
                     </DropdownMenuItem>
                   )}

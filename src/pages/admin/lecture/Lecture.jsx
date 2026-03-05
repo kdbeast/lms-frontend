@@ -1,7 +1,11 @@
-import { EditIcon, GripVertical } from "lucide-react";
+import { toast } from "sonner";
+import { useEffect } from "react";
+import { CSS } from "@dnd-kit/utilities";
 import { useNavigate } from "react-router";
 import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+import { Button } from "@/components/ui/button";
+import { EditIcon, GripVertical, Loader2, Trash2 } from "lucide-react";
+import { useDeleteLectureMutation } from "@/features/api/courseApi";
 
 const Lecture = ({ lecture, courseId }) => {
   const navigate = useNavigate();
@@ -19,6 +23,31 @@ const Lecture = ({ lecture, courseId }) => {
   const goToUpdateLecture = async () => {
     navigate(`/admin/course/${courseId}/lecture/${lecture._id}`);
   };
+
+  const renderButtonContent = (loading, text) =>
+    loading ? (
+      <>
+        <Loader2 className="mr-2 w-4 h-4 animate-spin" /> Please wait
+      </>
+    ) : (
+      text
+    );
+
+  const handleRemoveLecture = async () => {
+    await deleteLecture(lecture._id);
+  };
+
+  const [
+    deleteLecture,
+    { isLoading: deleteLoading, isSuccess: deleteSuccess, data: deleteData },
+  ] = useDeleteLectureMutation();
+
+  useEffect(() => {
+    if (deleteData && deleteSuccess) {
+      toast.success(deleteData.message || "Lecture Removed");
+      navigate(`/admin/course/${courseId}/lecture`);
+    }
+  }, [deleteData, deleteSuccess, navigate, courseId]);
 
   return (
     <div
@@ -41,11 +70,24 @@ const Lecture = ({ lecture, courseId }) => {
         </h1>
       </div>
 
-      <EditIcon
-        size={18}
-        onClick={goToUpdateLecture}
-        className="cursor-pointer text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
-      />
+      <div className="flex items-center gap-2">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={goToUpdateLecture}
+          className="cursor-pointer text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
+        >
+          <EditIcon size={18} />
+        </Button>
+        <Button
+          variant="outline"
+          disabled={deleteLoading}
+          onClick={handleRemoveLecture}
+          className="cursor-pointer text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400"
+        >
+          {renderButtonContent(deleteLoading, <Trash2 />)}
+        </Button>
+      </div>
     </div>
   );
 };

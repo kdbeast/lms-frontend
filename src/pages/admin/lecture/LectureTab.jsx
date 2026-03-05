@@ -10,7 +10,6 @@ import { toast } from "sonner";
 import {
   useEditLectureMutation,
   useGetLectureByIdQuery,
-  useDeleteLectureMutation,
 } from "../../../features/api/courseApi";
 import { Loader2 } from "lucide-react";
 import ReactPlayer from "react-player";
@@ -20,12 +19,11 @@ import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { Progress } from "@/components/ui/progress";
-import { useParams, useNavigate } from "react-router";
+import { useParams } from "react-router";
 
 const MEDIA_API = `${import.meta.env.VITE_API_URL}/api/v1/media`;
 
 const LectureTab = () => {
-  const navigate = useNavigate();
   const { courseId, lectureId } = useParams();
 
   const {
@@ -43,20 +41,8 @@ const LectureTab = () => {
   const [mediaProgress, setMediaProgress] = useState(false);
   const [uploadedVideoInfo, setUploadedVideoInfo] = useState(null);
 
-  const [
-    deleteLecture,
-    { isLoading: deleteLoading, isSuccess: deleteSuccess, data: deleteData },
-  ] = useDeleteLectureMutation();
-
   const [editLecture, { isLoading, isSuccess, data, error }] =
     useEditLectureMutation();
-
-  useEffect(() => {
-    if (deleteData && deleteSuccess) {
-      toast.success(deleteData.message || "Lecture Removed");
-      navigate(`/admin/course/${courseId}/lecture`);
-    }
-  }, [deleteData, deleteSuccess, navigate, courseId]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -79,10 +65,6 @@ const LectureTab = () => {
       setBtnDisable(false);
     }
   }, [lecture]);
-
-  const handleRemoveLecture = async () => {
-    await deleteLecture(lectureId);
-  };
 
   const handleEditLecture = async () => {
     await editLecture({
@@ -157,15 +139,6 @@ const LectureTab = () => {
           <CardDescription>
             Make changes and click save when done.
           </CardDescription>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="destructive"
-            disabled={deleteLoading}
-            onClick={handleRemoveLecture}
-          >
-            {renderButtonContent(deleteLoading, "Remove Lecture")}
-          </Button>
         </div>
       </CardHeader>
       <CardContent>

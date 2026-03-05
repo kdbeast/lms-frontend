@@ -6,32 +6,40 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Edit, Edit2, Trash2 } from "lucide-react";
+import {
+  useDeleteCourseMutation,
+  useGetAllAdminCourseQuery,
+} from "../../../features/api/courseApi";
 import { useNavigate } from "react-router";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { useGetAllAdminCourseQuery } from "../../../features/api/courseApi";
 
 const CourseTable = () => {
   const navigate = useNavigate();
 
   const { data, isLoading, isFetching } = useGetAllAdminCourseQuery();
+  const [deleteCourse, { isLoading: deleteLoading }] =
+    useDeleteCourseMutation();
 
   const courses = data?.courses || [];
 
   return (
     <div className="flex-1 mx-10 mt-20">
-      <Button onClick={() => navigate("create")}>Create New Course</Button>
+      <div className="flex justify-end">
+        <Button className="cursor-pointer" onClick={() => navigate("create")}>
+          Create New Course
+        </Button>
+      </div>
       <Table className="mt-5">
-        {/* <TableCaption>A list of your recent courses.</TableCaption> */}
         <TableHeader>
           <TableRow>
             <TableHead className="w-1/2">Title</TableHead>
             <TableHead className="w-1/4">Price</TableHead>
             <TableHead className="w-1/4">Status</TableHead>
-            <TableHead className="w-1/4 text-right">Action</TableHead>
+            <TableHead className="w-1/4 text-center">Action</TableHead>
           </TableRow>
         </TableHeader>
-        {/* Ensure that TableBody is always a direct child of Table */}
         {isLoading || isFetching ? (
           <CourseTableSkeleton />
         ) : (
@@ -61,14 +69,28 @@ const CourseTable = () => {
                       {course.isPublished ? "Published" : "Draft"}
                     </Badge>
                   </TableCell>
-                  <TableCell className="w-1/4 text-right">
+                  <TableCell className="w-1/4 text-right space-x-2">
                     <Button
                       variant="outline"
+                      className="cursor-pointer"
                       onClick={() => {
                         navigate(`/admin/course/${course._id}`);
                       }}
                     >
-                      Edit
+                      <Edit2/>
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="cursor-pointer"
+                      onClick={() => {
+                        deleteCourse(course._id);
+                      }}
+                    >
+                      {deleteLoading ? (
+                        <Loader2 className="animate-spin" />
+                      ) : (
+                        <Trash2 />
+                      )}
                     </Button>
                   </TableCell>
                 </TableRow>

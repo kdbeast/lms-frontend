@@ -22,9 +22,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import CreateDialog from "./CreateDialog";
-import { GripVertical, Pencil, Trash2 } from "lucide-react";
-import { Input } from "@/components/ui/input";
 import {
   arrayMove,
   SortableContext,
@@ -32,10 +29,13 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { useReorderLecturesMutation } from "@/features/api/courseApi";
+import CreateDialog from "./CreateDialog";
+import { Input } from "@/components/ui/input";
 import { closestCenter, DndContext } from "@dnd-kit/core";
+import { GripVertical, Pencil, Trash2 } from "lucide-react";
+import { useReorderLecturesMutation } from "@/features/api/courseApi";
 
-const Section = ({ section, index }) => {
+const Section = ({ section, index, courseId }) => {
   const [updateSection] = useUpdateSectionMutation();
   const [deleteSection] = useDeleteSectionMutation();
   const [reorderLectures] = useReorderLecturesMutation();
@@ -119,7 +119,7 @@ const Section = ({ section, index }) => {
                 </div>
 
                 {/* Section Number */}
-                <div className="w-6 h-6 flex items-center justify-center rounded-full bg-gray-400 text-sm font-medium text-black">
+                <div className="w-6 h-6 flex items-center justify-center rounded-full bg-gray-400 text-sm font-bold text-black">
                   {index + 1}
                 </div>
 
@@ -137,7 +137,7 @@ const Section = ({ section, index }) => {
                   <AlertDialogTrigger asChild>
                     <button
                       onClick={(e) => e.stopPropagation()}
-                      className="text-blue-500 hover:text-blue-700"
+                      className="text-blue-500 hover:text-blue-700 cursor-pointer"
                     >
                       <Pencil size={16} />
                     </button>
@@ -154,9 +154,14 @@ const Section = ({ section, index }) => {
                     />
 
                     <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogCancel className="cursor-pointer">
+                        Cancel
+                      </AlertDialogCancel>
 
-                      <AlertDialogAction onClick={handleUpdate}>
+                      <AlertDialogAction
+                        onClick={handleUpdate}
+                        className="cursor-pointer"
+                      >
                         Update
                       </AlertDialogAction>
                     </AlertDialogFooter>
@@ -167,7 +172,7 @@ const Section = ({ section, index }) => {
                   <AlertDialogTrigger asChild>
                     <button
                       onClick={(e) => e.stopPropagation()}
-                      className="text-red-500 hover:text-red-700"
+                      className="text-red-500 hover:text-red-700 cursor-pointer"
                     >
                       <Trash2 size={16} />
                     </button>
@@ -181,9 +186,14 @@ const Section = ({ section, index }) => {
                     </AlertDialogHeader>
 
                     <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogCancel className="cursor-pointer">
+                        Cancel
+                      </AlertDialogCancel>
 
-                      <AlertDialogAction onClick={handleDelete}>
+                      <AlertDialogAction
+                        className="cursor-pointer"
+                        onClick={handleDelete}
+                      >
                         Delete
                       </AlertDialogAction>
                     </AlertDialogFooter>
@@ -208,13 +218,17 @@ const Section = ({ section, index }) => {
                 items={lectures.map((l) => l._id)}
                 strategy={verticalListSortingStrategy}
               >
-                <div className="space-y-2">
+                <div className="space-y-2 border p-2 rounded-lg bg-cyan-900/30">
                   {lectures?.length ? (
                     lectures.map((lecture) => (
-                      <Lecture key={lecture._id} lecture={lecture} />
+                      <Lecture
+                        key={lecture._id}
+                        lecture={lecture}
+                        courseId={courseId}
+                      />
                     ))
                   ) : (
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-muted-foreground text-center">
                       No lectures yet
                     </p>
                   )}

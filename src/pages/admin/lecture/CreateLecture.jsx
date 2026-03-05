@@ -4,10 +4,22 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import Section from "./Section";
+import { toast } from "sonner";
+import {
+  useGetCourseByIdQuery,
+  useTogglePublishCourseMutation,
+} from "@/features/api/courseApi";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import {
   useGetSectionsByCourseIdQuery,
   useReorderSectionsMutation,
 } from "@/features/api/sectionApi";
+import { useEffect } from "react";
 import { Link, useParams } from "react-router";
 import { Button } from "@/components/ui/button";
 import CreateSectionDialog from "./CreateSectionDialog";
@@ -43,6 +55,44 @@ const CreateLecture = () => {
 
   console.log(data);
 
+  const { data: courseData } = useGetCourseByIdQuery(courseId);
+  console.log(courseData);
+
+  const [
+    togglePublishUnpublishCourse,
+    { data: publishData, isSuccess: publishSuccess, error: publishError },
+  ] = useTogglePublishCourseMutation();
+
+  const publishCourseHandler = async (action) => {
+    try {
+      await togglePublishUnpublishCourse({
+        courseId,
+        query: action,
+      });
+    } catch {
+      toast.error("Failed to update course status");
+    }
+  };
+
+  useEffect(() => {
+    if (publishSuccess) {
+      toast.success(publishData?.message || "Course status updated.");
+    }
+    if (publishError) {
+      toast.error(
+        publishError.data?.message || "Failed to update course status",
+      );
+    }
+  }, [publishSuccess, publishError, publishData]);
+
+  const isPublishDisabled =
+    !data?.sections?.length ||
+    data.sections.some((section) => section.lectures.length === 0);
+
+  const tooltipMessage = !data?.sections?.length
+    ? "Add at least one section before publishing."
+    : "Each section must contain at least one lecture.";
+
   return (
     <div>
       <div className="mb-4 mt-20">
@@ -53,7 +103,7 @@ const CreateLecture = () => {
 
       <div className="flex items-center gap-2 my-5">
         <Link to={`/admin/course/${courseId}`}>
-          <Button variant="outline">Back to course</Button>
+          <Button className="cursor-pointer" variant="outline">Back to course</Button>
         </Link>
 
         <CreateSectionDialog courseId={courseId} />
@@ -76,11 +126,47 @@ const CreateLecture = () => {
               strategy={verticalListSortingStrategy}
             >
               {data.sections.map((section, index) => (
-                <Section index={index} key={section._id} section={section} />
+                <Section
+                  index={index}
+                  key={section._id}
+                  section={section}
+                  courseId={courseId}
+                />
               ))}
             </SortableContext>
           </DndContext>
         )}
+      </div>
+
+      <div className="flex justify-end mt-6">
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span>
+                <Button
+                  variant={
+                    courseData?.course.isPublished ? "destructive" : "default"
+                  }
+                  onClick={() =>
+                    publishCourseHandler(
+                      courseData?.course.isPublished ? "false" : "true",
+                    )
+                  }
+                  disabled={isPublishDisabled}
+                  className="cursor-pointer"
+                >
+                  {courseData?.course.isPublished ? "Unpublish" : "Publish"}
+                </Button>
+              </span>
+            </TooltipTrigger>
+
+            {isPublishDisabled && (
+              <TooltipContent>
+                <p>{tooltipMessage}</p>
+              </TooltipContent>
+            )}
+          </Tooltip>
+        </TooltipProvider>
       </div>
     </div>
   );

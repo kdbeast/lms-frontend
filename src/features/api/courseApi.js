@@ -151,6 +151,13 @@ export const courseApi = createApi({
       }),
       invalidatesTags: ["Refetch_Section"],
     }),
+    deleteCourse: builder.mutation({
+      query: (courseId) => ({
+        url: `/${courseId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Refetch_Creator_Course"],
+    }),
   }),
 });
 
@@ -161,6 +168,7 @@ export const {
   useGetLectureByIdQuery,
   useEditLectureMutation,
   useCreateCourseMutation,
+  useDeleteCourseMutation,
   useCreateLectureMutation,
   useDeleteLectureMutation,
   useGetAllAdminCourseQuery,

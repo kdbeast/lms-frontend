@@ -19,7 +19,6 @@ import { Loader2 } from "lucide-react";
 import {
   useEditCourseMutation,
   useGetCourseByIdQuery,
-  // useTogglePublishCourseMutation,
 } from "../../../features/api/courseApi";
 import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
@@ -104,33 +103,6 @@ const BasicCourseTab = ({ courseId }) => {
     }
   }, [data, isSuccess, error, navigate, courseId]);
 
-  // const [
-  //   togglePublishUnpublishCourse,
-  //   { data: publishData, isSuccess: publishSuccess, error: publishError },
-  // ] = useTogglePublishCourseMutation();
-
-  // const publishCourseHandler = async (action) => {
-  //   try {
-  //     await togglePublishUnpublishCourse({
-  //       courseId,
-  //       query: action,
-  //     });
-  //   } catch {
-  //     toast.error("Failed to update course status");
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (publishSuccess) {
-  //     toast.success(publishData?.message || "Course status updated.");
-  //   }
-  //   if (publishError) {
-  //     toast.error(
-  //       publishError.data?.message || "Failed to update course status",
-  //     );
-  //   }
-  // }, [publishSuccess, publishError, publishData]);
-
   if (courseLoading) {
     return <Loader2 className="animate-spin fixed top-1/2 left-2/3" />;
   }
@@ -144,19 +116,6 @@ const BasicCourseTab = ({ courseId }) => {
             Make changes to your courses here. Click save when you're done.
           </CardDescription>
         </div>
-        {/* <div className="flex gap-2">
-          <Button
-            variant="outline"
-            onClick={() =>
-              publishCourseHandler(
-                courseData?.course.isPublished ? "false" : "true",
-              )
-            }
-            disabled={courseData?.course.lectures.length === 0}
-          >
-            {courseData?.course.isPublished ? "Unpublish" : "Publish"}
-          </Button>
-        </div> */}
       </CardHeader>
       <CardContent>
         <div className="space-y-4 mt-5">
