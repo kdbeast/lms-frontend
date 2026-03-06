@@ -7,9 +7,9 @@ import {
   CartesianGrid,
   ResponsiveContainer,
 } from "recharts";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useGetAllPurchasedCourseQuery } from "@/features/api/purchaseApi";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
 
 const Dashboard = () => {
   const { data, isLoading, isError } = useGetAllPurchasedCourseQuery();
@@ -35,7 +35,7 @@ const Dashboard = () => {
   const totalSales = data?.length;
 
   return (
-    <div className="mt-20 ml-5 mr-5 grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+    <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
       {/* Total Sales Card */}
       <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300 py-6">
         <CardHeader>
@@ -99,7 +99,7 @@ export default Dashboard;
 
 const DashboardSkeleton = () => {
   return (
-    <div className="mt-20 ml-5 mr-5 grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+    <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
       {/* Total Sales Skeleton */}
       <div className="shadow-lg rounded-lg p-6 space-y-4">
         <Skeleton className="h-6 w-32" />

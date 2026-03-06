@@ -8,12 +8,12 @@ const Sidebar = () => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
-    <div className="flex dark:bg-[#121212] bg-white h-full">
+    <div className="flex h-[calc(100vh-4rem)] w-full dark:bg-[#121212] bg-white overflow-hidden">
       {/* Left Sidebar (Desktop) */}
       <div
         onMouseEnter={() => setIsExpanded(true)}
         onMouseLeave={() => setIsExpanded(false)}
-        className={`hidden lg:flex flex-col mr-5 border-r border-gray-300 dark:border-gray-700 dark:bg-[#0A0A0A] bg-[#f0f0f0] sticky top-0 h-screen overflow-hidden transition-[width] duration-500 ease-out ${isExpanded ? "w-40" : "w-20"}`}
+        className={`hidden lg:flex flex-col mr-5 border-r border-gray-300 dark:border-gray-700 dark:bg-[#0A0A0A] bg-[#f0f0f0] sticky top-0 h-full transition-[width] duration-500 ease-out ${isExpanded ? "w-40" : "w-20"}`}
       >
         <div className="space-y-4 mt-5">
           <NavLink
@@ -114,7 +114,7 @@ const Sidebar = () => {
       </div>
 
       {/* Main Outlet Content */}
-      <div className="flex-1 p-2 dark:bg-[#121212] bg-white">
+      <div className="flex-1 overflow-y-auto p-6 dark:bg-[#121212] bg-white">
         <Outlet />
       </div>
     </div>

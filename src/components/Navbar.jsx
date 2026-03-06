@@ -58,10 +58,14 @@ const Navbar = () => {
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator className="bg-black m-0.5" />
                 <DropdownMenuItem asChild>
-                  <Link to="/my-learning">My Learning</Link>
+                  <Link className="cursor-pointer" to="/my-learning">
+                    My Learning
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link to="/profile">Edit Profile</Link>
+                  <Link className="cursor-pointer" to="/profile">
+                    Edit Profile
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   className="cursor-pointer"
@@ -72,7 +76,9 @@ const Navbar = () => {
                 <DropdownMenuSeparator />
                 {user?.unsafeMetadata?.role === "instructor" && (
                   <DropdownMenuItem asChild>
-                    <Link to="/admin/dashboard">Dashboard</Link>
+                    <Link className="cursor-pointer" to="/admin/dashboard">
+                      Dashboard
+                    </Link>
                   </DropdownMenuItem>
                 )}
               </DropdownMenuContent>
