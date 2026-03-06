@@ -14,10 +14,7 @@ import { useNavigate } from "react-router";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-  useCreateCourseMutation,
-  useGetAllAdminCourseQuery,
-} from "../../../features/api/courseApi";
+import { useCreateCourseMutation } from "../../../features/api/courseApi";
 
 const AddCourse = () => {
   const navigate = useNavigate();
@@ -25,19 +22,18 @@ const AddCourse = () => {
   const [createCourse, { data, error, isLoading, isSuccess }] =
     useCreateCourseMutation();
 
-  const { data: getCourse } = useGetAllAdminCourseQuery();
-
-  const courseId = getCourse?.courses[getCourse?.courses.length - 1]?._id;
-
   useEffect(() => {
     if (isSuccess) {
       toast.success(data.message || "Course created successfully");
-      navigate(`/admin/course/${courseId}`);
+
+      const newCourseId = data?.course?._id; // get id from API response
+      navigate(`/admin/course/${newCourseId}`);
     }
+
     if (error) {
       toast.error(error?.data?.message);
     }
-  }, [isSuccess, error, data, navigate, courseId]);
+  }, [isSuccess, error, data, navigate]);
 
   const [category, setCategory] = useState("");
   const [courseTitle, setCourseTitle] = useState("");
@@ -100,10 +96,18 @@ const AddCourse = () => {
           </Select>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" onClick={() => navigate(-1)}>
+          <Button
+            variant="outline"
+            className="cursor-pointer"
+            onClick={() => navigate(-1)}
+          >
             Cancel
           </Button>
-          <Button disabled={isLoading} onClick={createCourseHandler}>
+          <Button
+            disabled={isLoading}
+            className="cursor-pointer"
+            onClick={createCourseHandler}
+          >
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 w-4 h-4 animate-spin" />

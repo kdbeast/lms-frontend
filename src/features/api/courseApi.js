@@ -71,7 +71,7 @@ export const courseApi = createApi({
         url: "",
         method: "GET",
       }),
-      providesTags: ["Refetch_Creator_Course"],
+      providesTags: ["Course"],
     }),
     editCourse: builder.mutation({
       query: ({ formData, courseId }) => ({
@@ -156,7 +156,7 @@ export const courseApi = createApi({
         url: `/${courseId}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Refetch_Creator_Course"],
+      invalidatesTags: ["Course"],
     }),
   }),
 });

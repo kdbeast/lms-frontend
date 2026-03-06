@@ -6,7 +6,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Edit, Edit2, Trash2 } from "lucide-react";
+import { Edit, Edit2, Loader2, Trash2 } from "lucide-react";
 import {
   useDeleteCourseMutation,
   useGetAllAdminCourseQuery,
@@ -14,13 +14,20 @@ import {
 import { useNavigate } from "react-router";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 const CourseTable = () => {
   const navigate = useNavigate();
+  const [deletingId, setDeletingId] = useState(null);
 
   const { data, isLoading, isFetching } = useGetAllAdminCourseQuery();
-  const [deleteCourse, { isLoading: deleteLoading }] =
-    useDeleteCourseMutation();
+  const [deleteCourse] = useDeleteCourseMutation();
+
+  const handleDelete = async (id) => {
+    setDeletingId(id);
+    await deleteCourse(id);
+    setDeletingId(null);
+  };
 
   const courses = data?.courses || [];
 
@@ -63,7 +70,7 @@ const CourseTable = () => {
                     <Badge
                       className={
                         course.isPublished &&
-                        "bg-green-200 text-green-800 hover:bg-bg-green-200"
+                        "bg-green-200 text-green-800 hover:bg-green-200"
                       }
                     >
                       {course.isPublished ? "Published" : "Draft"}
@@ -77,16 +84,14 @@ const CourseTable = () => {
                         navigate(`/admin/course/${course._id}`);
                       }}
                     >
-                      <Edit2/>
+                      <Edit2 />
                     </Button>
                     <Button
                       variant="outline"
                       className="cursor-pointer"
-                      onClick={() => {
-                        deleteCourse(course._id);
-                      }}
+                      onClick={() => handleDelete(course._id)}
                     >
-                      {deleteLoading ? (
+                      {deletingId === course._id ? (
                         <Loader2 className="animate-spin" />
                       ) : (
                         <Trash2 />

@@ -103,7 +103,9 @@ const CreateLecture = () => {
 
       <div className="flex items-center gap-2 my-5">
         <Link to={`/admin/course/${courseId}`}>
-          <Button className="cursor-pointer" variant="outline">Back to course</Button>
+          <Button className="cursor-pointer" variant="outline">
+            Back to course
+          </Button>
         </Link>
 
         <CreateSectionDialog courseId={courseId} />

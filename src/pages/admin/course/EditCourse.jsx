@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 const EditCourse = () => {
   const params = useParams();
   return (
-    <div className="flex-1 mx-10 mt-20">
+    <div className="flex-1 mx-10">
       {/* Top bar  */}
       <div className="flex items-center justify-between mb-5">
         <h1 className="font-bold text-xl">

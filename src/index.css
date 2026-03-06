@@ -8,6 +8,18 @@
 
 @custom-variant dark (&:is(.dark *));
 
+.ProseMirror:focus {
+  outline: none;
+}
+
+.ProseMirror p.is-editor-empty:first-child::before {
+  color: #9ca3af;
+  content: attr(data-placeholder);
+  float: left;
+  pointer-events: none;
+  height: 0;
+}
+
 :root {
   --clerk-color-background: #212126;
   --clerk-color-neutral: white;

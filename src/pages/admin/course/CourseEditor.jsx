@@ -1,8 +1,6 @@
-import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import Link from "@tiptap/extension-link";
-import Underline from "@tiptap/extension-underline";
 import TextAlign from "@tiptap/extension-text-align";
+import { useEditor, EditorContent } from "@tiptap/react";
 
 import {
   Bold,
@@ -16,20 +14,25 @@ import {
   Undo,
   Redo,
 } from "lucide-react";
-
+import { useEffect } from "react";
+import { createLowlight } from "lowlight";
 import { Button } from "@/components/ui/button";
 import { Placeholder } from "@tiptap/extensions";
+import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
+
+const lowlight = createLowlight();
 
 const CourseEditor = ({ value, onChange }) => {
   const editor = useEditor({
     extensions: [
-      StarterKit,
-      Underline,
-      Link.configure({
-        openOnClick: false,
+      StarterKit.configure({
+        codeBlock: false,
       }),
       TextAlign.configure({
         types: ["heading", "paragraph"],
+      }),
+      CodeBlockLowlight.configure({
+        lowlight,
       }),
       Placeholder.configure({
         placeholder: "Write your course description here...",
@@ -43,6 +46,12 @@ const CourseEditor = ({ value, onChange }) => {
     },
   });
 
+  useEffect(() => {
+    if (editor && value !== editor.getHTML()) {
+      editor.commands.setContent(value || "");
+    }
+  }, [value, editor]);
+
   if (!editor) return null;
 
   const active = (name, options = {}) =>
@@ -55,6 +64,7 @@ const CourseEditor = ({ value, onChange }) => {
         {/* Undo Redo */}
         <Button
           size="icon"
+          type="button"
           variant="ghost"
           onClick={() => editor.chain().focus().undo().run()}
         >
@@ -63,6 +73,7 @@ const CourseEditor = ({ value, onChange }) => {
 
         <Button
           size="icon"
+          type="button"
           variant="ghost"
           onClick={() => editor.chain().focus().redo().run()}
         >
@@ -72,6 +83,7 @@ const CourseEditor = ({ value, onChange }) => {
         {/* Headings */}
         <Button
           size="icon"
+          type="button"
           variant="ghost"
           className={active("heading", { level: 1 })}
           onClick={() =>
@@ -83,6 +95,7 @@ const CourseEditor = ({ value, onChange }) => {
 
         <Button
           size="icon"
+          type="button"
           variant="ghost"
           className={active("heading", { level: 2 })}
           onClick={() =>
@@ -95,6 +108,7 @@ const CourseEditor = ({ value, onChange }) => {
         {/* Bold */}
         <Button
           size="icon"
+          type="button"
           variant="ghost"
           className={active("bold")}
           onClick={() => editor.chain().focus().toggleBold().run()}
@@ -105,6 +119,7 @@ const CourseEditor = ({ value, onChange }) => {
         {/* Italic */}
         <Button
           size="icon"
+          type="button"
           variant="ghost"
           className={active("italic")}
           onClick={() => editor.chain().focus().toggleItalic().run()}
@@ -115,6 +130,7 @@ const CourseEditor = ({ value, onChange }) => {
         {/* Bullet List */}
         <Button
           size="icon"
+          type="button"
           variant="ghost"
           className={active("bulletList")}
           onClick={() => editor.chain().focus().toggleBulletList().run()}
@@ -125,6 +141,7 @@ const CourseEditor = ({ value, onChange }) => {
         {/* Ordered List */}
         <Button
           size="icon"
+          type="button"
           variant="ghost"
           className={active("orderedList")}
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
@@ -135,6 +152,7 @@ const CourseEditor = ({ value, onChange }) => {
         {/* Quote */}
         <Button
           size="icon"
+          type="button"
           variant="ghost"
           className={active("blockquote")}
           onClick={() => editor.chain().focus().toggleBlockquote().run()}
@@ -145,6 +163,7 @@ const CourseEditor = ({ value, onChange }) => {
         {/* Code */}
         <Button
           size="icon"
+          type="button"
           variant="ghost"
           className={active("codeBlock")}
           onClick={() => editor.chain().focus().toggleCodeBlock().run()}
@@ -156,7 +175,15 @@ const CourseEditor = ({ value, onChange }) => {
       {/* Editor */}
       <EditorContent
         editor={editor}
-        className="prose dark:prose-invert max-w-none min-h-[250px] p-4 focus:outline-none"
+        className="
+          prose dark:prose-invert max-w-none p-4
+          [&_.ProseMirror]:min-h-[200px]
+          [&_.ProseMirror]:max-h-[250px]
+          [&_.ProseMirror]:overflow-y-auto
+          [&_.ProseMirror]:outline-none
+          [&_.ProseMirror]:leading-relaxed
+          [&_.ProseMirror]:text-base
+  "
       />
     </div>
   );
