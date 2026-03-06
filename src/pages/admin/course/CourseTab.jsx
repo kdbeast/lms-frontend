@@ -295,7 +295,7 @@ const BasicCourseTab = ({ courseId }) => {
                   {/* Buttons */}
                   <div className="absolute top-2 right-2 flex gap-2">
                     {/* Change Image */}
-                    <label className="cursor-pointer bg-black/50 text-white px-3 py-1 rounded text-sm hover:bg-black">
+                    <label className="cursor-pointer bg-black/60 text-white px-3 py-1 rounded text-sm hover:bg-black">
                       Change
                       <input
                         type="file"

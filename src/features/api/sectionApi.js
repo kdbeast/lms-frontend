@@ -31,7 +31,7 @@ export const sectionApi = createApi({
         url: `/${courseId}`,
         method: "GET",
       }),
-      providesTags: ["Refetch_Section"],
+      providesTags: ["Sections"],
     }),
     deleteSection: builder.mutation({
       query: (sectionId) => ({

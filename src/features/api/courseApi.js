@@ -95,11 +95,7 @@ export const courseApi = createApi({
         method: "POST",
         body: { lectureTitle, isPreviewFree, videoInfo, sectionId },
       }),
-      invalidatesTags: [
-        "Refetch_Lecture",
-        "Refetch_Section",
-        "Refetch_Creator_Course",
-      ],
+      invalidatesTags: ["Sections"],
     }),
     getLectureByCourseId: builder.query({
       query: (courseId) => ({
@@ -141,7 +137,7 @@ export const courseApi = createApi({
         url: `/${courseId}?publish=${query}`,
         method: "PATCH",
       }),
-      invalidatesTags: ["Refetch_Creator_Course"],
+      invalidatesTags: ["Course"],
     }),
     reorderLectures: builder.mutation({
       query: (lectures) => ({

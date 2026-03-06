@@ -30,8 +30,7 @@ const CreateDialog = ({ sectionId }) => {
   const [uploadedVideoInfo, setUploadedVideoInfo] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [createLecture, { data, isLoading }] = useCreateLectureMutation();
-  console.log(data);
+  const [createLecture, { isLoading }] = useCreateLectureMutation();
 
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
@@ -114,8 +113,7 @@ const CreateDialog = ({ sectionId }) => {
           <DialogHeader>
             <DialogTitle>Create Lecture</DialogTitle>
             <DialogDescription>
-              Make changes to your profile here. Click save when you&apos;re
-              done.
+              Add a new lecture to this section.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4">
@@ -167,11 +165,12 @@ const CreateDialog = ({ sectionId }) => {
           )}
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
+              <Button className="cursor-pointer" variant="outline">Cancel</Button>
             </DialogClose>
             <Button
               type="submit"
               disabled={disabled}
+              className="cursor-pointer"
               onClick={handleCreateLecture}
             >
               {renderButtonContent(isLoading, "Save changes")}

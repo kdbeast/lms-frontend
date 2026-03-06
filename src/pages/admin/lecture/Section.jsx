@@ -99,40 +99,43 @@ const Section = ({ section, index, courseId }) => {
 
   return (
     <div ref={setNodeRef} style={style}>
-      <Accordion type="single" collapsible>
-        <AccordionItem
-          value={section._id}
-          className="border rounded-lg px-4 mb-4 bg-accent"
-        >
-          {/* Section title */}
-          <AccordionTrigger className="hover:no-underline">
-            <div className="flex items-center justify-between w-full cursor-pointer">
-              <div className="flex items-center gap-3">
-                {/* Drag Handle */}
-                <div
-                  {...attributes}
-                  {...listeners}
-                  onClick={(e) => e.stopPropagation()}
-                  className="cursor-grab active:cursor-grabbing text-muted-foreground"
-                >
-                  <GripVertical size={18} />
-                </div>
-
-                {/* Section Number */}
-                <div className="w-6 h-6 flex items-center justify-center rounded-full bg-gray-400 text-sm font-bold text-black">
-                  {index + 1}
-                </div>
-
-                {/* Section Title */}
-                <span className="font-medium">{section.sectionTitle}</span>
+      <AccordionItem
+        value={section._id}
+        className="border rounded-lg px-4 mb-4 bg-accent w-full"
+      >
+        {/* Section title */}
+        <AccordionTrigger className="hover:no-underline">
+          <div className="flex items-center justify-between w-full cursor-pointer">
+            <div className="flex items-center gap-3">
+              {/* Drag Handle */}
+              <div
+                {...attributes}
+                {...listeners}
+                onClick={(e) => e.stopPropagation()}
+                className="cursor-grab active:cursor-grabbing text-muted-foreground"
+              >
+                <GripVertical size={18} />
               </div>
 
-              {/* Lecture Count */}
-              <div className="flex items-center gap-4">
-                <span className="text-sm text-muted-foreground">
-                  {section.lectures?.length || 0} lectures
-                </span>
+              {/* Section Number */}
+              <div className="w-6 h-6 flex items-center justify-center rounded-full bg-gray-400 text-sm font-bold text-black">
+                {index + 1}
+              </div>
 
+              {/* Section Title */}
+              <span className="font-medium">{section.sectionTitle}</span>
+            </div>
+
+            {/* Lecture Count */}
+            <div
+              onClick={(e) => e.stopPropagation()}
+              className="flex items-center gap-4"
+            >
+              <span className="text-sm text-muted-foreground md:block hidden">
+                {section.lectures?.length || 0} lectures
+              </span>
+
+              <div className="flex items-center gap-2 md:gap-4">
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
                     <button
@@ -201,43 +204,43 @@ const Section = ({ section, index, courseId }) => {
                 </AlertDialog>
               </div>
             </div>
-          </AccordionTrigger>
+          </div>
+        </AccordionTrigger>
 
-          <AccordionContent>
-            {/* Add lecture button */}
-            <div className="mb-4">
-              <CreateDialog sectionId={section._id} />
-            </div>
+        <AccordionContent>
+          {/* Add lecture button */}
+          <div className="mb-4">
+            <CreateDialog sectionId={section._id} />
+          </div>
 
-            {/* Lecture list */}
-            <DndContext
-              collisionDetection={closestCenter}
-              onDragEnd={handleLectureDragEnd}
+          {/* Lecture list */}
+          <DndContext
+            collisionDetection={closestCenter}
+            onDragEnd={handleLectureDragEnd}
+          >
+            <SortableContext
+              items={lectures.map((l) => l._id)}
+              strategy={verticalListSortingStrategy}
             >
-              <SortableContext
-                items={lectures.map((l) => l._id)}
-                strategy={verticalListSortingStrategy}
-              >
-                <div className="space-y-2 border p-2 rounded-lg bg-cyan-900/30">
-                  {lectures?.length ? (
-                    lectures.map((lecture) => (
-                      <Lecture
-                        key={lecture._id}
-                        lecture={lecture}
-                        courseId={courseId}
-                      />
-                    ))
-                  ) : (
-                    <p className="text-sm text-muted-foreground text-center">
-                      No lectures yet
-                    </p>
-                  )}
-                </div>
-              </SortableContext>
-            </DndContext>
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
+              <div className="space-y-2 border p-3 md:p-2 rounded-lg bg-cyan-900/30">
+                {lectures?.length ? (
+                  lectures.map((lecture) => (
+                    <Lecture
+                      key={lecture._id}
+                      lecture={lecture}
+                      courseId={courseId}
+                    />
+                  ))
+                ) : (
+                  <p className="text-sm text-muted-foreground text-center">
+                    No lectures yet
+                  </p>
+                )}
+              </div>
+            </SortableContext>
+          </DndContext>
+        </AccordionContent>
+      </AccordionItem>
     </div>
   );
 };

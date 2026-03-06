@@ -1,5 +1,13 @@
 import { toast } from "sonner";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { useEffect } from "react";
+import LectureTab from "./LectureTab";
 import { CSS } from "@dnd-kit/utilities";
 import { useNavigate } from "react-router";
 import { useSortable } from "@dnd-kit/sortable";
@@ -18,10 +26,6 @@ const Lecture = ({ lecture, courseId }) => {
   const style = {
     transform: CSS.Transform.toString(transform),
     transition: transition || "transform 200ms ease",
-  };
-
-  const goToUpdateLecture = async () => {
-    navigate(`/admin/course/${courseId}/lecture/${lecture._id}`);
   };
 
   const renderButtonContent = (loading, text) =>
@@ -53,7 +57,7 @@ const Lecture = ({ lecture, courseId }) => {
     <div
       ref={setNodeRef}
       style={style}
-      className="flex items-center justify-between bg-[#F7F9FA] dark:bg-[#1F1F1F] px-4 py-2 rounded-md my-2"
+      className="flex items-center justify-between gap-2 flex-wrap bg-[#F7F9FA] dark:bg-[#1F1F1F] px-4 py-2 rounded-md my-2"
     >
       <div className="flex items-center gap-3">
         <div
@@ -71,14 +75,26 @@ const Lecture = ({ lecture, courseId }) => {
       </div>
 
       <div className="flex items-center gap-2">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={goToUpdateLecture}
-          className="cursor-pointer text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
-        >
-          <EditIcon size={18} />
-        </Button>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button
+              variant="outline"
+              size="sm"
+              className="cursor-pointer text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
+            >
+              <EditIcon size={18} />
+            </Button>
+          </DialogTrigger>
+
+          <DialogContent className="max-w-3xl">
+            <DialogHeader>
+              <DialogTitle>Edit Lecture</DialogTitle>
+            </DialogHeader>
+
+            <LectureTab courseId={courseId} lectureId={lecture._id} />
+          </DialogContent>
+        </Dialog>
+
         <Button
           variant="outline"
           disabled={deleteLoading}

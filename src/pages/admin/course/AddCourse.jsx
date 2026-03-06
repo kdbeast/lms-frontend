@@ -8,13 +8,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useCreateCourseMutation } from "../../../features/api/courseApi";
+import { CourseCreationStepper } from "@/components/stepper-with-label-orientation";
 
 const AddCourse = () => {
   const navigate = useNavigate();
@@ -47,8 +48,9 @@ const AddCourse = () => {
   };
 
   return (
-    <div className="flex-1 mx-10 mt-20">
-      <div className="mb-4">
+    <div className="flex-1 mx-10">
+      <CourseCreationStepper currentStep={1} />
+      <div className="mb-4 mt-4">
         <h1 className="font-bold text-xl">
           Lets add course, add some basic details for your new course
         </h1>

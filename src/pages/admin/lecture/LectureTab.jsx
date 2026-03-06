@@ -20,11 +20,15 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { Progress } from "@/components/ui/progress";
 import { useParams } from "react-router";
+import { DialogClose } from "@/components/ui/dialog";
 
 const MEDIA_API = `${import.meta.env.VITE_API_URL}/api/v1/media`;
 
-const LectureTab = () => {
-  const { courseId, lectureId } = useParams();
+const LectureTab = ({ courseId: propCourseId, lectureId: propLectureId }) => {
+  const params = useParams();
+
+  const courseId = propCourseId || params.courseId;
+  const lectureId = propLectureId || params.lectureId;
 
   const {
     data: lectureByIdData,
@@ -163,10 +167,10 @@ const LectureTab = () => {
           />
         </div>
         {uploadedVideoInfo?.videoUrl && (
-          <div className="w-full mb-4">
+          <div className="w-full aspect-video mb-4">
             <ReactPlayer
-              width="50%"
-              height="50%"
+              width="100%"
+              height="100%"
               controls={true}
               src={uploadedVideoInfo.videoUrl}
               url={uploadedVideoInfo.videoUrl}
@@ -189,8 +193,14 @@ const LectureTab = () => {
           </div>
         )}
 
-        <div className="mt-4">
+        <div className="mt-4 flex gap-2 justify-end">
+          <DialogClose asChild>
+            <Button className="cursor-pointer" variant="outline">
+              Cancel
+            </Button>
+          </DialogClose>
           <Button
+            className="cursor-pointer"
             onClick={handleEditLecture}
             disabled={isLoading || btnDisable}
           >

@@ -20,12 +20,17 @@ import {
   useReorderSectionsMutation,
 } from "@/features/api/sectionApi";
 import { useEffect } from "react";
+import { useNavigate } from "react-router";
 import { Link, useParams } from "react-router";
 import { Button } from "@/components/ui/button";
 import CreateSectionDialog from "./CreateSectionDialog";
 import { closestCenter, DndContext } from "@dnd-kit/core";
+import { CourseCreationStepper } from "@/components/stepper-with-label-orientation";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { Accordion } from "@/components/ui/accordion";
 
 const CreateLecture = () => {
+  const navigate = useNavigate();
   const { courseId } = useParams();
   const [reorderSections] = useReorderSectionsMutation();
   const { data, isLoading, isError } = useGetSectionsByCourseIdQuery(courseId);
@@ -53,14 +58,16 @@ const CreateLecture = () => {
     await reorderSections(payload);
   };
 
-  console.log(data);
-
   const { data: courseData } = useGetCourseByIdQuery(courseId);
-  console.log(courseData);
 
   const [
     togglePublishUnpublishCourse,
-    { data: publishData, isSuccess: publishSuccess, error: publishError },
+    {
+      data: publishData,
+      isSuccess: publishSuccess,
+      error: publishError,
+      isLoading: publishLoading,
+    },
   ] = useTogglePublishCourseMutation();
 
   const publishCourseHandler = async (action) => {
@@ -68,7 +75,7 @@ const CreateLecture = () => {
       await togglePublishUnpublishCourse({
         courseId,
         query: action,
-      });
+      }).unwrap();
     } catch {
       toast.error("Failed to update course status");
     }
@@ -77,13 +84,14 @@ const CreateLecture = () => {
   useEffect(() => {
     if (publishSuccess) {
       toast.success(publishData?.message || "Course status updated.");
+      navigate(`/admin/course`);
     }
     if (publishError) {
       toast.error(
         publishError.data?.message || "Failed to update course status",
       );
     }
-  }, [publishSuccess, publishError, publishData]);
+  }, [publishSuccess, publishError, publishData, navigate, courseId]);
 
   const isPublishDisabled =
     !data?.sections?.length ||
@@ -94,16 +102,17 @@ const CreateLecture = () => {
     : "Each section must contain at least one lecture.";
 
   return (
-    <div>
-      <div className="mb-4 mt-20">
+    <div className="flex-1 px-4 md:px-10">
+      <CourseCreationStepper currentStep={3} />
+      <div className="mb-4 mt-5">
         <h1 className="font-bold text-xl">
           Let's organize your course curriculum
         </h1>
       </div>
 
-      <div className="flex items-center gap-2 my-5">
+      <div className="flex flex-col sm:flex-row gap-2 my-5">
         <Link to={`/admin/course/${courseId}`}>
-          <Button className="cursor-pointer" variant="outline">
+          <Button className="cursor-pointer md:w-auto w-full" variant="outline">
             Back to course
           </Button>
         </Link>
@@ -119,24 +128,29 @@ const CreateLecture = () => {
         ) : !data?.sections?.length ? (
           <p>No sections created yet.</p>
         ) : (
-          <DndContext
-            collisionDetection={closestCenter}
-            onDragEnd={handleDragEnd}
+          <Accordion
+            type="multiple"
+            defaultValue={data.sections.map((s) => s._id)}
           >
-            <SortableContext
-              items={data.sections.map((s) => s._id)}
-              strategy={verticalListSortingStrategy}
+            <DndContext
+              collisionDetection={closestCenter}
+              onDragEnd={handleDragEnd}
             >
-              {data.sections.map((section, index) => (
-                <Section
-                  index={index}
-                  key={section._id}
-                  section={section}
-                  courseId={courseId}
-                />
-              ))}
-            </SortableContext>
-          </DndContext>
+              <SortableContext
+                items={data.sections.map((s) => s._id)}
+                strategy={verticalListSortingStrategy}
+              >
+                {data.sections.map((section, index) => (
+                  <Section
+                    key={section._id}
+                    section={section}
+                    index={index}
+                    courseId={courseId}
+                  />
+                ))}
+              </SortableContext>
+            </DndContext>
+          </Accordion>
         )}
       </div>
 
@@ -154,10 +168,25 @@ const CreateLecture = () => {
                       courseData?.course.isPublished ? "false" : "true",
                     )
                   }
-                  disabled={isPublishDisabled}
-                  className="cursor-pointer"
+                  disabled={isPublishDisabled || publishLoading}
+                  className="cursor-pointer flex items-center gap-2"
                 >
-                  {courseData?.course.isPublished ? "Unpublish" : "Publish"}
+                  {publishLoading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Please wait
+                    </>
+                  ) : courseData?.course.isPublished ? (
+                    <>
+                      <EyeOff size={16} />
+                      Unpublish
+                    </>
+                  ) : (
+                    <>
+                      <Eye size={16} />
+                      Publish
+                    </>
+                  )}
                 </Button>
               </span>
             </TooltipTrigger>
