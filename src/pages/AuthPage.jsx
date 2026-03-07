@@ -15,7 +15,7 @@ const Login = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-      setLoginInput({ ...loginInput, [name]: value });
+    setLoginInput({ ...loginInput, [name]: value });
   };
 
   return (
@@ -26,8 +26,12 @@ const Login = () => {
         className="w-full sm:w-100"
       >
         <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="signup">Signup</TabsTrigger>
-          <TabsTrigger value="login">Login</TabsTrigger>
+          <TabsTrigger className="cursor-pointer" value="signup">
+            Signup
+          </TabsTrigger>
+          <TabsTrigger className="cursor-pointer" value="login">
+            Login
+          </TabsTrigger>
         </TabsList>
 
         <SignUp />

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   BadgeInfo,
   Lock,
@@ -14,11 +13,11 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import ReactPlayer from "react-player";
+import { useEffect, useState } from "react";
 import { PacmanLoader } from "react-spinners";
 import { useNavigate, useParams } from "react-router";
 import { Card, CardContent } from "../../components/ui/card";
 import BuyCourseButton from "../../components/BuyCourseButton";
-import { useGetSectionsByCourseIdQuery } from "@/features/api/sectionApi";
 import { useGetCourseDetailWithStatusQuery } from "../../features/api/purchaseApi";
 
 const CourseDetails = () => {
@@ -26,9 +25,12 @@ const CourseDetails = () => {
   const { courseId } = useParams();
   const [isExpanded, setIsExpanded] = useState(false);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const { data, isLoading, isError } =
     useGetCourseDetailWithStatusQuery(courseId);
-  const { data: sectionData } = useGetSectionsByCourseIdQuery(courseId);
 
   if (isLoading)
     return (
@@ -116,8 +118,8 @@ const CourseDetails = () => {
               <h2 className="text-2xl font-bold mb-4">Course Content</h2>
               <div className="flex justify-between text-sm mb-2 text-gray-600 dark:text-gray-400">
                 <span>
-                  {sectionData?.sections?.length} sections •{" "}
-                  {sectionData?.sections?.reduce(
+                  {course?.sections?.length} sections •{" "}
+                  {course?.sections?.reduce(
                     (total, section) => total + section.lectures.length,
                     0,
                   )}{" "}
@@ -130,7 +132,7 @@ const CourseDetails = () => {
                 collapsible
                 className="border rounded-md"
               >
-                {sectionData?.sections?.map((section, index) => (
+                {course?.sections?.map((section, index) => (
                   <AccordionItem
                     value={`item-${index}`}
                     key={section._id}

@@ -88,14 +88,14 @@ const Navbar = () => {
               <Button
                 variant={"default"}
                 onClick={() => navigate("/auth?tab=login")}
-                className="dark:bg-white dark:text-black"
+                className="dark:bg-white dark:text-black cursor-pointer"
               >
                 Login
               </Button>
               <Button
                 variant={"default"}
                 onClick={() => navigate("/auth?tab=signup")}
-                className="dark:bg-white dark:text-black"
+                className="dark:bg-white dark:text-black cursor-pointer"
               >
                 Register
               </Button>
@@ -193,14 +193,14 @@ const MobileNavbar = () => {
                 <Button
                   variant={"default"}
                   onClick={() => navigate("/auth?tab=login")}
-                  className="dark:bg-white dark:text-black"
+                  className="dark:bg-white dark:text-black cursor-pointer"
                 >
                   Login
                 </Button>
                 <Button
                   variant={"default"}
                   onClick={() => navigate("/auth?tab=signup")}
-                  className="dark:bg-white dark:text-black"
+                  className="dark:bg-white dark:text-black cursor-pointer"
                 >
                   Register
                 </Button>
