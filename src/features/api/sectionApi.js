@@ -4,7 +4,7 @@ const SECTION_API = `${import.meta.env.VITE_API_URL}/api/v1/section`;
 
 export const sectionApi = createApi({
   reducerPath: "sectionApi",
-  tagTypes: ["Refetch_Section"],
+  tagTypes: ["Sections"],
   baseQuery: fetchBaseQuery({
     baseUrl: SECTION_API,
     prepareHeaders: async (headers) => {
@@ -24,21 +24,27 @@ export const sectionApi = createApi({
         method: "POST",
         body: { sectionTitle, courseId },
       }),
-      invalidatesTags: ["Refetch_Section"],
+      invalidatesTags: (result, error, { courseId }) => [
+        { type: "Sections", id: courseId },
+      ],
     }),
     getSectionsByCourseId: builder.query({
       query: (courseId) => ({
         url: `/${courseId}`,
         method: "GET",
       }),
-      providesTags: ["Sections"],
+      providesTags: (result, error, courseId) => [
+        { type: "Sections", id: courseId },
+      ],
     }),
     deleteSection: builder.mutation({
       query: (sectionId) => ({
         url: `/${sectionId}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Refetch_Section"],
+      invalidatesTags: (result, error, { courseId }) => [
+        { type: "Sections", id: courseId },
+      ],
     }),
     updateSection: builder.mutation({
       query: ({ sectionId, sectionTitle }) => ({
@@ -46,7 +52,9 @@ export const sectionApi = createApi({
         method: "PATCH",
         body: { sectionTitle },
       }),
-      invalidatesTags: ["Refetch_Section"],
+      invalidatesTags: (result, error, { courseId }) => [
+        { type: "Sections", id: courseId },
+      ],
     }),
     reorderSections: builder.mutation({
       query: (sections) => ({
@@ -54,7 +62,9 @@ export const sectionApi = createApi({
         method: "PATCH",
         body: { sections },
       }),
-      invalidatesTags: ["Refetch_Section"],
+      invalidatesTags: (result, error, { courseId }) => [
+        { type: "Sections", id: courseId },
+      ],
     }),
   }),
 });

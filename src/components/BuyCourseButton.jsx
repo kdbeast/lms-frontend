@@ -37,7 +37,7 @@ const BuyCourseButton = ({ courseId }) => {
       <Button
         disabled={isLoading}
         onClick={createCheckoutHandler}
-        className="bg-purple-500 w-full text-white hover:bg-purple-600 transition-colors px-4 py-2 rounded-md"
+        className="bg-purple-500 w-full text-white hover:bg-purple-600 transition-colors px-4 py-2 rounded-md cursor-pointer"
       >
         {isLoading ? (
           <>

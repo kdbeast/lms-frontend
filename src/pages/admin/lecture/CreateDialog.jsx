@@ -10,9 +10,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import ReactPlayer from "react-player";
-import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -22,7 +22,7 @@ import { useCreateLectureMutation } from "@/features/api/courseApi";
 
 const MEDIA_API = `${import.meta.env.VITE_API_URL}/api/v1/media`;
 
-const CreateDialog = ({ sectionId }) => {
+const CreateDialog = ({ sectionId, courseId, refetch }) => {
   const [isFree, setIsFree] = useState(false);
   const [lectureTitle, setLectureTitle] = useState("");
   const [mediaProgress, setMediaProgress] = useState(false);
@@ -65,6 +65,7 @@ const CreateDialog = ({ sectionId }) => {
     if (e) e.preventDefault();
     const res = await createLecture({
       sectionId,
+      courseId,
       lectureTitle,
       isPreviewFree: isFree,
       videoInfo: uploadedVideoInfo,
@@ -72,6 +73,9 @@ const CreateDialog = ({ sectionId }) => {
 
     if (res?.data?.lecture) {
       toast.success(res.data.message);
+
+      await refetch();
+
       setIsModalOpen(false);
       setLectureTitle("");
       setUploadedVideoInfo({});
@@ -165,7 +169,9 @@ const CreateDialog = ({ sectionId }) => {
           )}
           <DialogFooter>
             <DialogClose asChild>
-              <Button className="cursor-pointer" variant="outline">Cancel</Button>
+              <Button className="cursor-pointer" variant="outline">
+                Cancel
+              </Button>
             </DialogClose>
             <Button
               type="submit"

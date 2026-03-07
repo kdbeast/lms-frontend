@@ -1,9 +1,13 @@
 /* eslint-disable react-hooks/set-state-in-effect */
+import {
+  arrayMove,
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 import { toast } from "sonner";
 import Lecture from "./Lecture";
-import { useEffect, useState } from "react";
 import {
-  Accordion,
   AccordionItem,
   AccordionTrigger,
   AccordionContent,
@@ -22,20 +26,15 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import {
-  arrayMove,
-  SortableContext,
-  useSortable,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import CreateDialog from "./CreateDialog";
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { closestCenter, DndContext } from "@dnd-kit/core";
 import { GripVertical, Pencil, Trash2 } from "lucide-react";
 import { useReorderLecturesMutation } from "@/features/api/courseApi";
 
-const Section = ({ section, index, courseId }) => {
+const Section = ({ section, index, courseId, refetch }) => {
   const [updateSection] = useUpdateSectionMutation();
   const [deleteSection] = useDeleteSectionMutation();
   const [reorderLectures] = useReorderLecturesMutation();
@@ -210,7 +209,7 @@ const Section = ({ section, index, courseId }) => {
         <AccordionContent>
           {/* Add lecture button */}
           <div className="mb-4">
-            <CreateDialog sectionId={section._id} />
+            <CreateDialog sectionId={section._id} courseId={courseId} refetch={refetch} />
           </div>
 
           {/* Lecture list */}

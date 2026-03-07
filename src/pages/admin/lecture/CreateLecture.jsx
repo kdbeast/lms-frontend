@@ -16,24 +16,25 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import {
-  useGetSectionsByCourseIdQuery,
   useReorderSectionsMutation,
+  useGetSectionsByCourseIdQuery,
 } from "@/features/api/sectionApi";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import { Link, useParams } from "react-router";
 import { Button } from "@/components/ui/button";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { Accordion } from "@/components/ui/accordion";
 import CreateSectionDialog from "./CreateSectionDialog";
 import { closestCenter, DndContext } from "@dnd-kit/core";
 import { CourseCreationStepper } from "@/components/stepper-with-label-orientation";
-import { Eye, EyeOff, Loader2 } from "lucide-react";
-import { Accordion } from "@/components/ui/accordion";
 
 const CreateLecture = () => {
   const navigate = useNavigate();
   const { courseId } = useParams();
   const [reorderSections] = useReorderSectionsMutation();
-  const { data, isLoading, isError } = useGetSectionsByCourseIdQuery(courseId);
+  const { data, isLoading, isError, refetch } =
+    useGetSectionsByCourseIdQuery(courseId);
 
   const handleDragEnd = async (event) => {
     const { active, over } = event;
@@ -142,9 +143,10 @@ const CreateLecture = () => {
               >
                 {data.sections.map((section, index) => (
                   <Section
+                    index={index}
+                    refetch={refetch}
                     key={section._id}
                     section={section}
-                    index={index}
                     courseId={courseId}
                   />
                 ))}

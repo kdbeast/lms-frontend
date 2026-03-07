@@ -36,13 +36,11 @@ const StepperTriggerWrapper = () => {
     variant = "outline";
   }
 
-  console.log(item);
-
   return (
     <Stepper.Trigger
       render={(domProps) => (
         <Button
-          disabled={item.status === "inactive"}
+          disabled={item.status === "inactive" || item.status === "success"}
           className="rounded-full"
           variant={variant}
           size="icon"

@@ -178,3 +178,36 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer base {
+  /* Customizing the Typography (Prose) plugin for a professional look */
+  .prose {
+    --tw-prose-body: var(--foreground);
+    --tw-prose-headings: var(--foreground);
+    --tw-prose-links: oklch(
+      0.45 0.25 264
+    ); /* A nice vibrant blue/purple for links */
+    --tw-prose-bold: var(--foreground);
+    --tw-prose-bullets: oklch(0.55 0.2 260); /* Colored bullets */
+    max-width: none !important; /* Ensures description fills the width */
+  }
+
+  .prose h1,
+  .prose h2,
+  .prose h3 {
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    font-weight: 700;
+  }
+
+  .prose p {
+    margin-top: 1em;
+    margin-bottom: 1em;
+    line-height: 1.7;
+  }
+
+  .prose ul {
+    list-style-type: disc;
+    padding-left: 1.5em;
+  }
+}

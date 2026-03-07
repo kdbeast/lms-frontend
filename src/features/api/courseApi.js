@@ -4,7 +4,7 @@ const COURSE_API = `${import.meta.env.VITE_API_URL}/api/v1/course`;
 
 export const courseApi = createApi({
   reducerPath: "courseApi",
-  tagTypes: ["Refetch_Creator_Course", "Refetch_Lecture"],
+  tagTypes: ["Refetch_Creator_Course", "Refetch_Lecture", "Sections"],
   baseQuery: fetchBaseQuery({
     baseUrl: COURSE_API,
     prepareHeaders: async (headers) => {
@@ -95,7 +95,9 @@ export const courseApi = createApi({
         method: "POST",
         body: { lectureTitle, isPreviewFree, videoInfo, sectionId },
       }),
-      invalidatesTags: ["Sections"],
+      invalidatesTags: (result, error, { courseId }) => [
+        { type: "Sections", id: courseId },
+      ],
     }),
     getLectureByCourseId: builder.query({
       query: (courseId) => ({
@@ -123,7 +125,7 @@ export const courseApi = createApi({
         url: `/lecture/${lectureId}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Refetch_Lecture"],
+      invalidatesTags: ["Sections"],
     }),
     getLectureById: builder.query({
       query: (lectureId) => ({
