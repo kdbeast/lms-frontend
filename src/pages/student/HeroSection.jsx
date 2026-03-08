@@ -7,7 +7,7 @@ const HeroSection = () => {
 
   return (
     <section className="relative overflow-hidden bg-linear-to-r from-blue-500 to-indigo-600 dark:from-gray-800 dark:to-gray-900">
-      <div className="max-w-7xl mx-auto px-6 py-28">
+      <div className="max-w-7xl mx-auto px-6 py-10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           {/* LEFT: TEXT */}
           <div className="text-center md:text-left">

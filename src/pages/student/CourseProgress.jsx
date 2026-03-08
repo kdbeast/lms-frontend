@@ -1,21 +1,21 @@
-import { toast } from "sonner";
-import { useParams } from "react-router";
-import { PacmanLoader } from "react-spinners";
-import { useEffect, useState } from "react";
-import {
-  useGetCourseProgressQuery,
-  useUpdateLectureProgressMutation,
-  useCompleteCourseMutation,
-  useInCompleteCourseMutation,
-} from "../../features/api/courseProgressApi";
-import { Badge } from "../../components/ui/badge";
-import { Button } from "../../components/ui/button";
 import {
   CheckCircle,
   CheckCircle2,
   CirclePlay,
   ChevronLeft,
 } from "lucide-react";
+import { toast } from "sonner";
+import { useState } from "react";
+import { useParams } from "react-router";
+import {
+  useGetCourseProgressQuery,
+  useUpdateLectureProgressMutation,
+  useCompleteCourseMutation,
+  useInCompleteCourseMutation,
+} from "../../features/api/courseProgressApi";
+import { PacmanLoader } from "react-spinners";
+import { Badge } from "../../components/ui/badge";
+import { Button } from "../../components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 const CourseProgress = () => {
@@ -26,33 +26,8 @@ const CourseProgress = () => {
     useGetCourseProgressQuery(courseId);
 
   const [updateLectureProgress] = useUpdateLectureProgressMutation();
-  const [
-    completeCourse,
-    { data: markCompletedData, isSuccess: completedSuccess },
-  ] = useCompleteCourseMutation();
-  const [
-    inCompleteCourse,
-    { data: markInCompletedData, isSuccess: inCompletedSuccess },
-  ] = useInCompleteCourseMutation();
-
-  useEffect(() => {
-    if (completedSuccess) {
-      refetch();
-      toast.success(markCompletedData.message || "Course marked as completed!");
-    }
-    if (inCompletedSuccess) {
-      refetch();
-      toast.success(
-        markInCompletedData.message || "Course marked as incomplete",
-      );
-    }
-  }, [
-    completedSuccess,
-    inCompletedSuccess,
-    markCompletedData,
-    markInCompletedData,
-    refetch,
-  ]);
+  const [completeCourse] = useCompleteCourseMutation();
+  const [inCompleteCourse] = useInCompleteCourseMutation();
 
   if (isLoading)
     return (
@@ -73,14 +48,16 @@ const CourseProgress = () => {
     refetch();
   };
 
-  const handleLectureEnd = () => {
+  const handleLectureEnd = async () => {
     const currentIndex = lectures.findIndex(
       (lec) => lec._id === activeLecture?._id,
     );
+
+    await handleLectureProgress(activeLecture._id);
+
     const nextLecture = lectures[currentIndex + 1];
     if (nextLecture) {
       setCurrentLecture(nextLecture);
-      handleLectureProgress(nextLecture._id);
     }
   };
 
@@ -91,6 +68,26 @@ const CourseProgress = () => {
 
   const isLectureCompleted = (lectureId) => {
     return progress.some((prog) => prog.lectureId === lectureId && prog.viewed);
+  };
+
+  const handleCompleteCourse = async () => {
+    try {
+      const res = await completeCourse(courseId).unwrap();
+      toast.success(res.message || "Course marked as completed!");
+      refetch();
+    } catch (err) {
+      toast.error(err.message || "Failed to complete course");
+    }
+  };
+
+  const handleInCompleteCourse = async () => {
+    try {
+      const res = await inCompleteCourse(courseId).unwrap();
+      toast.success(res.message || "Course marked as incomplete");
+      refetch();
+    } catch (err) {
+      toast.error(err.message || "Failed to update course");
+    }
   };
 
   return (
@@ -117,11 +114,7 @@ const CourseProgress = () => {
               ? "text-green-500 border-green-500 cursor-pointer"
               : "bg-white text-black hover:bg-gray-200 cursor-pointer"
           }
-          onClick={
-            completed
-              ? () => inCompleteCourse(courseId)
-              : () => completeCourse(courseId)
-          }
+          onClick={completed ? handleInCompleteCourse : handleCompleteCourse}
         >
           {completed ? (
             <span className="flex items-center gap-2">
@@ -140,9 +133,9 @@ const CourseProgress = () => {
           <div className="max-w-5xl mx-auto lg:p-6">
             <div className="aspect-video w-full bg-black shadow-2xl relative">
               <video
-                key={activeLecture?._id}
                 controls
                 autoPlay
+                key={activeLecture?._id}
                 className="w-full h-full"
                 src={activeLecture?.videoUrl}
                 onEnded={handleLectureEnd}
@@ -222,7 +215,7 @@ const CourseProgress = () => {
                           className="text-muted-foreground"
                         />
                         <span className="text-[10px] text-muted-foreground uppercase">
-                          Video • 10:00
+                          Video • 3:59
                         </span>
                       </div>
                     </div>
