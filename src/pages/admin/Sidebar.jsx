@@ -46,13 +46,13 @@ const Sidebar = () => {
         </div>
       </main>
 
-      {/* MOBILE TRIGGER (Bottom Right FAB) */}
-      <div className="lg:hidden absolute bottom-8 right-8 z-50">
+      {/* MOBILE TRIGGER */}
+      <div className="lg:hidden absolute m-2 z-50">
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild>
             <Button
               size="icon"
-              className="h-14 w-14 rounded-full shadow-2xl bg-blue-600 text-white border-none"
+              className="h-14 w-14 rounded-full shadow-2xl bg-blue-600 dark:bg-blue-600 hover:bg-blue-700 dark:hover:bg-blue-700 text-white border-none cursor-pointer"
             >
               <Menu size={24} />
             </Button>

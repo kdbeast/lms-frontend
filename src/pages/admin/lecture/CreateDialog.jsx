@@ -25,35 +25,47 @@ const MEDIA_API = `${import.meta.env.VITE_API_URL}/api/v1/media`;
 const CreateDialog = ({ sectionId, courseId, refetch }) => {
   const [isFree, setIsFree] = useState(false);
   const [lectureTitle, setLectureTitle] = useState("");
-  const [mediaProgress, setMediaProgress] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [uploadedVideoInfo, setUploadedVideoInfo] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [mediaProgress, setMediaProgress] = useState(false);
+  const [uploadedVideoInfo, setUploadedVideoInfo] = useState({});
 
   const [createLecture, { isLoading }] = useCreateLectureMutation();
 
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
+    console.log("file:", file);
     if (file) {
-      const formData = new FormData();
-      formData.append("file", file);
       setMediaProgress(true);
       try {
-        const res = await axios.post(`${MEDIA_API}/upload-video`, formData, {
-          onUploadProgress: ({ loaded, total }) => {
-            setUploadProgress(Math.round((loaded * 100) / total));
+        const res = await axios.get(`${MEDIA_API}/get-upload-url`, {
+          params: { filename: file.name, type: file.type },
+        });
+
+        const { url, key } = res.data.data;
+
+        await axios.put(url, file, {
+          headers: {
+            "Content-Type": file.type,
+          },
+          onUploadProgress: (progressEvent) => {
+            const progress = Math.round(
+              (progressEvent.loaded / progressEvent.total) * 100,
+            );
+            setUploadProgress(progress);
           },
         });
 
-        if (res.data.success) {
-          setUploadedVideoInfo({
-            videoUrl: res.data.data.secure_url || res.data.data.url,
-            publicId: res.data.data.public_id,
-          });
-          toast.success(res.data.message);
-        }
+        const videoUrl = `${import.meta.env.VITE_R2_PUBLIC_URL}/${key}`;
+
+        setUploadedVideoInfo({
+          videoUrl,
+          key,
+        });
+
+        toast.success("Video uploaded successfully");
       } catch (error) {
-        console.error("Upload failed", error);
+        console.log("Upload failed", error);
         toast.error("Video upload failed");
       } finally {
         setMediaProgress(false);
