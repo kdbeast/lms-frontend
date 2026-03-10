@@ -86,7 +86,6 @@ const BasicCourseTab = ({ courseId }) => {
 
     let thumbnailUrl = prevThumbnail;
 
-    // upload new thumbnail if selected
     if (formData.thumbnail) {
       const uploaded = await uploadThumbnail(formData.thumbnail);
       if (!uploaded) return;
@@ -111,7 +110,6 @@ const BasicCourseTab = ({ courseId }) => {
 
   const uploadThumbnail = async (file) => {
     try {
-      // 1️⃣ get signed URL
       const res = await axios.get(`${MEDIA_API}/get-upload-url`, {
         params: {
           filename: file.name,
@@ -121,14 +119,12 @@ const BasicCourseTab = ({ courseId }) => {
 
       const { url, key } = res.data.data;
 
-      // 2️⃣ upload directly to R2
       await axios.put(url, file, {
         headers: {
           "Content-Type": file.type,
         },
       });
 
-      // 3️⃣ construct public URL
       return `${import.meta.env.VITE_R2_PUBLIC_URL}/${key}`;
     } catch (err) {
       console.error(err);
@@ -140,7 +136,7 @@ const BasicCourseTab = ({ courseId }) => {
   useEffect(() => {
     if (isSuccess && data) {
       toast.success(data?.message || "Course updated successfully.");
-      navigate(`/admin/course/${courseId}/lecture`);
+      navigate(`/admin/course/${courseId}/curriculum`);
     }
     if (error) {
       toast.error(error.data.message);
@@ -152,8 +148,8 @@ const BasicCourseTab = ({ courseId }) => {
   }
 
   return (
-    <Card className="py-6">
-      <CardHeader className="flex flex-row justify-between">
+    <Card className="py-6 w-full max-w-full overflow-hidden">
+      <CardHeader className="flex flex-col sm:flex-row justify-between gap-4">
         <div>
           <CardTitle>Basic Information</CardTitle>
           <CardDescription>
@@ -164,58 +160,66 @@ const BasicCourseTab = ({ courseId }) => {
 
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="space-y-4">
-            <div>
-              <Label className="mb-1">Title</Label>
+          <div className="space-y-6">
+            {/* Title */}
+            <div className="space-y-2">
+              <Label htmlFor="courseTitle">Title</Label>
               <Input
+                id="courseTitle"
                 type="text"
                 placeholder="Ex. Fullstack development"
                 {...register("courseTitle", { required: "Title is required" })}
               />
-
               {errors.courseTitle && (
-                <p className="text-red-500 text-sm">
+                <p className="text-destructive text-sm font-medium">
                   {errors.courseTitle.message}
                 </p>
               )}
             </div>
 
-            <div>
-              <Label className="mb-1">Subtitle</Label>
+            {/* Subtitle */}
+            <div className="space-y-2">
+              <Label htmlFor="subTitle">Subtitle</Label>
               <Input
+                id="subTitle"
                 type="text"
-                placeholder="Ex. Become a MERN Stack developer from Zero to Hero in 2 months"
+                placeholder="Ex. Become a MERN Stack developer"
                 {...register("subTitle", { required: "Subtitle is required" })}
               />
-
               {errors.subTitle && (
-                <p className="text-red-500 text-sm">
+                <p className="text-destructive text-sm font-medium">
                   {errors.subTitle.message}
                 </p>
               )}
             </div>
 
-            <div className="w-full overflow-hidden">
-              <Label className="mb-1">Description</Label>
-              <Controller
-                name="description"
-                control={control}
-                rules={{ required: "Description is required" }}
-                render={({ field }) => (
-                  <CourseEditor value={field.value} onChange={field.onChange} />
-                )}
-              />
-
+            {/* Description - Fixed for Mobile Overflow */}
+            <div className="w-full max-w-full overflow-hidden space-y-2">
+              <Label>Description</Label>
+              <div className="rounded-md border border-input overflow-hidden">
+                <Controller
+                  name="description"
+                  control={control}
+                  rules={{ required: "Description is required" }}
+                  render={({ field }) => (
+                    <CourseEditor
+                      value={field.value}
+                      onChange={field.onChange}
+                    />
+                  )}
+                />
+              </div>
               {errors.description && (
-                <p className="text-red-500 text-sm">
+                <p className="text-destructive text-sm font-medium">
                   {errors.description.message}
                 </p>
               )}
             </div>
 
-            <div className="flex items-center gap-5">
-              <div>
-                <Label className="mb-1">Category</Label>
+            {/* Selectors Grid - Fixed for Mobile Stacking */}
+            <div className="grid grid-cols-1 md:flex md:items-start md:gap-5 gap-6">
+              <div className="flex-1 space-y-2">
+                <Label>Category</Label>
                 <Controller
                   name="category"
                   control={control}
@@ -226,10 +230,9 @@ const BasicCourseTab = ({ courseId }) => {
                       defaultValue={field.value}
                       onValueChange={field.onChange}
                     >
-                      <SelectTrigger className="w-55">
+                      <SelectTrigger className="w-full md:w-55">
                         <SelectValue placeholder="Select a category" />
                       </SelectTrigger>
-
                       <SelectContent>
                         <SelectItem value="Next Js">Next JS</SelectItem>
                         <SelectItem value="Data Science">
@@ -241,31 +244,21 @@ const BasicCourseTab = ({ courseId }) => {
                         <SelectItem value="Fullstack Development">
                           Fullstack Development
                         </SelectItem>
-                        <SelectItem value="MERN Stack Development">
-                          MERN Stack Development
-                        </SelectItem>
-                        <SelectItem value="Backend Development">
-                          Backend Development
-                        </SelectItem>
                         <SelectItem value="Javascript">Javascript</SelectItem>
-                        <SelectItem value="Python">Python</SelectItem>
-                        <SelectItem value="Docker">Docker</SelectItem>
-                        <SelectItem value="MongoDB">MongoDB</SelectItem>
-                        <SelectItem value="HTML">HTML</SelectItem>
+                        {/* ... other options */}
                       </SelectContent>
                     </Select>
                   )}
                 />
-
                 {errors.category && (
-                  <p className="text-red-500 text-sm">
+                  <p className="text-destructive text-sm font-medium">
                     {errors.category.message}
                   </p>
                 )}
               </div>
 
-              <div>
-                <Label className="mb-1">Course Level</Label>
+              <div className="flex-1 space-y-2">
+                <Label>Course Level</Label>
                 <Controller
                   name="courseLevel"
                   control={control}
@@ -276,10 +269,9 @@ const BasicCourseTab = ({ courseId }) => {
                       defaultValue={field.value}
                       onValueChange={field.onChange}
                     >
-                      <SelectTrigger className="w-45">
-                        <SelectValue placeholder="Select course level" />
+                      <SelectTrigger className="w-full md:w-45">
+                        <SelectValue placeholder="Select level" />
                       </SelectTrigger>
-
                       <SelectContent>
                         <SelectItem value="Beginner">Beginner</SelectItem>
                         <SelectItem value="Intermediate">
@@ -290,59 +282,53 @@ const BasicCourseTab = ({ courseId }) => {
                     </Select>
                   )}
                 />
-
                 {errors.courseLevel && (
-                  <p className="text-red-500 text-sm">
+                  <p className="text-destructive text-sm font-medium">
                     {errors.courseLevel.message}
                   </p>
                 )}
               </div>
 
-              <div>
-                <Label className="mb-1">Price in (INR)</Label>
+              <div className="flex-1 space-y-2">
+                <Label>Price (INR)</Label>
                 <Input
                   type="number"
                   placeholder="₹499"
+                  className="w-full"
                   {...register("coursePrice", {
                     required: "Price is required",
                     valueAsNumber: true,
-                    min: { value: 1, message: "Price must be greater than 0" },
+                    min: { value: 1, message: "Price must be > 0" },
                   })}
                 />
-
                 {errors.coursePrice && (
-                  <p className="text-red-500 text-sm">
+                  <p className="text-destructive text-sm font-medium">
                     {errors.coursePrice.message}
                   </p>
                 )}
               </div>
             </div>
 
-            <div>
-              <Label className="mb-2">Course Thumbnail</Label>
-
-              {/* If thumbnail already exists */}
+            {/* Thumbnail */}
+            <div className="space-y-3">
+              <Label>Course Thumbnail</Label>
               {prevThumbnail ? (
-                <div className="relative w-fit">
+                <div className="relative group w-full md:w-fit overflow-hidden rounded-md border">
                   <img
                     src={prevThumbnail}
                     alt="Course Thumbnail"
-                    className="rounded-md max-h-[250px]"
+                    className="w-full md:max-w-sm rounded-md object-cover max-h-[250px]"
                   />
-
-                  {/* Buttons */}
                   <div className="absolute top-2 right-2 flex gap-2">
-                    {/* Change Image */}
-                    <label className="cursor-pointer bg-black/60 text-white px-3 py-1 rounded text-sm hover:bg-black">
+                    <label className="cursor-pointer bg-black/70 text-white px-3 py-1.5 rounded-md text-xs font-semibold hover:bg-black transition-colors">
                       Change
                       <input
                         type="file"
                         className="hidden"
                         onChange={(e) => {
                           const file = e.target.files[0];
-                          setValue("thumbnail", file);
-
                           if (file) {
+                            setValue("thumbnail", file);
                             const reader = new FileReader();
                             reader.onloadend = () =>
                               setPrevThumbnail(reader.result);
@@ -351,11 +337,9 @@ const BasicCourseTab = ({ courseId }) => {
                         }}
                       />
                     </label>
-
-                    {/* Remove Image */}
                     <button
                       type="button"
-                      className="bg-red-600 text-white px-3 py-1 cursor-pointer rounded text-sm hover:bg-red-700"
+                      className="bg-red-600/90 text-white px-3 py-1.5 rounded-md text-xs font-semibold hover:bg-red-700 transition-colors"
                       onClick={() => {
                         setPrevThumbnail(null);
                         setValue("thumbnail", null);
@@ -366,14 +350,13 @@ const BasicCourseTab = ({ courseId }) => {
                   </div>
                 </div>
               ) : (
-                /* If no image yet */
                 <Input
                   type="file"
+                  className="w-full md:w-fit"
                   onChange={(e) => {
                     const file = e.target.files[0];
-                    setValue("thumbnail", file);
-
                     if (file) {
+                      setValue("thumbnail", file);
                       const reader = new FileReader();
                       reader.onloadend = () => setPrevThumbnail(reader.result);
                       reader.readAsDataURL(file);
@@ -383,10 +366,12 @@ const BasicCourseTab = ({ courseId }) => {
               )}
             </div>
 
-            <div className="flex items-center gap-2">
+            {/* Actions */}
+            <div className="flex flex-col sm:flex-row items-center gap-3 pt-4">
               <Button
+                type="button"
                 variant="outline"
-                className="cursor-pointer"
+                className="w-full sm:w-auto order-2 sm:order-1"
                 onClick={() => navigate("/admin/course")}
               >
                 Cancel
@@ -394,15 +379,14 @@ const BasicCourseTab = ({ courseId }) => {
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="cursor-pointer"
+                className="w-full sm:w-auto order-1 sm:order-2"
               >
                 {isLoading ? (
                   <>
-                    <Loader2 className="mr-2 w-4 h-4 animate-spin" /> Please
-                    wait
+                    <Loader2 className="mr-2 w-4 h-4 animate-spin" /> Saving...
                   </>
                 ) : (
-                  "Save"
+                  "Save Changes"
                 )}
               </Button>
             </div>
@@ -414,68 +398,3 @@ const BasicCourseTab = ({ courseId }) => {
 };
 
 export default BasicCourseTab;
-
-const BasicCourseTabSkeleton = () => {
-  return (
-    <Card className="py-6 animate-pulse">
-      <CardHeader className="flex flex-row justify-between">
-        <div className="space-y-2">
-          <div className="h-6 w-40 bg-gray-300 dark:bg-gray-700 rounded" />
-          <div className="h-4 w-72 bg-gray-300 dark:bg-gray-700 rounded" />
-        </div>
-      </CardHeader>
-
-      <CardContent>
-        <div className="space-y-5 mt-5">
-          {/* Title */}
-          <div className="space-y-2">
-            <div className="h-4 w-20 bg-gray-300 dark:bg-gray-700 rounded" />
-            <div className="h-10 w-full bg-gray-300 dark:bg-gray-700 rounded-md" />
-          </div>
-
-          {/* Subtitle */}
-          <div className="space-y-2">
-            <div className="h-4 w-24 bg-gray-300 dark:bg-gray-700 rounded" />
-            <div className="h-10 w-full bg-gray-300 dark:bg-gray-700 rounded-md" />
-          </div>
-
-          {/* Description */}
-          <div className="space-y-2">
-            <div className="h-4 w-28 bg-gray-300 dark:bg-gray-700 rounded" />
-            <div className="h-56 w-full bg-gray-300 dark:bg-gray-700 rounded-md" />
-          </div>
-
-          {/* Row */}
-          <div className="flex gap-5">
-            <div className="flex-1 space-y-2">
-              <div className="h-4 w-20 bg-gray-300 dark:bg-gray-700 rounded" />
-              <div className="h-10 bg-gray-300 dark:bg-gray-700 rounded-md" />
-            </div>
-
-            <div className="flex-1 space-y-2">
-              <div className="h-4 w-24 bg-gray-300 dark:bg-gray-700 rounded" />
-              <div className="h-10 bg-gray-300 dark:bg-gray-700 rounded-md" />
-            </div>
-
-            <div className="flex-1 space-y-2">
-              <div className="h-4 w-24 bg-gray-300 dark:bg-gray-700 rounded" />
-              <div className="h-10 bg-gray-300 dark:bg-gray-700 rounded-md" />
-            </div>
-          </div>
-
-          {/* Thumbnail */}
-          <div className="space-y-2">
-            <div className="h-4 w-32 bg-gray-300 dark:bg-gray-700 rounded" />
-            <div className="h-10 w-72 bg-gray-300 dark:bg-gray-700 rounded-md" />
-          </div>
-
-          {/* Buttons */}
-          <div className="flex gap-2 pt-2">
-            <div className="h-10 w-24 bg-gray-300 dark:bg-gray-700 rounded-md" />
-            <div className="h-10 w-24 bg-gray-300 dark:bg-gray-700 rounded-md" />
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
-};

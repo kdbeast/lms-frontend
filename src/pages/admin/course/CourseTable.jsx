@@ -34,7 +34,10 @@ const CourseTable = () => {
   return (
     <div className="flex-1 mx-10 mt-20">
       <div className="flex justify-end">
-        <Button className="cursor-pointer" onClick={() => navigate("create")}>
+        <Button
+          className="cursor-pointer"
+          onClick={() => navigate("/admin/course/create")}
+        >
           Create New Course
         </Button>
       </div>
@@ -81,7 +84,7 @@ const CourseTable = () => {
                       variant="outline"
                       className="cursor-pointer"
                       onClick={() => {
-                        navigate(`/admin/course/${course._id}`);
+                        navigate(`/admin/course/${course._id}/course-details`);
                       }}
                     >
                       <Edit2 />

@@ -27,8 +27,8 @@ const AddCourse = () => {
     if (isSuccess) {
       toast.success(data.message || "Course created successfully");
 
-      const newCourseId = data?.course?._id; // get id from API response
-      navigate(`/admin/course/${newCourseId}`);
+      const newCourseId = data?.course?._id;
+      navigate(`/admin/course/${newCourseId}/course-details`);
     }
 
     if (error) {
@@ -49,7 +49,7 @@ const AddCourse = () => {
 
   return (
     <div className="flex-1 mx-10">
-      <CourseCreationStepper currentStep={1} />
+      <CourseCreationStepper />
       <div className="mb-4 mt-4">
         <h1 className="font-bold text-xl">
           Lets add course, add some basic details for your new course

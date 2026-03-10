@@ -7,7 +7,7 @@ const EditCourse = () => {
   return (
     <div className="flex-1 mx-10">
       {/* Top bar  */}
-      <CourseCreationStepper currentStep={2} />
+      <CourseCreationStepper />
       <div className="flex items-center justify-between mb-5 mt-2">
         <h1 className="font-bold text-xl">
           Add detail information regarding course

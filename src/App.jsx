@@ -127,16 +127,24 @@ const router = createBrowserRouter([
             element: <AddCourse />,
           },
           {
-            path: "course/:courseId",
-            element: <EditCourse />,
-          },
-          {
             path: "course/:courseId/lecture",
             element: <CreateLecture />,
           },
           {
             path: "course/:courseId/lecture/:lectureId",
             element: <EditLecture />,
+          },
+          {
+            path: "course/:courseId/create-course",
+            element: <EditCourse />,
+          },
+          {
+            path: "course/:courseId/course-details",
+            element: <EditCourse />,
+          },
+          {
+            path: "course/:courseId/curriculum",
+            element: <CreateLecture />,
           },
         ],
       },

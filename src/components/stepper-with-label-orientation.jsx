@@ -4,6 +4,8 @@ import { defineStepper } from "@stepperize/react";
 import { useStepItemContext } from "@stepperize/react/primitives";
 
 import { Button } from "@/components/ui/button";
+import { Check } from "lucide-react";
+import { useLocation, useNavigate, useParams } from "react-router";
 
 const { Stepper } = defineStepper(
   {
@@ -25,28 +27,51 @@ const { Stepper } = defineStepper(
 
 const StepperTriggerWrapper = () => {
   const item = useStepItemContext();
+  const navigate = useNavigate();
+  const { courseId } = useParams();
+
+  const stepRoutes = ["create-course", "course-details", "curriculum"];
 
   let variant = "secondary";
 
+  if (item.status === "active") variant = "default";
+  if (item.status === "inactive") variant = "outline";
+  let className = "rounded-full transition-all duration-300 border-2";
+
   if (item.status === "active") {
     variant = "default";
+    className += " ring-4 ring-primary/20";
   }
 
-  if (item.status === "inactive") {
-    variant = "outline";
+  if (item.status === "success") {
+    variant = "default";
+    className += " bg-green-500 hover:bg-green-600 border-green-500 text-white";
+  }
+
+  if (item.data.id === "create-course") {
+    variant = "default";
+    className += " bg-green-500 hover:bg-green-600 border-green-500 text-white";
   }
 
   return (
     <Stepper.Trigger
       render={(domProps) => (
         <Button
-          disabled={item.status === "inactive" || item.status === "success"}
-          className="rounded-full"
+          {...domProps}
+          onClick={(e) => {
+            domProps.onClick?.(e); // keeps stepper logic working
+            navigate(`/admin/course/${courseId}/${stepRoutes[item.index]}`);
+          }}
+          className={className}
           variant={variant}
           size="icon"
-          {...domProps}
+          disabled={
+            item.status === "success" && item.data.id === "create-course"
+          }
         >
-          <Stepper.Indicator>{item.index + 1}</Stepper.Indicator>
+          <Stepper.Indicator>
+            {item.status === "success" ? <Check size={16} /> : item.index + 1}
+          </Stepper.Indicator>
         </Button>
       )}
     />
@@ -57,7 +82,10 @@ const StepperTitleWrapper = ({ title }) => {
   return (
     <Stepper.Title
       render={(domProps) => (
-        <h4 className="text-sm font-medium" {...domProps}>
+        <h4
+          className="text-sm font-medium group-data-[status=success]:text-green-500"
+          {...domProps}
+        >
           {title}
         </h4>
       )}
@@ -85,18 +113,35 @@ const StepperSeparatorWithLabelOrientation = ({ status, isLast }) => {
     <Stepper.Separator
       orientation="horizontal"
       data-status={status}
-      className="absolute left-[calc(50%+30px)] right-[calc(-50%+20px)] top-5 block shrink-0 bg-muted data-[status=success]:bg-primary data-disabled:opacity-50 transition-all duration-300 ease-in-out h-0.5"
+      className="
+      hidden
+      md:block
+      absolute
+      left-[calc(50%+30px)]
+      right-[calc(-50%+20px)]
+      top-5
+      h-0.5
+      bg-muted
+      data-[status=success]:bg-green-500
+      transition-all
+      duration-300
+      "
     />
   );
 };
 
-export function CourseCreationStepper({ currentStep }) {
+export function CourseCreationStepper() {
+  const location = useLocation();
+
   const stepIds = ["create-course", "course-details", "curriculum"];
+
+  const activeStep =
+    stepIds.find((step) => location.pathname.includes(step)) || "create-course";
   return (
     <Stepper.Root
       orientation="horizontal"
       className="w-full space-y-4"
-      initialStep={stepIds[currentStep - 1]}
+      initialStep={activeStep}
     >
       {({ stepper }) => (
         <>

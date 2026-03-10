@@ -104,7 +104,7 @@ const CreateLecture = () => {
 
   return (
     <div className="flex-1 px-4 md:px-10">
-      <CourseCreationStepper currentStep={3} />
+      <CourseCreationStepper />
       <div className="mb-4 mt-5">
         <h1 className="font-bold text-xl">
           Let's organize your course curriculum
@@ -112,7 +112,7 @@ const CreateLecture = () => {
       </div>
 
       <div className="flex flex-col sm:flex-row gap-2 my-5">
-        <Link to={`/admin/course/${courseId}`}>
+        <Link to={`/admin/course/${courseId}/course-details`}>
           <Button className="cursor-pointer md:w-auto w-full" variant="outline">
             Back to course
           </Button>
