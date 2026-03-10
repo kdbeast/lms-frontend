@@ -398,3 +398,59 @@ const BasicCourseTab = ({ courseId }) => {
 };
 
 export default BasicCourseTab;
+
+const BasicCourseTabSkeleton = () => {
+  return (
+    <Card className="py-6 animate-pulse">
+      <CardHeader className="flex flex-row justify-between">
+        <div className="space-y-2">
+          <div className="h-6 w-64 bg-gray-300 rounded"></div>
+          <div className="h-4 w-96 bg-gray-300 rounded"></div>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-6">
+          {/* Title */}
+          <div className="space-y-2">
+            <div className="h-4 w-32 bg-gray-300 rounded"></div>
+            <div className="h-10 w-full bg-gray-300 rounded"></div>
+          </div>
+
+          {/* Description */}
+          <div className="space-y-2">
+            <div className="h-4 w-32 bg-gray-300 rounded"></div>
+            <div className="h-20 w-full bg-gray-300 rounded"></div>
+          </div>
+
+          {/* Category, Level, Price */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="space-y-2">
+              <div className="h-4 w-32 bg-gray-300 rounded"></div>
+              <div className="h-10 w-full bg-gray-300 rounded"></div>
+            </div>
+            <div className="space-y-2">
+              <div className="h-4 w-32 bg-gray-300 rounded"></div>
+              <div className="h-10 w-full bg-gray-300 rounded"></div>
+            </div>
+            <div className="space-y-2">
+              <div className="h-4 w-32 bg-gray-300 rounded"></div>
+              <div className="h-10 w-full bg-gray-300 rounded"></div>
+            </div>
+          </div>
+
+          {/* Thumbnail */}
+          <div className="space-y-2">
+            <div className="h-4 w-32 bg-gray-300 rounded"></div>
+            <div className="h-10 w-full md:w-fit bg-gray-300 rounded"></div>
+          </div>
+
+          {/* Actions */}
+          <div className="flex flex-col sm:flex-row items-center gap-3 pt-4">
+            <div className="h-10 w-full sm:w-auto bg-gray-300 rounded"></div>
+            <div className="h-10 w-full sm:w-auto bg-gray-300 rounded"></div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
