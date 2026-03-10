@@ -13,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import axios from "axios";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import {
@@ -26,6 +27,8 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Controller, useForm } from "react-hook-form";
 import CourseEditor from "@/pages/admin/course/CourseEditor";
+
+const MEDIA_API = `${import.meta.env.VITE_API_URL}/api/v1/media`;
 
 const BasicCourseTab = ({ courseId }) => {
   const navigate = useNavigate();
@@ -80,23 +83,58 @@ const BasicCourseTab = ({ courseId }) => {
       toast.error("Thumbnail is required");
       return;
     }
-    const data = new FormData();
 
-    data.append("courseTitle", formData.courseTitle);
-    data.append("subTitle", formData.subTitle);
-    data.append("description", formData.description);
-    data.append("category", formData.category);
-    data.append("courseLevel", formData.courseLevel);
-    data.append("coursePrice", formData.coursePrice);
+    let thumbnailUrl = prevThumbnail;
 
+    // upload new thumbnail if selected
     if (formData.thumbnail) {
-      data.append("courseThumbnail", formData.thumbnail);
+      const uploaded = await uploadThumbnail(formData.thumbnail);
+      if (!uploaded) return;
+      thumbnailUrl = uploaded;
     }
+
+    const payload = {
+      courseTitle: formData.courseTitle,
+      subTitle: formData.subTitle,
+      description: formData.description,
+      category: formData.category,
+      courseLevel: formData.courseLevel,
+      coursePrice: formData.coursePrice,
+      courseThumbnail: thumbnailUrl,
+    };
 
     await editCourse({
       courseId,
-      formData: data,
+      formData: payload,
     });
+  };
+
+  const uploadThumbnail = async (file) => {
+    try {
+      // 1️⃣ get signed URL
+      const res = await axios.get(`${MEDIA_API}/get-upload-url`, {
+        params: {
+          filename: file.name,
+          type: file.type,
+        },
+      });
+
+      const { url, key } = res.data.data;
+
+      // 2️⃣ upload directly to R2
+      await axios.put(url, file, {
+        headers: {
+          "Content-Type": file.type,
+        },
+      });
+
+      // 3️⃣ construct public URL
+      return `${import.meta.env.VITE_R2_PUBLIC_URL}/${key}`;
+    } catch (err) {
+      console.error(err);
+      toast.error("Thumbnail upload failed");
+      return null;
+    }
   };
 
   useEffect(() => {
