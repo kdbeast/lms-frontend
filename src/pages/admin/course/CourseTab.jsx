@@ -230,22 +230,21 @@ const BasicCourseTab = ({ courseId }) => {
                       defaultValue={field.value}
                       onValueChange={field.onChange}
                     >
-                      <SelectTrigger className="w-full md:w-55">
+                      <SelectTrigger className="w-full md:w-55 cursor-pointer">
                         <SelectValue placeholder="Select a category" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Next Js">Next JS</SelectItem>
-                        <SelectItem value="Data Science">
+                        <SelectItem className="cursor-pointer" value="Next Js">Next JS</SelectItem>
+                        <SelectItem className="cursor-pointer" value="Data Science">
                           Data Science
                         </SelectItem>
-                        <SelectItem value="Frontend Development">
+                        <SelectItem className="cursor-pointer" value="Frontend Development">
                           Frontend Development
                         </SelectItem>
-                        <SelectItem value="Fullstack Development">
+                        <SelectItem className="cursor-pointer" value="Fullstack Development">
                           Fullstack Development
                         </SelectItem>
-                        <SelectItem value="Javascript">Javascript</SelectItem>
-                        {/* ... other options */}
+                        <SelectItem className="cursor-pointer" value="Javascript">Javascript</SelectItem>
                       </SelectContent>
                     </Select>
                   )}
@@ -269,15 +268,15 @@ const BasicCourseTab = ({ courseId }) => {
                       defaultValue={field.value}
                       onValueChange={field.onChange}
                     >
-                      <SelectTrigger className="w-full md:w-45">
+                      <SelectTrigger className="w-full md:w-45 cursor-pointer">
                         <SelectValue placeholder="Select level" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Beginner">Beginner</SelectItem>
-                        <SelectItem value="Intermediate">
+                        <SelectItem className="cursor-pointer" value="Beginner">Beginner</SelectItem>
+                        <SelectItem className="cursor-pointer" value="Intermediate">
                           Intermediate
                         </SelectItem>
-                        <SelectItem value="Advanced">Advanced</SelectItem>
+                        <SelectItem className="cursor-pointer" value="Advanced">Advanced</SelectItem>
                       </SelectContent>
                     </Select>
                   )}
@@ -339,7 +338,7 @@ const BasicCourseTab = ({ courseId }) => {
                     </label>
                     <button
                       type="button"
-                      className="bg-red-600/90 text-white px-3 py-1.5 rounded-md text-xs font-semibold hover:bg-red-700 transition-colors"
+                      className="bg-red-600/90 text-white px-3 py-1.5 rounded-md text-xs font-semibold hover:bg-red-700 transition-colors cursor-pointer"
                       onClick={() => {
                         setPrevThumbnail(null);
                         setValue("thumbnail", null);
@@ -371,7 +370,7 @@ const BasicCourseTab = ({ courseId }) => {
               <Button
                 type="button"
                 variant="outline"
-                className="w-full sm:w-auto order-2 sm:order-1"
+                className="w-full sm:w-auto order-2 sm:order-1 cursor-pointer"
                 onClick={() => navigate("/admin/course")}
               >
                 Cancel
@@ -379,7 +378,7 @@ const BasicCourseTab = ({ courseId }) => {
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="w-full sm:w-auto order-1 sm:order-2"
+                className="w-full sm:w-auto order-1 sm:order-2 cursor-pointer"
               >
                 {isLoading ? (
                   <>

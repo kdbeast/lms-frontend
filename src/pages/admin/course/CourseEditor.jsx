@@ -66,6 +66,7 @@ const CourseEditor = ({ value, onChange }) => {
           size="icon"
           type="button"
           variant="ghost"
+          className="cursor-pointer"
           onClick={() => editor.chain().focus().undo().run()}
         >
           <Undo size={16} />
@@ -75,6 +76,7 @@ const CourseEditor = ({ value, onChange }) => {
           size="icon"
           type="button"
           variant="ghost"
+          className="cursor-pointer"
           onClick={() => editor.chain().focus().redo().run()}
         >
           <Redo size={16} />
@@ -85,7 +87,7 @@ const CourseEditor = ({ value, onChange }) => {
           size="icon"
           type="button"
           variant="ghost"
-          className={active("heading", { level: 1 })}
+          className={active("heading", { level: 1 }) + "cursor-pointer"}
           onClick={() =>
             editor.chain().focus().toggleHeading({ level: 1 }).run()
           }
@@ -97,7 +99,7 @@ const CourseEditor = ({ value, onChange }) => {
           size="icon"
           type="button"
           variant="ghost"
-          className={active("heading", { level: 2 })}
+          className={active("heading", { level: 2 }) + "cursor-pointer"}
           onClick={() =>
             editor.chain().focus().toggleHeading({ level: 2 }).run()
           }
@@ -110,7 +112,7 @@ const CourseEditor = ({ value, onChange }) => {
           size="icon"
           type="button"
           variant="ghost"
-          className={active("bold")}
+          className={active("bold") + "cursor-pointer"}
           onClick={() => editor.chain().focus().toggleBold().run()}
         >
           <Bold size={16} />
@@ -121,7 +123,7 @@ const CourseEditor = ({ value, onChange }) => {
           size="icon"
           type="button"
           variant="ghost"
-          className={active("italic")}
+          className={active("italic") + "cursor-pointer"}
           onClick={() => editor.chain().focus().toggleItalic().run()}
         >
           <Italic size={16} />
@@ -132,7 +134,7 @@ const CourseEditor = ({ value, onChange }) => {
           size="icon"
           type="button"
           variant="ghost"
-          className={active("bulletList")}
+          className={active("bulletList") + "cursor-pointer"}
           onClick={() => editor.chain().focus().toggleBulletList().run()}
         >
           <List size={16} />
@@ -143,7 +145,7 @@ const CourseEditor = ({ value, onChange }) => {
           size="icon"
           type="button"
           variant="ghost"
-          className={active("orderedList")}
+          className={active("orderedList") + "cursor-pointer"}
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
         >
           <ListOrdered size={16} />
@@ -154,7 +156,7 @@ const CourseEditor = ({ value, onChange }) => {
           size="icon"
           type="button"
           variant="ghost"
-          className={active("blockquote")}
+          className={active("blockquote") + "cursor-pointer"}
           onClick={() => editor.chain().focus().toggleBlockquote().run()}
         >
           <Quote size={16} />
@@ -165,7 +167,7 @@ const CourseEditor = ({ value, onChange }) => {
           size="icon"
           type="button"
           variant="ghost"
-          className={active("codeBlock")}
+          className={active("codeBlock") + "cursor-pointer"}
           onClick={() => editor.chain().focus().toggleCodeBlock().run()}
         >
           <Code size={16} />
